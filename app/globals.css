@@ -1,0 +1,59 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  /* The Inference Engine — see DESIGN.md */
+  --bg: #05070c;
+  --surface: #0b0f17;
+  --ink: #edeff2;
+  --ink-muted: #9ca3af;
+  --live: #ccff00;
+  --infra: #3b82f6;
+  --infra-deep: #1e40af;
+  --hairline: rgba(255, 255, 255, 0.08);
+  --border-soft: rgba(255, 255, 255, 0.12);
+}
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+  }
+
+  body {
+    background-color: var(--bg);
+    color: var(--ink);
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+
+  /* Keyboard focus: the one live signal */
+  :focus-visible {
+    outline: 2px solid var(--live);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  ::selection {
+    background: rgba(204, 255, 0, 0.22);
+    color: var(--ink);
+  }
+}
+
+/* Full-viewport blocks with svh override (vh fallback for older engines).
+   Tailwind's minHeight scale in this version lacks svh/dvh utilities. */
+.min-h-hero {
+  min-height: 100vh;
+  min-height: 100svh;
+}
+
+.min-h-contact {
+  min-height: 60vh;
+  min-height: 60svh;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+}

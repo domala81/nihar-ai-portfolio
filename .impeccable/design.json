@@ -1,0 +1,117 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-06-07T00:00:00.000Z",
+  "title": "Design System: Nihar Domala — AI Systems Portfolio",
+  "extensions": {
+    "colorMeta": {
+      "bg": { "role": "neutral", "displayName": "Charcoal Void", "canonical": "#05070C", "tonalRamp": ["#05070C", "#0B0F17", "#11161F", "#1A2230", "#2A3445", "#4A5566", "#7C8696", "#C3C9D2"] },
+      "surface": { "role": "neutral", "displayName": "Lifted Surface", "canonical": "#0B0F17", "tonalRamp": ["#070A10", "#0B0F17", "#10151F", "#161D2A", "#212B3B", "#3C475A", "#6B7587", "#B7BdC8"] },
+      "ink": { "role": "neutral", "displayName": "Instrument White", "canonical": "#EDEFF2", "tonalRamp": ["#2A2D33", "#41454C", "#595E66", "#757B85", "#969CA6", "#B7BcC4", "#D6D9DE", "#EDEFF2"] },
+      "ink-muted": { "role": "neutral", "displayName": "Muted Ink", "canonical": "#9CA3AF", "tonalRamp": ["#2C3038", "#3E434C", "#525863", "#6B7280", "#9CA3AF", "#B6BCC5", "#D0D4DB", "#EBEDF0"] },
+      "accent-live": { "role": "primary", "displayName": "Electric Lime", "canonical": "#CCFF00", "tonalRamp": ["#1E2600", "#3A4A00", "#566D00", "#739200", "#90B800", "#ADDB00", "#CCFF00", "#E2FF66"] },
+      "infra": { "role": "secondary", "displayName": "Synapse Cobalt", "canonical": "#3B82F6", "tonalRamp": ["#0C1A33", "#13294F", "#1B3B73", "#235099", "#2E68C7", "#3B82F6", "#74A6F9", "#B6D0FC"] },
+      "infra-deep": { "role": "secondary", "displayName": "Deep Cobalt", "canonical": "#1E40AF", "tonalRamp": ["#0A1640", "#0E1E5C", "#142878", "#193394", "#1E40AF", "#3457C9", "#6E86DD", "#AEBDEE"] },
+      "line": { "role": "neutral", "displayName": "Hairline", "canonical": "rgba(255,255,255,0.08)", "tonalRamp": ["rgba(255,255,255,0.02)", "rgba(255,255,255,0.04)", "rgba(255,255,255,0.06)", "rgba(255,255,255,0.08)", "rgba(255,255,255,0.12)", "rgba(255,255,255,0.18)", "rgba(255,255,255,0.28)", "rgba(255,255,255,0.45)"] },
+      "border": { "role": "neutral", "displayName": "Border", "canonical": "rgba(255,255,255,0.12)", "tonalRamp": ["rgba(255,255,255,0.04)", "rgba(255,255,255,0.08)", "rgba(255,255,255,0.12)", "rgba(255,255,255,0.16)", "rgba(255,255,255,0.22)", "rgba(255,255,255,0.3)", "rgba(255,255,255,0.42)", "rgba(255,255,255,0.6)"] }
+    },
+    "typographyMeta": {
+      "display": { "displayName": "Display", "purpose": "Hero name only, set massive and tight. Appears once." },
+      "headline": { "displayName": "Headline", "purpose": "Section openers (case studies, experience, contact)." },
+      "title": { "displayName": "Title", "purpose": "Project and role titles, terminal chip headings." },
+      "body": { "displayName": "Body", "purpose": "Problem/solution sentences and prose, max 70ch, Instrument White." },
+      "label": { "displayName": "Label / Mono", "purpose": "Machine voice: metrics, badges, terminal chips, form fields, status line." }
+    },
+    "shadows": [
+      { "name": "node-glow-live", "value": "0 0 32px rgba(204,255,0,0.45)", "purpose": "Soft halo under an active/firing canvas node and the output node. Canvas-rendered, never on DOM chrome." },
+      { "name": "node-glow-infra", "value": "0 0 28px rgba(59,130,246,0.4)", "purpose": "Cobalt halo along active synapses and structural network highlights." }
+    ],
+    "motion": [
+      { "name": "ease-out-quint", "value": "cubic-bezier(0.22, 1, 0.36, 1)", "purpose": "Default exponential ease-out for state transitions, fades, and tooltips." },
+      { "name": "dur-fast", "value": "180ms", "purpose": "Button/hover state changes." },
+      { "name": "dur-base", "value": "320ms", "purpose": "Overlay and tooltip entrances." }
+    ],
+    "breakpoints": [
+      { "name": "mobile-fallback", "value": "768px" }
+    ]
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Lead action: case-study live demo, contact submit. Goes lime on hover (its one live-signal moment).",
+      "html": "<button class=\"ds-btn-primary\">Live architecture demo</button>",
+      "css": ".ds-btn-primary { background: #EDEFF2; color: #05070C; font-family: 'JetBrains Mono','Fira Code',ui-monospace,monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; padding: 12px 28px; border: none; border-radius: 8px; cursor: pointer; transition: background 180ms cubic-bezier(0.22,1,0.36,1), transform 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-primary:hover { background: #CCFF00; transform: translateY(-1px); } .ds-btn-primary:focus-visible { outline: 2px solid #CCFF00; outline-offset: 3px; }"
+    },
+    {
+      "name": "Ghost Button",
+      "kind": "button",
+      "refersTo": "button-ghost",
+      "description": "Secondary action: GitHub / code link. Hairline border lifts to cobalt on hover.",
+      "html": "<button class=\"ds-btn-ghost\">Code · GitHub</button>",
+      "css": ".ds-btn-ghost { background: #0B0F17; color: #EDEFF2; font-family: 'JetBrains Mono','Fira Code',ui-monospace,monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; padding: 12px 28px; border: 1px solid rgba(255,255,255,0.12); border-radius: 8px; cursor: pointer; transition: border-color 180ms cubic-bezier(0.22,1,0.36,1); } .ds-btn-ghost:hover { border-color: #3B82F6; } .ds-btn-ghost:focus-visible { outline: 2px solid #3B82F6; outline-offset: 3px; }"
+    },
+    {
+      "name": "Tech / Layer Chip",
+      "kind": "chip",
+      "refersTo": "chip",
+      "description": "Small terminal token for tech badges and the glassmorphic layer-hover label.",
+      "html": "<span class=\"ds-chip\">[Layer 02 // Hidden: Core Engineering Stack]</span>",
+      "css": ".ds-chip { display: inline-block; background: #0B0F17; color: #3B82F6; font-family: 'JetBrains Mono','Fira Code',ui-monospace,monospace; font-size: 0.8125rem; font-weight: 500; letter-spacing: 0.04em; padding: 4px 10px; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; }"
+    },
+    {
+      "name": "Terminal Input",
+      "kind": "input",
+      "refersTo": "input-terminal",
+      "description": "CLI-styled contact field with a prompt glyph; border + underglow shift to cobalt on focus.",
+      "html": "<label class=\"ds-field\"><span class=\"ds-prompt\">&gt;</span><input class=\"ds-input\" placeholder=\"your.email@domain.com\" /></label>",
+      "css": ".ds-field { display: flex; align-items: center; gap: 8px; background: #0B0F17; border: 1px solid rgba(255,255,255,0.12); border-radius: 4px; padding: 12px 14px; transition: border-color 180ms cubic-bezier(0.22,1,0.36,1), box-shadow 180ms cubic-bezier(0.22,1,0.36,1); } .ds-prompt { color: #3B82F6; font-family: 'JetBrains Mono',ui-monospace,monospace; } .ds-input { flex: 1; background: transparent; border: none; outline: none; color: #EDEFF2; font-family: 'JetBrains Mono','Fira Code',ui-monospace,monospace; font-size: 0.8125rem; letter-spacing: 0.04em; } .ds-input::placeholder { color: #9CA3AF; } .ds-field:focus-within { border-color: #3B82F6; box-shadow: 0 0 0 1px #3B82F6, 0 0 18px rgba(59,130,246,0.25); }"
+    },
+    {
+      "name": "Case Study Card",
+      "kind": "card",
+      "refersTo": null,
+      "description": "TL;DR project panel: problem/solution neutral, the single impact metric in lime. Flat, hairline border, no shadow, no side-stripe.",
+      "html": "<article class=\"ds-card\"><h3 class=\"ds-card-title\">Real-time NLP Pipeline</h3><p class=\"ds-card-body\">Batch ETL could not keep up with streaming inference demand.</p><p class=\"ds-metric\">Processed 10M+ rows daily · latency -40%</p></article>",
+      "css": ".ds-card { background: #0B0F17; border: 1px solid rgba(255,255,255,0.12); border-radius: 14px; padding: 28px; } .ds-card-title { font-family: Geist,system-ui,sans-serif; font-weight: 600; font-size: 1.25rem; letter-spacing: -0.01em; color: #EDEFF2; margin: 0 0 12px; } .ds-card-body { font-family: Geist,system-ui,sans-serif; font-size: 1.0625rem; line-height: 1.6; color: #EDEFF2; margin: 0 0 16px; max-width: 70ch; } .ds-metric { font-family: 'JetBrains Mono','Fira Code',ui-monospace,monospace; font-size: 0.8125rem; letter-spacing: 0.04em; color: #CCFF00; margin: 0; }"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Inference Engine",
+    "overview": "The page is not a portfolio about a neural network; it is one, mid-inference. Data enters at the top (passions), flows down through engineering and ML-stack layers, and converges at the bottom on a single output node whose status reads 'ready.' The aesthetic is a high-end technical instrument, precise and calm, with one live signal that pulses. Density is low by deliberate intent: restraint is the entire argument. Everything structural is rendered in cool infrastructural cobalt; everything alive is rendered in a single electric lime that, by rule, is rare.",
+    "keyCharacteristics": [
+      "Near-black charcoal canvas (#05070C), drenched and absolute.",
+      "Two-color logic: cobalt = infrastructure, lime = life. Nothing else competes.",
+      "Monospace for machine-spoken strings; Inter for human-spoken text.",
+      "One signature interaction (the autonomous canvas pipeline) instead of many small ones.",
+      "Performance is visual integrity: a stutter breaks the illusion that the machine is real."
+    ],
+    "rules": [
+      { "name": "The One Live Signal Rule", "body": "Lime means exactly one thing: active right now. Hovered, firing, the single headline metric, or the one moment asking to be clicked. Cobalt carries everything merely structural.", "section": "colors" },
+      { "name": "The Tone-Not-Shadow Rule", "body": "Depth on this dark surface comes from lifting tone (#05070C to #0B0F17), not from drop shadows. Glows are the only exception and belong to the network, not UI chrome.", "section": "colors" },
+      { "name": "The Two-Voice Rule", "body": "Inter is the human voice; JetBrains Mono is the machine voice. Metrics, labels, paths, status lines, form fields are machine, so mono. Headings, sentences, names are human, so Inter.", "section": "typography" },
+      { "name": "The Quiet-Glow Heading Rule", "body": "Headings are solid Instrument White (#EDEFF2). Gradient text is forbidden as decoration; the only exception is a restrained vertical metallic sheen on the hero name, AA-tested, never multi-hue.", "section": "typography" },
+      { "name": "The Glow-Belongs-To-The-Machine Rule", "body": "Glow is reserved for the network and the final output node. If a button, card, or input glows, it is impersonating the machine; remove it.", "section": "elevation" }
+    ],
+    "dos": [
+      "Do keep the background absolute charcoal (#05070C) and build depth with tonal lift to #0B0F17 plus hairline borders, never drop shadows.",
+      "Do reserve Electric Lime (#CCFF00) for the active/live signal only and keep it rare.",
+      "Do use cobalt (#3B82F6 / #1E40AF) for everything structural: synapses, outlines, links, resting network.",
+      "Do set machine-spoken strings in JetBrains Mono and human-spoken text in Inter.",
+      "Do keep body text in Instrument White (#EDEFF2) and verify every text color clears WCAG AA (4.5:1); placeholders use Muted Ink, not faint gray.",
+      "Do confine glow to the canvas network and the output node.",
+      "Do provide the prefers-reduced-motion static-network fallback and the <768px stacked-layout fallback; both are mandatory."
+    ],
+    "donts": [
+      "Don't use gradient text except the one permitted restrained metallic sheen on the hero name; no multi-hue gradient text.",
+      "Don't ship the generic SaaS landing: no gradient-blob hero, no big-number hero-metric template, no identical icon-heading-text card grid.",
+      "Don't ship the cluttered dev portfolio: no skill-cloud walls, no badge dumps, no busy-resume density.",
+      "Don't ship the corporate / stiff look: no enterprise-blue chrome, no stock photography, no personality-free polish.",
+      "Don't use cobalt for reading-length body text, and never use Deep Cobalt (#1E40AF) for any text.",
+      "Don't put a colored border-left/border-right stripe on cards or callouts; use full hairline borders.",
+      "Don't glow UI chrome (buttons, cards, inputs). Glow belongs to the machine.",
+      "Don't render network nodes or synapses as DOM/SVG elements; everything inside the network is painted on the single canvas.",
+      "Don't use lime for error states; errors get a dedicated dim red-orange."
+    ]
+  }
+}
