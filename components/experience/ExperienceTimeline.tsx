@@ -63,14 +63,16 @@ export default function ExperienceTimeline() {
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
   const nowRef = useRef<HTMLDivElement>(null);
-  const spineEndRef = useRef<HTMLDivElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
 
-  // Register the lime "now" head (dock) + spine bottom (path waypoint) for the page thread.
+  // Register the lime "now" head (dock) + the live trace tip (track) for the page thread.
   useEffect(() => {
     const cleanups: Array<() => void> = [];
     if (nowRef.current) cleanups.push(registerAnchor("experience", nowRef.current));
-    if (spineEndRef.current)
-      cleanups.push(registerAnchor("experience-end", spineEndRef.current, { dock: false }));
+    if (tipRef.current)
+      cleanups.push(
+        registerAnchor("experience-tip", tipRef.current, { dock: false, track: true }),
+      );
     return () => cleanups.forEach((c) => c());
   }, []);
 
@@ -136,12 +138,15 @@ export default function ExperienceTimeline() {
               <span className="relative h-2.5 w-2.5 rounded-full bg-live shadow-[0_0_10px_2px_rgba(204,255,0,0.5)]" />
             </span>
           </div>
-          {/* Spine bottom — invisible path waypoint so the thread rides the wire down. */}
-          <div
-            ref={spineEndRef}
+          {/* Invisible clone of the trace — its bottom edge is the live trace tip the page
+              thread follows, kept perfectly in sync with the cobalt line by construction. */}
+          <motion.div
             aria-hidden
-            className={`absolute ${RAIL} bottom-8 h-0 w-0 -translate-x-1/2`}
-          />
+            style={reduce ? { scaleY: 1 } : { scaleY: scrollYProgress }}
+            className={`pointer-events-none absolute ${RAIL} bottom-8 top-7 w-0 origin-top -translate-x-1/2`}
+          >
+            <div ref={tipRef} className="absolute bottom-0 left-0 h-0 w-0" />
+          </motion.div>
           {ENTRIES.map((node, i) => {
             const isHead = i === 0; // most-recent role = the live "running" deploy
             const bullets =

@@ -39,6 +39,13 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-18** — (Experiment, `feature/lime-thread`) **Keep & harden** the lime thread.
+  Three fixes: **snappier dissolve** (frame-delta idle at 90ms + faster op decay, ignoring
+  momentum/settle scroll events that lagged it to ~1s); **experience sync** — the lime dot now
+  glues exactly to the cobalt trace tip (measured gap **0px**) by following an invisible
+  scaleY-clone of the trace; **dwell-band emergence** — the dot stays dissolved while a
+  section's dot is comfortably in view and only emerges during between-section travel, so
+  projects no longer pops in (it appears as the core passes ~top-30%). → Entry 021.
 - **2026-06-18** — (Experiment, on `feature/lime-thread`, not merged) Refined the
   "lime me threads the page" idea into the **anchored traveler (v2)**: the dot starts/ends at
   each section's real lime dot, **dissolves into** the current section's dot at rest (fixes
@@ -203,6 +210,38 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 021 — Lime thread harden: snappy dissolve, trace-sync, dwell-band
+
+**Prompt** — Keep & harden: make the dissolve snappier; in experience the lime dot leads/lags
+the cobalt "blue line" (sync it); in projects the dot appears instantly — dwell, then emerge
+when the core dot is ~top-30% of the viewport (soft rule, "make it look clean").
+
+**Flow** — Three targeted fixes to `LimeThread.tsx` (+ `anchorStore.ts`, `ExperienceTimeline.tsx`).
+Verified numerically via opacity/position probes (dissolve op→0 by ~0.4s and stays; experience
+dot vs trace tip **gap 0px** at three scroll positions; projects op=0 with the core centered)
+and a mid-scroll capture (traveler + comet trail intact). `tsc` + `next build` clean. Branch only.
+
+**Decisions** —
+- **Snappy dissolve:** idle is detected by **frame-delta** (scrollY actually changing) at a 90ms
+  threshold + op decay 0.3. A `scroll`-event listener was *worse* — momentum/settle events at the
+  same Y kept refreshing "moving," delaying the dissolve.
+- **Experience sync:** added an invisible **scaleY clone** of the trace (same `scrollYProgress`
+  mapping) whose bottom edge is the live trace tip; registered it as a `track` anchor; the
+  traveler **follows it directly** while on screen → glued to the blue line (gap 0). Replaced the
+  static spine-bottom waypoint.
+- **Dwell-band:** the dot is hidden while the nearest dock's viewport-center fraction is in
+  `[0.30, 0.72]` (section comfortably in view) and only visible during between-section travel, so
+  it no longer pops in at projects. Experience is exempt (rides the tip visibly). Idle always
+  forces the dissolve.
+
+**Output** —
+- `components/thread/LimeThread.tsx` (loop rewrite), `anchorStore.ts` (`track` meta),
+  `ExperienceTimeline.tsx` (trace-tip marker; spine-end waypoint removed).
+- Verified: `tsc` clean; `next build` passes; probes confirm snappy dissolve + 0px trace sync +
+  projects dwell. `main` untouched.
 
 ---
 

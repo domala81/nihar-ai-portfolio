@@ -10,6 +10,8 @@
 export type AnchorMeta = {
   /** the traveler can dock + bloom here (a real lime dot). Waypoints (false) only guide the path. */
   dock?: boolean;
+  /** a live moving marker the traveler follows directly while on screen (e.g. the experience trace tip). */
+  track?: boolean;
 };
 
 export type Anchor = { id: string; el: HTMLElement; meta: AnchorMeta };

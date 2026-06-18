@@ -59,18 +59,32 @@ export default function LimeThread() {
       const vh = window.innerHeight;
       const scrollY = window.scrollY;
 
+      // idle = scroll position stopped changing (ignores momentum/settle events at same Y)
       if (s.lastScrollY < 0) s.lastScrollY = scrollY;
-      const moving = Math.abs(scrollY - s.lastScrollY) > 0.5;
-      if (moving) s.lastMoveT = now;
+      if (Math.abs(scrollY - s.lastScrollY) > 0.5) s.lastMoveT = now;
       s.lastScrollY = scrollY;
-      const idle = now - s.lastMoveT > 160;
+      const idle = now - s.lastMoveT > 90;
 
       if (anchors.length < 2) {
         if (dotRef.current) dotRef.current.style.opacity = "0";
         return;
       }
 
+      // the live track marker (the experience trace tip), pulled out before the map
+      let track: { vpx: number; vpy: number; onScreen: boolean } | null = null;
+      const trackAnchor = anchors.find((a) => a.meta.track);
+      if (trackAnchor) {
+        const r = trackAnchor.el.getBoundingClientRect();
+        track = {
+          vpx: r.left + r.width / 2,
+          vpy: r.top + r.height / 2,
+          onScreen: r.top > 4 && r.top < vh - 4,
+        };
+      }
+
+      // dock stations (top→bottom)
       const stations = anchors
+        .filter((a) => !a.meta.track)
         .map((a) => {
           const r = a.el.getBoundingClientRect();
           const docCenterY = r.top + scrollY + r.height / 2;
@@ -84,57 +98,72 @@ export default function LimeThread() {
         })
         .sort((p, q) => p.docCenterY - q.docCenterY);
 
-      // target position along the polyline of station viewport-centers
-      let tx: number, ty: number;
-      const first = stations[0];
-      const last = stations[stations.length - 1];
-      if (scrollY <= first.dockScroll) {
-        tx = first.vpx;
-        ty = first.vpy;
-      } else if (scrollY >= last.dockScroll) {
-        tx = last.vpx;
-        ty = last.vpy;
-      } else {
-        let i = 0;
-        while (
-          i < stations.length - 1 &&
-          !(scrollY >= stations[i].dockScroll && scrollY < stations[i + 1].dockScroll)
-        )
-          i++;
-        const a = stations[i];
-        const b = stations[i + 1];
-        const t = (scrollY - a.dockScroll) / Math.max(1, b.dockScroll - a.dockScroll);
-        tx = a.vpx + (b.vpx - a.vpx) * t;
-        ty = a.vpy + (b.vpy - a.vpy) * t;
+      if (stations.length < 1) {
+        if (dotRef.current) dotRef.current.style.opacity = "0";
+        return;
       }
 
-      // ease toward target (snap on first frame)
-      const k = s.primed ? 0.25 : 1;
+      // nearest dock + its viewport-center fraction (drives the dwell band)
+      const docks = stations.filter((x) => x.dock);
+      let nd = docks[0] ?? stations[0];
+      let best = Infinity;
+      for (const d of docks) {
+        const dd = Math.abs(scrollY - d.dockScroll);
+        if (dd < best) {
+          best = dd;
+          nd = d;
+        }
+      }
+      const ndF = nd.vpy / vh;
+
+      // target: ride the trace tip while it's on screen (experience), else the polyline
+      const onTip = !!track && track.onScreen;
+      let tx: number, ty: number;
+      if (onTip) {
+        tx = track!.vpx;
+        ty = track!.vpy;
+      } else {
+        const first = stations[0];
+        const last = stations[stations.length - 1];
+        if (scrollY <= first.dockScroll) {
+          tx = first.vpx;
+          ty = first.vpy;
+        } else if (scrollY >= last.dockScroll) {
+          tx = last.vpx;
+          ty = last.vpy;
+        } else {
+          let i = 0;
+          while (
+            i < stations.length - 1 &&
+            !(scrollY >= stations[i].dockScroll && scrollY < stations[i + 1].dockScroll)
+          )
+            i++;
+          const a = stations[i];
+          const b = stations[i + 1];
+          const t = (scrollY - a.dockScroll) / Math.max(1, b.dockScroll - a.dockScroll);
+          tx = a.vpx + (b.vpx - a.vpx) * t;
+          ty = a.vpy + (b.vpy - a.vpy) * t;
+        }
+      }
+
+      // ease toward target (snap first frame; glue tighter while riding the tip)
+      const k = s.primed ? (onTip ? 0.45 : 0.3) : 1;
       s.x += (tx - s.x) * k;
       s.y += (ty - s.y) * k;
       s.primed = true;
 
-      // dissolve when idle (fade into the section's own dot); full while moving
-      const opTarget = idle ? 0 : 0.82;
-      s.op += (opTarget - s.op) * 0.15;
+      // visibility: dissolve when idle; while moving, hide whenever a section's dot is
+      // comfortably in view (dwell) and only emerge during the between-section travel.
+      // Experience (riding the tip) stays visible so the lime tracks the blue line.
+      const dwelling = ndF >= 0.3 && ndF <= 0.72;
+      const opTarget = idle ? 0 : onTip ? 0.82 : dwelling ? 0 : 0.82;
+      s.op += (opTarget - s.op) * 0.3;
 
       // bloom once when settling into the nearest dock
-      if (idle && !s.wasIdle) {
-        const docks = stations.filter((x) => x.dock);
-        let nd = docks[0];
-        let best = Infinity;
-        for (const d of docks) {
-          const dd = Math.abs(scrollY - d.dockScroll);
-          if (dd < best) {
-            best = dd;
-            nd = d;
-          }
-        }
-        if (nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });
-      }
+      if (idle && !s.wasIdle && nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });
       s.wasIdle = idle;
 
-      // comet trail: a follow chain behind the dot
+      // comet trail follow chain
       let px = s.x;
       let py = s.y;
       for (let j = 0; j < TRAIL; j++) {
