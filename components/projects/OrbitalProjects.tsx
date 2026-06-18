@@ -15,6 +15,7 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import { LAYERS, type PipeNode } from "../pipeline/networkData";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * Section 3 — Projects ("Output layer").
@@ -90,6 +91,13 @@ function OrbitView() {
 
   const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rafRef = useRef<number | null>(null);
+  const coreRef = useRef<HTMLDivElement>(null);
+
+  // Register the lime core as the projects "me" anchor for the page thread.
+  useEffect(
+    () => (coreRef.current ? registerAnchor("projects", coreRef.current) : undefined),
+    [],
+  );
 
   const engaged = nearOrbit || overPanel;
 
@@ -160,6 +168,7 @@ function OrbitView() {
         />
         {/* center — the lime "me" / output node, same big lime core as the network's result node */}
         <div
+          ref={coreRef}
           aria-hidden
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >

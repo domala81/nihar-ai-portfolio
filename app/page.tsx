@@ -2,6 +2,7 @@ import NeuralPipeline from "@/components/pipeline/NeuralPipeline";
 import OrbitalProjects from "@/components/projects/OrbitalProjects";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
 import LimeThread from "@/components/thread/LimeThread";
+import ContactAnchor from "@/components/thread/ContactAnchor";
 
 export default function Home() {
   return (
@@ -23,6 +24,7 @@ export default function Home() {
         className="min-h-contact flex flex-col justify-center border-t border-border-soft px-6 py-24 sm:px-10"
       >
         <div className="mx-auto w-full max-w-6xl">
+          <ContactAnchor />
           <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">
             Inference status
           </p>

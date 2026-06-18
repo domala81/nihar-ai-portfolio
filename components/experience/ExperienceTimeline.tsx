@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
   useReducedMotion,
@@ -16,6 +16,7 @@ import {
 } from "lucide-react";
 import { LAYERS } from "../pipeline/networkData";
 import { ICONS } from "../pipeline/iconData";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * Section 4 — Professional Experience ("Signal Trace").
@@ -61,6 +62,17 @@ const ROLE_GLYPH: Record<string, LucideIcon> = {
 export default function ExperienceTimeline() {
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
+  const nowRef = useRef<HTMLDivElement>(null);
+  const spineEndRef = useRef<HTMLDivElement>(null);
+
+  // Register the lime "now" head (dock) + spine bottom (path waypoint) for the page thread.
+  useEffect(() => {
+    const cleanups: Array<() => void> = [];
+    if (nowRef.current) cleanups.push(registerAnchor("experience", nowRef.current));
+    if (spineEndRef.current)
+      cleanups.push(registerAnchor("experience-end", spineEndRef.current, { dock: false }));
+    return () => cleanups.forEach((c) => c());
+  }, []);
 
   // Scroll progress through the list draws the cobalt trace down the spine.
   const { scrollYProgress } = useScroll({
@@ -109,6 +121,26 @@ export default function ExperienceTimeline() {
             aria-hidden
             style={reduce ? { scaleY: 1 } : { scaleY: scrollYProgress }}
             className={`absolute ${RAIL} bottom-8 top-7 w-px origin-top -translate-x-1/2 bg-infra`}
+          />
+          {/* Lime "now / me" anchor at the spine head — present day; history flows down.
+              The page thread docks here (consolidates the old lime "running" chip). */}
+          <div
+            ref={nowRef}
+            aria-hidden
+            className={`absolute ${RAIL} -top-1 z-20 -translate-x-1/2`}
+          >
+            <span className="relative flex h-3 w-3 items-center justify-center">
+              {!reduce && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live/40" />
+              )}
+              <span className="relative h-2.5 w-2.5 rounded-full bg-live shadow-[0_0_10px_2px_rgba(204,255,0,0.5)]" />
+            </span>
+          </div>
+          {/* Spine bottom — invisible path waypoint so the thread rides the wire down. */}
+          <div
+            ref={spineEndRef}
+            aria-hidden
+            className={`absolute ${RAIL} bottom-8 h-0 w-0 -translate-x-1/2`}
           />
           {ENTRIES.map((node, i) => {
             const isHead = i === 0; // most-recent role = the live "running" deploy
@@ -173,7 +205,6 @@ export default function ExperienceTimeline() {
                       <h3 className="font-sans text-lg font-semibold tracking-tightish text-ink sm:text-xl">
                         {node.label}
                       </h3>
-                      {isHead && <RunningTag reduce={!!reduce} />}
                     </div>
 
                     {/* Meta — org always; date only on mobile (desktop shows it in the gutter) */}
@@ -312,25 +343,6 @@ function Node({
           />
         )}
       </motion.span>
-    </span>
-  );
-}
-
-/** The one live signal: a breathing lime "running" tag on the current role. */
-function RunningTag({ reduce }: { reduce: boolean }) {
-  return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-live/30 bg-live/10 px-2 py-0.5 font-mono text-[11px] text-live">
-      <span className="relative inline-flex h-1.5 w-1.5">
-        {!reduce && (
-          <motion.span
-            className="absolute inline-flex h-full w-full rounded-full bg-live"
-            animate={{ scale: [1, 2.2], opacity: [0.6, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-          />
-        )}
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-live" />
-      </span>
-      running
     </span>
   );
 }

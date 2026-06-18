@@ -1,62 +1,208 @@
 "use client";
 
-import { useScroll, useTransform, motion, useReducedMotion } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
+import { getAnchors } from "./anchorStore";
 
 /**
- * PROTOTYPE — the lime "me" node threading the whole page.
+ * The lime "me" node threading the whole page.
  *
- * One lime node (position: fixed) whose viewport position is driven by page scroll
- * progress, weaving to roughly land on each section's anchor as you scroll: the
- * network's result node (right), the projects orbit center (left), the experience
- * head, the contact node. Stops are approximate for now — when hardened they'd be
- * locked to the live anchor positions (getBoundingClientRect) instead of fixed
- * vw/vh. Hidden under prefers-reduced-motion and below lg.
+ * Reads the live screen position of every registered anchor each frame (network result
+ * node, projects orbit core, experience "now" head + spine-bottom waypoint, contact node),
+ * orders them top→bottom, and rides the traveling dot along that polyline by scroll. A
+ * faint screen-blend comet trail follows. When the user stops scrolling the dot dissolves
+ * into the nearest dock anchor (so only that section's own lime dot remains) and fires a
+ * one-shot bloom; it re-emerges and travels on the next scroll.
+ *
+ * Disabled under prefers-reduced-motion and below lg — the per-section lime dots remain as
+ * the static fallback.
  */
 
-// scroll-progress stops ≈ each section framed (measured: pipeline ~0.19, projects
-// ~0.59, experience ~0.83, contact ~1.0; network result sits a bit below pipeline center).
-const P = [0, 0.15, 0.3, 0.588, 0.834, 0.97, 1];
+const TRAIL = 6;
 
 export default function LimeThread() {
   const reduce = useReducedMotion();
-  const { scrollYProgress } = useScroll();
+  const [enabled, setEnabled] = useState(false);
+  const [bloom, setBloom] = useState<{ x: number; y: number; key: number } | null>(null);
 
-  // weave horizontally toward each anchor
-  const left = useTransform(scrollYProgress, P, [
-    "78vw",
-    "78vw",
-    "78vw",
-    "24vw",
-    "28vw",
-    "38vw",
-    "38vw",
-  ]);
-  // and vertically (network/projects centered; experience head sits higher)
-  const top = useTransform(scrollYProgress, P, [
-    "50vh",
-    "50vh",
-    "50vh",
-    "50vh",
-    "38vh",
-    "52vh",
-    "52vh",
-  ]);
-  // fade in as we leave the hero
-  const opacity = useTransform(scrollYProgress, P, [0, 0, 1, 1, 1, 1, 1]);
+  const dotRef = useRef<HTMLSpanElement>(null);
+  const trailRefs = useRef<(HTMLSpanElement | null)[]>([]);
+  const st = useRef({
+    x: 0,
+    y: 0,
+    op: 0,
+    trail: Array.from({ length: TRAIL }, () => ({ x: 0, y: 0 })),
+    lastScrollY: -1,
+    lastMoveT: 0,
+    wasIdle: true,
+    primed: false,
+  });
 
-  if (reduce) return null;
+  // Enable only on lg+ and when motion is allowed.
+  useEffect(() => {
+    if (reduce) return;
+    const mq = window.matchMedia("(min-width: 1024px)");
+    const update = () => setEnabled(mq.matches);
+    update();
+    mq.addEventListener("change", update);
+    return () => mq.removeEventListener("change", update);
+  }, [reduce]);
+
+  useEffect(() => {
+    if (!enabled) return;
+    let raf = 0;
+    const s = st.current;
+
+    const frame = (now: number) => {
+      raf = requestAnimationFrame(frame);
+      const anchors = getAnchors();
+      const vh = window.innerHeight;
+      const scrollY = window.scrollY;
+
+      if (s.lastScrollY < 0) s.lastScrollY = scrollY;
+      const moving = Math.abs(scrollY - s.lastScrollY) > 0.5;
+      if (moving) s.lastMoveT = now;
+      s.lastScrollY = scrollY;
+      const idle = now - s.lastMoveT > 160;
+
+      if (anchors.length < 2) {
+        if (dotRef.current) dotRef.current.style.opacity = "0";
+        return;
+      }
+
+      const stations = anchors
+        .map((a) => {
+          const r = a.el.getBoundingClientRect();
+          const docCenterY = r.top + scrollY + r.height / 2;
+          return {
+            dock: a.meta.dock !== false,
+            docCenterY,
+            vpx: r.left + r.width / 2,
+            vpy: r.top + r.height / 2,
+            dockScroll: docCenterY - vh / 2,
+          };
+        })
+        .sort((p, q) => p.docCenterY - q.docCenterY);
+
+      // target position along the polyline of station viewport-centers
+      let tx: number, ty: number;
+      const first = stations[0];
+      const last = stations[stations.length - 1];
+      if (scrollY <= first.dockScroll) {
+        tx = first.vpx;
+        ty = first.vpy;
+      } else if (scrollY >= last.dockScroll) {
+        tx = last.vpx;
+        ty = last.vpy;
+      } else {
+        let i = 0;
+        while (
+          i < stations.length - 1 &&
+          !(scrollY >= stations[i].dockScroll && scrollY < stations[i + 1].dockScroll)
+        )
+          i++;
+        const a = stations[i];
+        const b = stations[i + 1];
+        const t = (scrollY - a.dockScroll) / Math.max(1, b.dockScroll - a.dockScroll);
+        tx = a.vpx + (b.vpx - a.vpx) * t;
+        ty = a.vpy + (b.vpy - a.vpy) * t;
+      }
+
+      // ease toward target (snap on first frame)
+      const k = s.primed ? 0.25 : 1;
+      s.x += (tx - s.x) * k;
+      s.y += (ty - s.y) * k;
+      s.primed = true;
+
+      // dissolve when idle (fade into the section's own dot); full while moving
+      const opTarget = idle ? 0 : 0.82;
+      s.op += (opTarget - s.op) * 0.15;
+
+      // bloom once when settling into the nearest dock
+      if (idle && !s.wasIdle) {
+        const docks = stations.filter((x) => x.dock);
+        let nd = docks[0];
+        let best = Infinity;
+        for (const d of docks) {
+          const dd = Math.abs(scrollY - d.dockScroll);
+          if (dd < best) {
+            best = dd;
+            nd = d;
+          }
+        }
+        if (nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });
+      }
+      s.wasIdle = idle;
+
+      // comet trail: a follow chain behind the dot
+      let px = s.x;
+      let py = s.y;
+      for (let j = 0; j < TRAIL; j++) {
+        const tn = s.trail[j];
+        tn.x += (px - tn.x) * 0.35;
+        tn.y += (py - tn.y) * 0.35;
+        px = tn.x;
+        py = tn.y;
+      }
+
+      if (dotRef.current) {
+        dotRef.current.style.transform = `translate3d(${s.x}px, ${s.y}px, 0) translate(-50%, -50%)`;
+        dotRef.current.style.opacity = String(s.op);
+      }
+      for (let j = 0; j < TRAIL; j++) {
+        const el = trailRefs.current[j];
+        if (!el) continue;
+        const tn = s.trail[j];
+        const fade = s.op * (1 - (j + 1) / (TRAIL + 1)) * 0.6;
+        el.style.transform = `translate3d(${tn.x}px, ${tn.y}px, 0) translate(-50%, -50%)`;
+        el.style.opacity = String(fade);
+      }
+    };
+
+    raf = requestAnimationFrame(frame);
+    return () => cancelAnimationFrame(raf);
+  }, [enabled]);
+
+  if (reduce || !enabled) return null;
 
   return (
-    <motion.div
+    <div
       aria-hidden
-      style={{ left, top, opacity }}
-      className="pointer-events-none fixed z-30 hidden -translate-x-1/2 -translate-y-1/2 lg:block"
+      className="pointer-events-none fixed inset-0 z-30"
+      style={{ mixBlendMode: "screen" }}
     >
-      <span className="relative flex h-4 w-4 items-center justify-center">
-        <span className="absolute -inset-3 rounded-full bg-live/25 blur-lg" />
-        <span className="absolute inset-0 animate-ping rounded-full bg-live/30" />
-        <span className="relative h-4 w-4 rounded-full bg-live shadow-[0_0_18px_5px_rgba(204,255,0,0.55)]" />
-      </span>
-    </motion.div>
+      {Array.from({ length: TRAIL }).map((_, j) => (
+        <span
+          key={j}
+          ref={(el) => {
+            trailRefs.current[j] = el;
+          }}
+          className="absolute left-0 top-0 rounded-full bg-live blur-[1px]"
+          style={{ width: 8 - j, height: 8 - j, opacity: 0 }}
+        />
+      ))}
+      <span
+        ref={dotRef}
+        className="absolute left-0 top-0 h-3 w-3 rounded-full bg-live shadow-[0_0_14px_4px_rgba(204,255,0,0.55)]"
+        style={{ opacity: 0 }}
+      />
+      <AnimatePresence>
+        {bloom && (
+          <span
+            key={bloom.key}
+            className="absolute left-0 top-0"
+            style={{ transform: `translate3d(${bloom.x}px, ${bloom.y}px, 0)` }}
+          >
+            <motion.span
+              initial={{ scale: 0.4, opacity: 0.5 }}
+              animate={{ scale: 2.6, opacity: 0 }}
+              transition={{ duration: 0.7, ease: "easeOut" }}
+              onAnimationComplete={() => setBloom(null)}
+              className="-ml-6 -mt-6 block h-12 w-12 rounded-full border border-live/50"
+            />
+          </span>
+        )}
+      </AnimatePresence>
+    </div>
   );
 }

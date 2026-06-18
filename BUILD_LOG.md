@@ -39,6 +39,14 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-18** — (Experiment, on `feature/lime-thread`, not merged) Refined the
+  "lime me threads the page" idea into the **anchored traveler (v2)**: the dot starts/ends at
+  each section's real lime dot, **dissolves into** the current section's dot at rest (fixes
+  the v1 duplicate/floating problem), rides the **spine** through experience, and leaves a
+  faint comet trail; each dot blooms on dock. First set up a **git snapshot + branch** so the
+  whole thing is one-command revertible (`git init`; `main` = the pre-experiment state). Added
+  lime anchors to experience (consolidated the "running" chip into a spine "now" dot) + contact;
+  a registry connects all four. → Entry 020.
 - **2026-06-18** — Wanted **small prev/next arrows** on the projects detail panel to step
   left/right, almost invisible, popping lightly on hover. → Added near-invisible (`opacity-20`)
   chevron buttons flanking the spotlight dots; hover/focus pops them (full opacity + scale +
@@ -195,6 +203,46 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 020 — Lime "me" thread: anchored traveler (on feature/lime-thread)
+
+**Prompt** — A series: build the page-spanning lime "me" node, then refine — start/end at the
+green dots, reveal each section's items after the dot, make experience travel the spine (not
+random), and have the dot dissolve into the section's dot at rest and re-appear on scroll.
+"Judge first, ask, then implement." Plus: set up easy rollback before building.
+
+**Flow** — Set up a **git snapshot + feature branch** (the project wasn't a repo yet) so the
+work is one-command revertible. Judged the refinements (the dissolve mechanic fixes the v1
+duplicate/floating lime; the network nodes are DOM — `tokenRefs` — so anchoring is feasible).
+Asked 3 questions → bloom-sync, all-four-sections, dot+trail. Built the registry + rewrote the
+traveler. Verified each section at rest (single lime dot, dissolve works) and mid-scroll
+(traveler + comet trail). `tsc` + `next build` clean. All on `feature/lime-thread`.
+
+**Decisions** —
+- **Anchor registry** (`components/thread/anchorStore.ts`): each section registers its lime
+  element; the traveler reads live `getBoundingClientRect` → layout-proof (no hardcoded vw/vh
+  like the v1 prototype, which floated off-anchor).
+- **Traveler** (`LimeThread.tsx`): rAF loop, routes the dot along the polyline of live anchor
+  centers by scroll; comet **follow-chain trail** with `mix-blend-mode: screen` (clean over
+  text); **dissolve** on scroll-idle (~160ms) into the nearest dock + a one-shot **bloom**;
+  re-emerges on scroll. Caught a framer-vs-inline-transform bug on the bloom (positioned
+  wrapper + inner scaling span).
+- **Experience**: added a lime **"now"** dot at the spine head, **consolidating** the old
+  lime "running" chip into it (one lime, not two) + an invisible spine-bottom waypoint so the
+  dot **rides the wire** down. Role nodes stay cobalt.
+- **Contact**: a placeholder lime node (previews the planned Section 5 convergent node).
+- **Fallbacks**: `prefers-reduced-motion` + `< lg` → no traveler; the four static lime dots
+  remain (the recurring-anchor motif).
+
+**Output** —
+- New: `components/thread/anchorStore.ts`, `LimeThread.tsx` (rewrite), `ContactAnchor.tsx`.
+- Registrations: `NeuralPipeline.tsx` (result node), `OrbitalProjects.tsx` (orbit core),
+  `ExperienceTimeline.tsx` (spine "now" + waypoint, running chip removed), `app/page.tsx`
+  (contact node).
+- Verified: `tsc` clean; `next build` passes; screenshots confirm at-rest single dots +
+  mid-scroll traveler/trail. `main` untouched — awaiting the user's keep/revert call.
 
 ---
 
