@@ -63,7 +63,7 @@ export default function LimeThread() {
       if (s.lastScrollY < 0) s.lastScrollY = scrollY;
       if (Math.abs(scrollY - s.lastScrollY) > 0.5) s.lastMoveT = now;
       s.lastScrollY = scrollY;
-      const idle = now - s.lastMoveT > 90;
+      const idle = now - s.lastMoveT > 150;
 
       if (anchors.length < 2) {
         if (dotRef.current) dotRef.current.style.opacity = "0";
@@ -103,7 +103,7 @@ export default function LimeThread() {
         return;
       }
 
-      // nearest dock + its viewport-center fraction (drives the dwell band)
+      // nearest dock (for the end-snap + bloom)
       const docks = stations.filter((x) => x.dock);
       let nd = docks[0] ?? stations[0];
       let best = Infinity;
@@ -114,7 +114,6 @@ export default function LimeThread() {
           nd = d;
         }
       }
-      const ndF = nd.vpy / vh;
 
       // target: ride the trace tip while it's on screen (experience), else the polyline
       const onTip = !!track && track.onScreen;
@@ -144,20 +143,22 @@ export default function LimeThread() {
           tx = a.vpx + (b.vpx - a.vpx) * t;
           ty = a.vpy + (b.vpy - a.vpy) * t;
         }
+        // settled: glide the last bit onto the nearest dot, then fade into it
+        if (idle) {
+          tx = nd.vpx;
+          ty = nd.vpy;
+        }
       }
 
-      // ease toward target (snap first frame; glue tighter while riding the tip)
-      const k = s.primed ? (onTip ? 0.45 : 0.3) : 1;
+      // slow, smooth glide (snap on the first frame only)
+      const k = s.primed ? 0.2 : 1;
       s.x += (tx - s.x) * k;
       s.y += (ty - s.y) * k;
       s.primed = true;
 
-      // visibility: dissolve when idle; while moving, hide whenever a section's dot is
-      // comfortably in view (dwell) and only emerge during the between-section travel.
-      // Experience (riding the tip) stays visible so the lime tracks the blue line.
-      const dwelling = ndF >= 0.3 && ndF <= 0.72;
-      const opTarget = idle ? 0 : onTip ? 0.82 : dwelling ? 0 : 0.82;
-      s.op += (opTarget - s.op) * 0.3;
+      // visible the whole way; gently fades only once settled at a dot
+      const opTarget = idle ? 0 : 0.82;
+      s.op += (opTarget - s.op) * 0.1;
 
       // bloom once when settling into the nearest dock
       if (idle && !s.wasIdle && nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });

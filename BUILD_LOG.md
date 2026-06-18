@@ -39,6 +39,12 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-18** — (Experiment, `feature/lime-thread`) v3 harden overshot — the dot felt too
+  snappy and the dwell-band made it **vanish far from the dots before arriving**. User wanted the
+  v2 feel back: slow, smooth, simple, travels all the way to each dot, snaps only a little at the
+  end. → v4 re-tune: removed the dwell-band (visible the whole travel), slowed the glide (ease
+  0.2) + gentle fade (decay 0.1), and added an **end-snap** onto the nearest dot at idle so it
+  always dissolves *on* a dot. Kept the experience trace-sync (gap 0). → Entry 022.
 - **2026-06-18** — (Experiment, `feature/lime-thread`) **Keep & harden** the lime thread.
   Three fixes: **snappier dissolve** (frame-delta idle at 90ms + faster op decay, ignoring
   momentum/settle scroll events that lagged it to ~1s); **experience sync** — the lime dot now
@@ -210,6 +216,33 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 022 — Lime thread: re-tune to the v2 feel (slow, smooth, lands on the dot)
+
+**Prompt** — The v3 harden felt wrong: "snapping is too much," the dot "disappears before
+arriving at the dot," "far from the main dots." Liked the previous version — "slow smooth simple
+clean." Snap only a little at the end, smoothly.
+
+**Flow** — One-file re-tune of `LimeThread.tsx`. Verified probes (gentle fade; experience sync
+still gap 0) + a mid-scroll capture showing the dot gliding all the way to the orbit core, then
+settling into it. `tsc` + `next build` clean. Branch only.
+
+**Decisions** —
+- **Removed the dwell-band** (the main villain): visibility back to `idle ? 0 : 0.82`, so the dot
+  stays visible the whole way to each dot instead of vanishing mid-travel.
+- **Slowed it down**: position ease `0.2` (was 0.3/0.45), op decay `0.1` (was 0.3), idle `150ms`
+  (was 90) — slow, smooth fade, not a snap.
+- **End-snap**: at idle the dot eases onto the **nearest dock's exact center**, so it always
+  dissolves *on* a main dot, never far away. Experience (riding the tip) fades in place on the
+  spine instead.
+- **Kept** the experience trace-tip follow (gap 0) and the comet trail.
+
+**Output** —
+- `components/thread/LimeThread.tsx` only (`anchorStore.ts` + the experience tip marker unchanged).
+- Verified: `tsc` clean; `next build` passes; gentle dissolve + 0px trace sync + visible travel to
+  the dot confirmed. `main` untouched.
 
 ---
 
