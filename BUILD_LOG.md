@@ -27,7 +27,9 @@ reproducible. `←` marks where we are.
 | 6 | `/impeccable shape` + polish experience | More-life pass on Section 4 — card hover-zoom, year pulled to an outside-left gutter, role-icon spine nodes, removed the autonomous spine pulse | ✅ done |
 | 7 | `/impeccable craft` — experience pop + shine | Scroll-in "pop" on the timeline cards (scale 0.96→1 + rise), plus a faint diagonal cool-white hover shine across the card surface | ✅ done |
 | 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done |
-| 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done  ← |
+| 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done |
+| 10 | `/impeccable craft` — experience→contact transition | "Curtain-flavored" scroll-driven reveal of Section 5 (from a reference footer's curtain reveal): synapses draw + node + content unfurl top→down on scroll, latched, soft mask wipe; thread/convergence kept intact (Option C) | ✅ done |
+| 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done  ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -39,6 +41,45 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-19** — Footer felt clumsy / too tall → **redesign, shorter**. Collapsed the 3-zone
+  two-line-stack layout into a compact centered colophon: live `● session complete _` line over a
+  single wrapping credit line (`© · built with ♥ · Next.js · Canvas · GSAP`), back-to-top a bare `↑`
+  circle pinned bottom-right on desktop / inline-centered on mobile. Dropped "All rights reserved" +
+  the "rerun" label. Height ~180px → **101px**. Contact + footer still share one screen, all revealed.
+  → amends Entry 030.
+- **2026-06-19** — Footer follow-up. (1) Too big a gap between the contact and the footer — at the
+  page bottom the contact was pushed up; **"scrolling to the end should not hide the last contact,
+  not even a bit"** (loses the recruiter's context/CTA). Fix: removed Entry 029's `h-[24vh]` contact
+  runway spacer (the footer is the runway now) + restored `py-24` → contact content + footer now share
+  one screen at rest (desktop: content [21–584px] + footer [680–860px]; mobile: only the decorative
+  node glow clips, all CTA/channels + footer visible). The `center center` reveal stays reachable +
+  still plays on scroll. (2) Make `session complete` more live → added a **blinking terminal cursor**
+  (`_`, framer step-blink, `useReducedMotion` → static), kept ink/cobalt not lime (one-live-signal).
+  → amends Entries 029/030.
+- **2026-06-19** — Wanted a simple footer like a pasted reference (the cinematic footer's bottom bar:
+  `© left · crafted-with-♥ pill center · ↑ back-to-top right`), with portfolio details (rights,
+  built-with-love, etc.); asked for options first, keep it simple/low-token. Showed 3 options; picked
+  **B "Inference colophon"**. Built it debranded of the reference's glass pill + giant text (both
+  banned by DESIGN.md) and on-concept: a machine-voice `● session complete` line, `built with ♥` +
+  tech credit, `↑ rerun` back-to-top. **One-live-signal fix:** the ♥ is the only lime; the status
+  dot is cobalt (done/structural, not live). → Entry 030.
+- **2026-06-19** — After Option C shipped: **"I can't see anything working, same as before."** Correct.
+  Diagnosed: in normal flow the reveal finished during *entry* while the content was still low /
+  off-screen (the page bottoms out right as the content reaches center, so the reveal completed
+  ~300px before the content was where the eye looks). Picked **"flow + runway"**: retargeted
+  `useScroll` to the **content block** (not the section) with `["start end","center center"]`, and
+  added a small **trailing spacer** (`h-[24vh]`) so "content centered" is reachable. Now the content
+  rises through the middle of the viewport while it unfurls — visibly staggered (node→status→
+  headline→prose→CTA→channels), thread still docks. → Entry 029.
+- **2026-06-19** — Wanted the experience→contact transition to feel like a reference component
+  the user pasted (a "cinematic/curtain footer"): take **only** its transition + the slow reveal
+  of content while transitioning, ignore everything else (its footer content, shadcn setup, etc.).
+  The reference's literal move is a `position: fixed` panel behind a `clip-path` curtain — which
+  **conflicts** with the lime thread (it docks the dot using `rect.top + scrollY`, assuming the node
+  is in normal flow; pinning breaks that). I rated three resolutions for fit; user picked **Option C
+  (9/10): keep the node in flow, drive the reveal from scroll** so the convergence climax + no-jank
+  bar are preserved while still reading as a curtain-flavored reveal. Reveal confirmed
+  **scroll-driven + latched** (unfurls while transitioning, never un-reveals). → Entry 029.
 - **2026-06-19** — Thread bug: scrolling back **up** from contact, the dot rejoined the experience
   spine mid-way instead of riding the trace tip. Cause = my earlier descent-fix (`approachingContact`)
   had no direction guard, so it suppressed the tip-follow on the way up too. Fixed with a **sticky
@@ -257,6 +298,77 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 030 — Footer: the "inference colophon"
+
+**Prompt** — `/impeccable craft` "design a simple footer, like this [reference image of the cinematic
+footer's bottom bar]. Add portfolio details (license, rights, built with love, anything else). Give
+design options first, then implement; keep it simple, low-token."
+
+**Flow** — Setup already loaded this session (PRODUCT/DESIGN/brand). Showed 3 text+ASCII options
+(faithful 3-zone / inference colophon / bare one-liner); user picked **B**. Built `SiteFooter.tsx`,
+wired one import into `app/page.tsx`. `tsc` + `next build` clean; verified in-browser (browse) at
+desktop + mobile, back-to-top scrolls to 0, no new console errors.
+
+**Decisions** — (1) **Debrand the reference**: dropped the glass pill (glassmorphism-as-default ban)
+and the giant background text + glow ("glow belongs to the network, not chrome"). Flat, hairline-top,
+mono machine voice. (2) **One-live-signal:** the ♥ ("built with love" = the brand's *alive*) is the
+only lime mark; the `● session complete` status dot is **cobalt** (a done/structural status, not
+live). (3) On-concept copy: `● session complete` + `↑ rerun` back-to-top (scroll to top = re-run the
+inference). (4) Tech credit `Next.js · Canvas · GSAP` doubles as a work-sample for the engineer
+reader. (5) One gentle motion touch: a slow lime ♥ heartbeat (framer `motion.span`, `useReducedMotion`
+→ static) — a callback to the reference's heartbeat, kept calm per the user's slow/smooth taste.
+(6) a11y: `aria-hidden` ♥ + `sr-only "love"` so SR reads "built with love"; back-to-top `aria-label`,
+keyboard-focusable; year hardcoded `2026` (static-prerender safe). ContactSection + thread untouched.
+
+**Output** — `components/footer/SiteFooter.tsx` (new) + `app/page.tsx` (one import + render).
+`next build` clean (201 kB). On `feature/lime-thread`.
+
+**Follow-up (same day)** — (1) Closed the contact↔footer gap: removed Entry 029's `h-[24vh]` contact
+spacer + restored `py-24` so the contact and footer share one screen at rest (the contact is never
+scrolled out of view — recruiter context stays put). (2) `session complete` gained a **blinking
+terminal cursor** (`_`) for a small "alive" pulse; ink/cobalt, not lime (one-live-signal). See the
+idea thread.
+
+---
+
+## Entry 029 — Experience→contact: curtain-flavored scroll reveal (Section 5)
+
+**Prompt** — `/impeccable craft` "I want the last contact page transition like this [pasted a
+'cinematic/curtain footer' reference] — only the transition from experience→contact and the slow
+reveal of content while transitioning; ignore everything else in that prompt. Ask before
+implementing; show the plan." (caveman session.)
+
+**Flow** — Read the reference: a `position: fixed` panel behind a `clip-path` curtain + GSAP
+ScrollTrigger `scrub` reveals. Flagged the conflict: pinning breaks `LimeThread`'s dock math
+(`docCenterY = rect.top + scrollY` assumes normal flow). Confirmed two decisions with the user
+(reveal = scroll-driven + **latched**; approach = **Option C**, rated 9/10 — keep the node in flow,
+reveal from scroll, soft curtain mask). Reworked `ContactSection.tsx` only; `tsc` + `next build`
+clean; verified in-browser (browse): opacities 0→1 across the entry scroll, **latch holds on
+scroll-up**, all 6 rows = opacity 1 at the page-bottom rest, console adds nothing new (the framer
+`useScroll` "non-static container" warning is **pre-existing/global** — container defaults to the
+static `<html>`; `ExperienceTimeline` already triggers it; `warnOnce` dedupes).
+
+**Decisions** — (1) Replaced the one-shot `whileInView` batch with a **scroll-progress-driven**
+reveal: `useScroll` → a `useMotionValue` latched to the running max via `useMotionValueEvent` (never
+un-reveals). (2) Per-element overlapping windows (synapses pathLength, then node, status, headline,
+prose, CTA, channels) via a small `useReveal` helper + a soft `useMotionTemplate` mask wipe = the
+"curtain." (3) **Reveal styles live on wrappers, not the CTA `<a>`** (a framer inline transform would
+override its Tailwind `hover:scale`); **node is opacity-only** (scaling it would wobble the thread's
+live dock target → jank). (4) **Default-visible** gate: `active = mounted && !reduce`, so SSR / no-JS
+/ reduced-motion render static + ungated (no blank ship); latch seeded from current scroll on mount
+(deep-link/reload-scrolled). (5) **Visibility fix (see idea thread):** target the **content block**
+with `["start end","center center"]` so the reveal completes when the *content* is centered (where
+the eye is), not when the section top passes — plus an `h-[24vh]` trailing spacer so that point is
+reachable (contact is the last section; without runway the page bottoms out mid-reveal). Verified:
+content rises bottom→center while staggering in; rests ~43% with all rows at full opacity; thread
+still docks. No thread changes; convergence climax intact.
+
+**Output** — `components/contact/ContactSection.tsx` (only code file; `py-24`→`pt-24` + trailing
+spacer for runway). `next build` clean (201 kB, was 199 kB; +2 kB for the framer scroll hooks). On
+`feature/lime-thread`.
 
 ---
 

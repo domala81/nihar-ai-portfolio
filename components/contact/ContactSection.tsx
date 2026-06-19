@@ -1,7 +1,17 @@
 "use client";
 
-import { useState } from "react";
-import { motion, useReducedMotion, type Variants } from "framer-motion";
+import { useEffect, useRef, useState } from "react";
+import {
+  cubicBezier,
+  motion,
+  useMotionTemplate,
+  useMotionValue,
+  useMotionValueEvent,
+  useReducedMotion,
+  useScroll,
+  useTransform,
+  type MotionValue,
+} from "framer-motion";
 import { Mail } from "lucide-react";
 import ContactAnchor from "@/components/thread/ContactAnchor";
 
@@ -14,9 +24,26 @@ const EMAIL = "ndomala81@gmail.com";
  * (registered as the "contact" anchor in ContactAnchor), faint cobalt synapses converge into
  * it from above, and a restrained terminal block offers the direct lines. No form by design —
  * recruiters distrust no-confirmation forms; a real email + handles is the higher-trust path.
+ *
+ * The reveal is "curtain-flavored": as the section scrolls in (the experience→contact
+ * transition), a soft mask wipe lifts down the stack while the synapses draw and the content
+ * unfurls top→down, all driven by scroll progress and synced to the thread gliding onto the
+ * node. It is *latched* — progresses with scroll, never un-reveals on scroll-up. The section
+ * stays in normal document flow so the thread's docking math is untouched. Default markup ships
+ * fully visible (SSR / no-JS / reduced-motion); the reveal only enhances once mounted on the
+ * client with motion allowed.
  */
 
-const EASE = [0.22, 1, 0.36, 1] as const;
+const EASE_FN = cubicBezier(0.22, 1, 0.36, 1);
+
+/** Scroll-driven reveal for one element: fades up (opacity 0→1, y 16→0) over [start,end]. */
+function useReveal(p: MotionValue<number>, start: number, end: number) {
+  const opacity = useTransform(p, [start, end], [0, 1], { ease: EASE_FN });
+  const y = useTransform(p, [start, end], [16, 0], { ease: EASE_FN });
+  return { opacity, y };
+}
+
+const HEADING_SIZE = "clamp(1.75rem, 4vw, 2.75rem)";
 
 type Channel = {
   label: string;
@@ -41,28 +68,53 @@ const CHANNELS: Channel[] = [
 const FAN_X = [6, 28, 50, 72, 94];
 const CONVERGE = { x: 50, y: 72 };
 
-const container: Variants = {
-  hidden: {},
-  show: { transition: { staggerChildren: 0.09, delayChildren: 0.04 } },
-};
-
-const item: Variants = {
-  hidden: { opacity: 0, y: 16 },
-  show: { opacity: 1, y: 0, transition: { duration: 0.55, ease: EASE } },
-};
-
-const draw: Variants = {
-  hidden: { pathLength: 0, opacity: 0 },
-  show: {
-    pathLength: 1,
-    opacity: 1,
-    transition: { duration: 1.1, ease: EASE },
-  },
-};
-
 export default function ContactSection() {
   const reduce = useReducedMotion();
   const [copied, setCopied] = useState(false);
+  const [mounted, setMounted] = useState(false);
+
+  const contentRef = useRef<HTMLDivElement>(null);
+
+  // Scroll progress keyed to the CONTENT block (not the section): 0 as the content starts
+  // entering (its top at viewport bottom) → 1 as the content is centered on screen. So the
+  // reveal plays while the content rises through the middle of the viewport, where the eye is,
+  // instead of finishing off-screen during entry. The footer below provides the runway that
+  // makes "content centered" reachable; at rest the content sits in the upper viewport with the
+  // footer beneath it (both visible — the contact is never scrolled out of view).
+  const { scrollYProgress } = useScroll({
+    target: contentRef,
+    offset: ["start end", "center center"],
+  });
+
+  // Latched reveal: tracks the max progress so content stays revealed (never un-reveals).
+  const revealed = useMotionValue(0);
+  useMotionValueEvent(scrollYProgress, "change", (v) => {
+    if (v > revealed.get()) revealed.set(v);
+  });
+
+  // Client-only enhancement. Default markup ships fully visible (SSR / no-JS / reduced motion);
+  // the reveal only attaches after mount. Seed the latch from current progress so a reload or
+  // deep-link while already scrolled to contact shows the content instead of staying hidden.
+  useEffect(() => {
+    setMounted(true);
+    revealed.set(scrollYProgress.get());
+  }, [revealed, scrollYProgress]);
+
+  const active = mounted && !reduce;
+
+  // Per-element reveal windows over the latched progress (overlapping top→down stagger).
+  const syn = useTransform(revealed, [0, 0.5], [0, 1], { ease: EASE_FN });
+  const nodeOpacity = useTransform(revealed, [0.1, 0.45], [0, 1], { ease: EASE_FN });
+  const statusR = useReveal(revealed, 0.3, 0.6);
+  const headR = useReveal(revealed, 0.42, 0.75);
+  const proseR = useReveal(revealed, 0.55, 0.85);
+  const ctaR = useReveal(revealed, 0.68, 0.95);
+  const chR = useReveal(revealed, 0.78, 1);
+
+  // Curtain-flavored soft mask wipe: a fade edge that lifts down the stack as it reveals.
+  // Overshoots past 100% so the resting state is fully opaque (fully visible).
+  const maskPos = useTransform(revealed, [0, 0.6], [10, 130], { ease: EASE_FN });
+  const maskImage = useMotionTemplate`linear-gradient(to bottom, #000 0%, #000 ${maskPos}%, transparent calc(${maskPos}% + 16%))`;
 
   const copyEmail = async () => {
     let ok = false;
@@ -101,16 +153,14 @@ export default function ContactSection() {
       className="min-h-contact border-t border-border-soft px-6 py-24 sm:px-10"
     >
       <motion.div
+        ref={contentRef}
         className="mx-auto flex w-full max-w-2xl flex-col items-center text-center"
-        variants={container}
-        initial={reduce ? false : "hidden"}
-        whileInView={reduce ? undefined : "show"}
-        viewport={{ once: true, margin: "0px 0px -12% 0px" }}
+        style={active ? { maskImage, WebkitMaskImage: maskImage } : undefined}
       >
         {/* Convergent node — faint cobalt synapses fan in and meet the lime "me" dot. */}
         <motion.div
-          variants={item}
           className="relative mx-auto h-32 w-full max-w-xs"
+          style={active ? { opacity: nodeOpacity } : undefined}
         >
           <svg
             aria-hidden
@@ -127,16 +177,7 @@ export default function ContactSection() {
             </defs>
             {FAN_X.map((x) => {
               const d = `M ${x} 4 Q ${x} 46 ${CONVERGE.x} ${CONVERGE.y}`;
-              return reduce ? (
-                <path
-                  key={x}
-                  d={d}
-                  fill="none"
-                  stroke="url(#conv-fade)"
-                  strokeWidth={1}
-                  vectorEffect="non-scaling-stroke"
-                />
-              ) : (
+              return active ? (
                 <motion.path
                   key={x}
                   d={d}
@@ -144,7 +185,16 @@ export default function ContactSection() {
                   stroke="url(#conv-fade)"
                   strokeWidth={1}
                   vectorEffect="non-scaling-stroke"
-                  variants={draw}
+                  style={{ pathLength: syn, opacity: syn }}
+                />
+              ) : (
+                <path
+                  key={x}
+                  d={d}
+                  fill="none"
+                  stroke="url(#conv-fade)"
+                  strokeWidth={1}
+                  vectorEffect="non-scaling-stroke"
                 />
               );
             })}
@@ -156,45 +206,46 @@ export default function ContactSection() {
         </motion.div>
 
         <motion.p
-          variants={item}
+          style={active ? statusR : undefined}
           className="font-mono text-[0.8125rem] tracking-[0.04em] text-ink-muted"
         >
           <span className="text-live">●</span> inference_status: ready
         </motion.p>
 
         <motion.h2
-          variants={item}
+          style={active ? { ...headR, fontSize: HEADING_SIZE } : { fontSize: HEADING_SIZE }}
           className="mt-4 text-balance font-sans font-semibold tracking-tightish text-ink"
-          style={{ fontSize: "clamp(1.75rem, 4vw, 2.75rem)" }}
         >
           Ready to solve your problem next.
         </motion.h2>
 
         <motion.p
-          variants={item}
+          style={active ? proseR : undefined}
           className="mt-4 max-w-measure text-pretty leading-relaxed text-ink-muted"
         >
           Open to AI Systems Engineering roles. The fastest path is a direct
           line.
         </motion.p>
 
-        {/* Primary CTA — cobalt hero-style button; hover = border glow + card-style shine (no fill). */}
-        <motion.a
-          variants={item}
-          href="mailto:ndomala81@gmail.com"
-          className="group relative mt-9 inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.2] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
-        >
-          <span
-            aria-hidden
-            className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(125deg,rgba(226,235,255,0.12)_0%,rgba(226,235,255,0.04)_30%,transparent_60%)] opacity-0 transition-opacity duration-300 ease-out-quint group-hover:opacity-100 motion-reduce:transition-none"
-          />
-          <Mail aria-hidden className="relative z-10 h-4 w-4" />
-          <span className="relative z-10">Say hello</span>
-        </motion.a>
+        {/* Primary CTA — reveal lives on the wrapper so the anchor keeps its CSS hover
+            transform (a framer inline transform would override hover:-translate/scale). */}
+        <motion.div style={active ? ctaR : undefined} className="mt-9">
+          <a
+            href="mailto:ndomala81@gmail.com"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.2] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+          >
+            <span
+              aria-hidden
+              className="pointer-events-none absolute inset-0 z-0 bg-[linear-gradient(125deg,rgba(226,235,255,0.12)_0%,rgba(226,235,255,0.04)_30%,transparent_60%)] opacity-0 transition-opacity duration-300 ease-out-quint group-hover:opacity-100 motion-reduce:transition-none"
+            />
+            <Mail aria-hidden className="relative z-10 h-4 w-4" />
+            <span className="relative z-10">Say hello</span>
+          </a>
+        </motion.div>
 
         {/* Direct channels — terminal listing. Email copies to clipboard; github/linkedin open. */}
         <motion.div
-          variants={item}
+          style={active ? chR : undefined}
           className="mt-9 w-fit text-left font-mono text-sm"
         >
           {CHANNELS.map((c) => {

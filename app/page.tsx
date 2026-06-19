@@ -3,6 +3,7 @@ import OrbitalProjects from "@/components/projects/OrbitalProjects";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
 import LimeThread from "@/components/thread/LimeThread";
 import ContactSection from "@/components/contact/ContactSection";
+import SiteFooter from "@/components/footer/SiteFooter";
 
 export default function Home() {
   return (
@@ -20,6 +21,9 @@ export default function Home() {
 
       {/* Section 5 — Convergent Output Node + direct-contact terminal. */}
       <ContactSection />
+
+      {/* Footer — "inference colophon" (copyright · build credit · back-to-top). */}
+      <SiteFooter />
     </main>
   );
 }
