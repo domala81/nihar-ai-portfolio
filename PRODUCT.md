@@ -26,13 +26,16 @@ Systems Engineer, and make it effortless to start a conversation.
 
 A single-page portfolio that frames a career as a deep-learning network: passions
 (input) flow through engineering and ML-stack layers (hidden) into shipped projects
-(output), converging on one "Inference Status: ready" contact node. The signature
-is an autonomous, always-animating neural-pipeline rendered on a single HTML5
-canvas, scrolling strictly vertically.
+(output), converging on one "Inference Status: ready" contact node. The page scrolls
+top→bottom; its signature is an autonomous, always-animating neural pipeline laid out
+**horizontally** (five columns, left→right) — a canvas synapse web with the nodes riding
+above it as DOM tokens for smooth interaction. The shipped projects then appear as a
+radial orbit around a single lime "me" node.
 
 Success looks like: a recruiter lands, understands the positioning within the hero,
-scrolls the pipeline, scans 3-4 case studies with hard metrics, and opens the
-contact form, without ever feeling lost, bored, or impressed-but-confused.
+scrolls the pipeline, browses the project orbit and the experience timeline (each with
+hard metrics), and opens the contact node, without ever feeling lost, bored, or
+impressed-but-confused.
 
 ## Brand Personality
 

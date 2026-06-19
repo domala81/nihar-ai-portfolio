@@ -39,6 +39,15 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-19** — Asked to sync the docs to the as-built brand/design (they drift while
+  building). → Updated `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` to the shipped reality:
+  page scrolls top→bottom but Section 2 is **horizontal**; the network is a **canvas/DOM
+  hybrid** (synapses + packets + glows on canvas, **nodes are DOM tokens**) — corrected the
+  old "nodes never DOM" hard constraint; **hover/active = cobalt**, lime reserved for the
+  "me"/output node + the one impact metric; documented the **project orbit** (Section 3) +
+  the **experience "Signal Trace"** (Section 4) + the card hover-pop/diagonal-shine; fixed
+  the Geist-not-Inter font typo + the folder map. The lime thread was left out (branch-only
+  experiment, not yet decided). → Entry 024.
 - **2026-06-18** — (Experiment, `feature/lime-thread`) v4 still off: the end-snap pulled the dot
   to the big green dot on every stop, and projects→experience was a hard sub-second snap.
   Measured the cause — the loop chased anchors' **viewport** positions, which dive to the screen
@@ -224,6 +233,34 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 024 — Docs sync: PRODUCT/DESIGN/CLAUDE to the as-built design
+
+**Prompt** — "update the product.md and other docs with the current brand design things and
+details, as some keep changing as I build."
+
+**Flow** — Read the docs vs the shipped code, fixed the factual drifts. No code changes.
+
+**Decisions** — Synced three docs to reality:
+- **Horizontal Section 2 / vertical page:** killed "scrolling strictly vertically" in
+  PRODUCT.md + DESIGN.md; the page scrolls top→bottom, the Section 2 network is horizontal.
+- **Canvas/DOM hybrid:** the original "every node + synapse on canvas, never DOM" was false —
+  synapses/packets/glows are canvas, **nodes are DOM tokens** (`NodeToken`, Framer). Updated
+  DESIGN.md's signature component + Don'ts and CLAUDE.md's hard constraint #1/#2.
+- **Color logic:** hover/active brightens **cobalt**, not lime; lime is reserved for the
+  "me"/result node + the one impact metric. Rewrote the One Live Signal Rule + the lime
+  description.
+- **New components documented:** the project orbit (Section 3) and the experience "Signal
+  Trace" (Section 4) as signature components; the card hover-pop + diagonal-shine treatment.
+- **Misc:** Geist (not "Inter") in the Overview; CLAUDE folder map now lists
+  `components/projects` + `components/experience`; the Framer/icons stack lines.
+- **Left out:** the lime "me" thread (branch-only experiment, undecided — not baked into the
+  design system yet).
+
+**Output** — `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md`. Committed on `feature/lime-thread` (the
+content is main-valid; merges along or can be re-applied to main if the branch is dropped).
 
 ---
 

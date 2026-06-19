@@ -23,15 +23,19 @@ app/
   globals.css           Tailwind + global styles
 components/
   Hero.tsx              typographic hero section
-  pipeline/
-    NeuralPipeline.tsx  canvas animation + interaction core (signature feature)
+  pipeline/             Section 2 — neural pipeline (canvas synapses + DOM node tokens)
+    NeuralPipeline.tsx  canvas synapse/packet loop + DOM node layout (signature feature)
     PipelineContent.tsx layout wrapper for the pipeline
-    DetailCard.tsx      Framer Motion tooltip overlays
-    NodeBadge.tsx       node label renderer
-    NodeToken.tsx       node display element
-    networkData.ts      graph structure + node definitions
+    DetailCard.tsx      Framer Motion glass detail card (node hover)
+    NodeBadge.tsx       node glyph (brand icon, or per-kind/per-id lucide glyph)
+    NodeToken.tsx       DOM node token (the circular interactive node)
+    networkData.ts      graph structure + node/project/role definitions (single source)
     iconData.ts         icon mappings
-public/resume.pdf       downloadable resume
+  projects/
+    OrbitalProjects.tsx Section 3 — radial project orbit + fixed detail panel + static fallback
+  experience/
+    ExperienceTimeline.tsx Section 4 — "Signal Trace" cobalt-spine timeline
+public/resume.pdf       downloadable resume (stub)
 scripts/gen-icons.mjs   icon generation helper
 ```
 
@@ -90,8 +94,9 @@ network is laid out horizontally).
 - **Tailwind CSS** for styling (custom dark theme — see colors below)
 - **GSAP (GreenSock)** — drives the canvas animation loop via `gsap.ticker`, and
   scroll-linked transitions via ScrollTrigger
-- **Framer Motion** — DOM overlays only
-- **Lucide React** (or raw SVG) for icons
+- **Framer Motion** — DOM overlays + the network node tokens, the project orbit, the
+  experience timeline, and card hover/scroll reveals
+- **Lucide React** (or raw SVG) for icons; **simple-icons** for brand glyphs
 
 Once scaffolded as a standard Next.js app, expect `npm run dev` / `build` / `lint`.
 
@@ -100,17 +105,21 @@ Once scaffolded as a standard Next.js app, expect `npm run dev` / `build` / `lin
 These are the non-obvious rules from the spec that shape every decision. Violating
 them defeats the purpose of the design:
 
-1. **Canvas is the renderer for the network; DOM is for overlays only.**
-   - Every node and synapse is painted onto a *single* `<canvas>` via 2D drawing
-     calls (`ctx.arc`, `ctx.lineTo`). Do **not** render nodes/synapses as individual
-     HTML or SVG elements — DOM bloat will kill performance.
-   - Framer Motion is used *exclusively* for DOM structural overlays: hero text
-     fades, glassmorphic layer bounding boxes, floating tooltip cards, and the final
-     CLI contact modal.
+1. **Canvas renders the synapse web; nodes are DOM tokens.** (Shipped architecture —
+   evolved from the original canvas-only plan; `NeuralPipeline.tsx` is the source of
+   truth.)
+   - The **synapse web, in-flight packets, and glows** are painted on a *single*
+     `<canvas>` via 2D calls (`ctx.arc`, `ctx.lineTo`). Do **not** move those to DOM/SVG.
+   - The **nodes** are DOM tokens (`NodeToken`, Framer Motion) positioned over the canvas
+     from the JS layout — a small, capped count, so no DOM bloat. This is what gives the
+     buttery hover/scale pop.
+   - Framer Motion also drives the other DOM overlays: hero fades, the glass detail card +
+     layer chips, the project orbit, the experience timeline, the contact node.
 
-2. **Network state lives in plain JS arrays of objects.** Nodes and in-flight data
-   packets are lightweight objects tracking vector math (`x`, `y`, target positions,
-   radius, alpha, interpolation state). No per-element React components for these.
+2. **Network/packet state lives in plain JS arrays of objects.** The layout and in-flight
+   packets track vector math (`x`, `y`, target positions, radius, alpha, interpolation
+   state). The node *tokens* read their position from that JS layout; the heavy per-frame
+   work (synapses, packets, glows) stays off the DOM.
 
 3. **The animation is autonomous.** Even with zero user interaction, data packets
    continuously fire down synapses top→bottom (forward pass) and flash back upward
@@ -133,11 +142,17 @@ them defeats the purpose of the design:
    A self-playing boot ignites the columns left→right, then converges into a top
    `● INFERENCE: LIVE` chip. Node-hover isolates the node, dims other lines, and pops
    a Framer Motion detail card (skill + metric, or project title + impact metric).
-3. **Case Studies** — 3–4 project cards in a recruiter-scannable TL;DR format
-   (Problem / Solution / Impact metrics / tech badges / Code + Demo buttons).
-4. **Experience Timeline** — vertical chronological line.
+3. **Projects ("Output layer")** — the shipped projects as a **radial orbit** around a
+   lime "me" core (slow spin, spotlight autoplay, proximity-open) with a fixed right
+   detail panel (Problem / Approach / Impact metric / tech badges / Code + Demo). Project
+   nodes are cobalt; only the core is lime. Degrades to a static stack of
+   recruiter-scannable case-study cards on mobile / reduced-motion.
+4. **Experience Timeline ("Signal Trace")** — vertical cobalt spine continuing the
+   network's synapse; role-icon nodes light cobalt as a scroll-drawn trace reaches them;
+   lifted cards (hover pop + diagonal shine, per-role glyph watermark), year in an
+   outside-left gutter, one lime "live" marker on the current role.
 5. **Convergent Output Node + Contact** — network converges into one glowing node;
-   clicking it reveals a CLI/terminal-styled contact form.
+   clicking it reveals a CLI/terminal-styled contact form. (Still a stub in `app/page.tsx`.)
 
 ## Theme
 
