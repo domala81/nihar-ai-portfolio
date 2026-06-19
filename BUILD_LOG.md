@@ -26,8 +26,8 @@ reproducible. `←` marks where we are.
 | 5 | `/impeccable shape` + build experience | Build Section 4 — "Signal Trace" experience timeline (cobalt spine, scroll-drawn trace + packet dot, lime `running` head) | ✅ done |
 | 6 | `/impeccable shape` + polish experience | More-life pass on Section 4 — card hover-zoom, year pulled to an outside-left gutter, role-icon spine nodes, removed the autonomous spine pulse | ✅ done |
 | 7 | `/impeccable craft` — experience pop + shine | Scroll-in "pop" on the timeline cards (scale 0.96→1 + rise), plus a faint diagonal cool-white hover shine across the card surface | ✅ done |
-| 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done  ← |
-| 9 | CLI contact (Section 5, planned) | Convergent output node + terminal contact form | ⬜ planned |
+| 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done |
+| 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done  ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -39,6 +39,30 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-19** — Thread bug: scrolling back **up** from contact, the dot rejoined the experience
+  spine mid-way instead of riding the trace tip. Cause = my earlier descent-fix (`approachingContact`)
+  had no direction guard, so it suppressed the tip-follow on the way up too. Fixed with a **sticky
+  scroll direction** (held through pauses); ascending re-grabs the left spine tip immediately and glides
+  onto it gently (slow, my taste). → Entry 028.
+- **2026-06-19** — `say_hello` CTA: wanted it off the terminal-prompt look but still on-theme,
+  asked for options. Picked **cobalt ghost button + card hover-shine** (transparent + cobalt
+  border, Geist "Say hello" + `ArrowUpRight`, hover glow/shine/lift). Node stays the only lime;
+  removed the now-unused `caret-blink` CSS. → Entry 027.
+- **2026-06-19** — Section 5 polish. (1) The lime thread's last leg (experience→contact) felt a
+  little fast: "start it a little before and move it a bit slowly, like the others." (2) The white
+  `say_hello` button looked totally off; redesign + show options for the 3-contact arrangement.
+  (3) Make the email **copyable** (not a redirect) since `say_hello` already does the mailto. → User
+  picked the **terminal-prompt-list** option (no button box; `> say_hello` prompt + a mono `>` listing).
+  Built: thread hands off to the contact glide ~0.85·vh earlier + gentler ease; the white button is
+  gone; email row click-copies with a lime `copied ✓`; github/linkedin stay external. → Entry 026.
+- **2026-06-19** — Section 5 (contact). User did the research themselves: top dev portfolios
+  (Brittany Chiang's most-cloned template) **skip the contact form** — recruiters distrust
+  no-confirmation forms and prefer a direct email + links they can use in their own client; forms
+  that exist pair with a visible direct-contact fallback. → Built it as a **no-form** node:
+  convergent lime node with faint cobalt synapses fanning in (echoes Section 2's converge-to-one),
+  a restrained `> say_hello` mailto + a mono `>` channel listing (email / github / linkedin). Asked
+  for terminal-literalness (chose restrained prompt, not a skeuomorphic terminal window) and whether
+  to draw the converging lines (yes). Résumé row skipped (PDF still a stub). → Entry 025.
 - **2026-06-19** — Asked to sync the docs to the as-built brand/design (they drift while
   building). → Updated `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` to the shipped reality:
   page scrolls top→bottom but Section 2 is **horizontal**; the network is a **canvas/DOM
@@ -233,6 +257,119 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 028 — Thread fix: ride the spine tip when scrolling back up
+
+**Prompt** — "Scrolled to contact then back up: the dot joins the timeline spine in the middle, not
+near the tip. Make it move a lot more left, not fast." (slow = the known taste.)
+
+**Flow** — Probed in-browser (the gotcha: global `scroll-behavior: smooth` made `scrollTo` animate, so
+discrete probes read positions the page never reached — disabling it per-probe fixed the readings).
+Added a temp debug hook to read the loop's live decision, confirmed `onTip` was being suppressed on the
+way up, fixed it, re-probed (dot now tracks the tip x→420), removed the debug. `next build` clean.
+
+**Decisions** — `LimeThread.tsx`: (1) **sticky scroll direction** `s.dir` (only updates on real
+movement, held through pauses — so a mid-scroll pause doesn't snap the dot back to center). (2) The
+descent-only `approachingContact` now carries `!goingUp`, so ascending no longer suppresses the tip
+follow. (3) Ascending, `onTip` engages the moment the tip is on screen (not just upper-third). (4)
+Gentle ease (k=0.085) for the leftward re-grab so it's slow. Descending behaviour unchanged.
+
+**Output** — `components/thread/LimeThread.tsx`. `next build` clean (199 kB). On `feature/lime-thread`.
+
+---
+
+## Entry 027 — say_hello CTA: cobalt ghost button (off the terminal look)
+
+**Prompt** — "Make say_hello a different design, not the same terminal. Ask options relevant to the
+whole folio / theme, then implement. Small change, minimize tokens."
+
+**Flow** — Offered 3 on-theme directions (cobalt ghost button / node-is-the-button / lime pill);
+user chose the **cobalt ghost button**. One-file change + a CSS cleanup. `next build` clean, screenshot
+confirmed.
+
+**Decisions** — Final: the CTA **matches the hero buttons in cobalt** — `border-infra bg-infra/10`,
+mono "Say hello" + leading lucide `Mail` icon. Hover = cobalt **border glow + card-style diagonal shine
+sweep** (no fill) + a 1px lift (the fill-on-hover pass was rejected as too harsh; a Geist ghost pass
+before that read bad).  Kept lime rare: the convergent node stays the
+only lime, so the CTA is cobalt (structure); #3B82F6 on near-black ≈ 5.5:1 (AA). Dropped the now-unused
+`caret-blink` keyframe.
+
+**Output** — `components/contact/ContactSection.tsx` (CTA), `app/globals.css` (removed `caret-blink`).
+`next build` clean (199 kB). On `feature/lime-thread`.
+
+---
+
+## Entry 026 — Contact polish: terminal-prompt CTA, click-to-copy email, slower thread last leg
+
+**Prompt** — Three asks on the just-built Section 5: the thread dot from experience→contact is a bit
+fast (start earlier, move slower, like the other legs); the white `say_hello` button is "totally off
+looking" — redesign it and show options for the 3-contact arrangement; and make the email copyable to
+clipboard (not a redirect), since `say_hello` already does the mailto.
+
+**Flow** — `/impeccable craft` in plan mode. Re-read the thread loop + anchor registry, then offered
+four layout options (terminal prompt list / neural node-chips / ghost command bar / branching synapse
+outputs) with ASCII previews. User chose the **terminal prompt list**. Built all three changes,
+verified in-browser (redesign screenshot, click-to-copy shows `copied ✓`, dot-position probe across the
+approach), `next build` clean.
+
+**Decisions** —
+- **Kill the white button.** The Instrument-White primary was right per DESIGN.md but jarring on the
+  dark finale. Replaced with a terminal prompt: `> say_hello` (lime `>` + ink text + blinking lime
+  caret), hover = lime underline-sweep + faint lime text-glow. No box. Restraint over a slab.
+- **Email = copy, not redirect.** `say_hello` owns the mailto; the email row is now a `<button>` that
+  copies the address (clipboard API → `execCommand` fallback so it survives insecure/denied contexts)
+  and flashes a lime `copied ✓` (aria-live). github/linkedin stay external links. Resolves the old
+  email-appears-twice redundancy too.
+- **Thread last leg, earlier + slower.** Root cause: the dot stayed glued to the experience trace tip
+  until the tip left the upper screen, by which point `scrollY` was already at the contact dock — so
+  the final hop rushed. Fix in `LimeThread.tsx`: hand off the tip ~0.85·vh before the contact dock
+  (`approachingContact`) so the center-glide carries the dot in over a long runway, with a gentler
+  ease (k 0.14 → 0.10) for that leg only. Probe confirms the dot holds the center band (x=720, y≈400)
+  the whole approach instead of diving.
+
+**Output** —
+- `components/contact/ContactSection.tsx` (prompt CTA, copy handler + `copied` state, channel rows as
+  button/link), `components/thread/LimeThread.tsx` (early contact handoff + softer ease).
+- Verified: `next build` clean (199 kB); copy shows `copied ✓` (DOM + screenshot); dot-probe shows
+  smooth center-band approach; redesign confirmed at desktop. On `feature/lime-thread`.
+
+---
+
+## Entry 025 — Contact (Section 5): convergent node + no-form terminal direct-contact
+
+**Prompt** — Resume context → "Build Section 5." On the submit-path question the user came back
+with research: the best dev portfolios skip the contact form (recruiters distrust no-confirmation
+forms; they want a direct email + links). "Plan this again using impeccable craft, modern clean, on
+brand, connect the dot from the top, subtle life, no AI slop. Ask design options then proceed."
+
+**Flow** — Routed brainstorm → `/impeccable craft`. Loaded PRODUCT/DESIGN + brand register; read the
+live tokens, the thread docking (`LimeThread` reads anchor rects), and the timeline's reveal pattern.
+Compact shape brief + two taste calls (terminal-literalness → restrained prompt; converging lines →
+yes). Got the real links from the user. Built the section, fixed node↔line alignment, verified at
+desktop/tablet/mobile. `next build` clean (199 kB first load).
+
+**Decisions** —
+- **No form, by design** (the user's research): lead with a real `mailto` + a visible mono channel
+  listing (email / github / linkedin), the higher-trust path for recruiters.
+- **Restrained terminal, not a window.** A skeuomorphic terminal (traffic-lights + fake typing) is
+  the "literal terminal" slop lane and would undercut the site's restraint pitch. Terminal voice
+  lives in the `>` prompt, the mono rows, and one blinking caret — exactly what DESIGN.md prescribes.
+- **Connect the dot from the top, two ways:** the page-spanning lime thread already docks onto the
+  contact anchor; added faint cobalt synapses fanning in to **converge on the lime node**, paying off
+  Section 2's "network converges to one output." Pinned the dot center exactly to the line vertex
+  (killed `ContactAnchor`'s `mb-10` offset so the synapses meet the dot, not empty space below it).
+- **Subtle life, slow taste:** staggered `whileInView` reveal reusing the timeline's ease
+  `[0.22,1,0.36,1]`, `pathLength` draw-in on the synapses, hover underline-sweep on channel rows,
+  slow blinking caret. Reduced-motion: everything static + visible (paths render plain, no blink).
+
+**Output** —
+- New `components/contact/ContactSection.tsx`; `app/globals.css` (caret-blink keyframe,
+  reduced-motion-safe); `app/page.tsx` (swapped the stub `<section>` for `<ContactSection />`,
+  dropped the now-unused `ContactAnchor` import there).
+- Verified: `next build` clean (199 kB); no console errors; node/synapse alignment + responsive
+  composition confirmed in-browser at 1440 / 768 / 390. On `feature/lime-thread`.
 
 ---
 

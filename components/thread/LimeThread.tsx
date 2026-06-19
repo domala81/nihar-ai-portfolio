@@ -36,6 +36,7 @@ export default function LimeThread() {
     lastMoveT: 0,
     wasIdle: true,
     primed: false,
+    dir: 1,
   });
 
   // Enable only on lg+ and when motion is allowed.
@@ -61,8 +62,12 @@ export default function LimeThread() {
 
       // idle = scroll position stopped changing (ignores momentum/settle events at same Y)
       if (s.lastScrollY < 0) s.lastScrollY = scrollY;
-      if (Math.abs(scrollY - s.lastScrollY) > 0.5) s.lastMoveT = now;
+      if (Math.abs(scrollY - s.lastScrollY) > 0.5) {
+        s.lastMoveT = now;
+        s.dir = scrollY < s.lastScrollY ? -1 : 1; // sticky: held through brief scroll pauses
+      }
       s.lastScrollY = scrollY;
+      const goingUp = s.dir < 0;
       const idle = now - s.lastMoveT > 150;
 
       if (anchors.length < 2) {
@@ -115,9 +120,21 @@ export default function LimeThread() {
         }
       }
 
-      // engage the experience tip only once it has risen into the upper screen, so it
-      // doesn't yank the dot down to the bottom edge as the section scrolls in
-      const onTip = !!track && track.onScreen && track.vpy < vh * 0.55;
+      // Final leg DOWN (experience → contact): hand off the tip early so the dot center-glides
+      // into the contact node over a long runway, instead of rushing across at the very end.
+      // Only while descending — going back up we want the tip (left spine) re-grabbed straight away.
+      const contactDock = docks[docks.length - 1];
+      const approachingContact =
+        !goingUp &&
+        !!contactDock &&
+        contactDock === nd &&
+        scrollY > contactDock.dockScroll - vh * 0.85;
+
+      // Engage the experience tip. Descending: only once it has risen into the upper screen, so it
+      // doesn't yank the dot to the bottom edge as the section scrolls in. Ascending: the moment the
+      // tip is on screen, so the dot glides left onto the spine tip instead of rejoining mid-spine.
+      const onTip =
+        !!track && track.onScreen && (goingUp || track.vpy < vh * 0.55) && !approachingContact;
 
       let tx: number, ty: number;
       if (onTip) {
@@ -163,8 +180,15 @@ export default function LimeThread() {
         }
       }
 
-      // soft glide (snap to target on the first frame only)
-      const k = s.primed ? 0.14 : 1;
+      // soft glide (snap to target on the first frame only). Gentler eases for the two long moves:
+      // descending into the contact node, and re-grabbing the left spine tip on the way back up.
+      const k = s.primed
+        ? approachingContact
+          ? 0.1
+          : goingUp && onTip
+            ? 0.085
+            : 0.14
+        : 1;
       s.x += (tx - s.x) * k;
       s.y += (ty - s.y) * k;
       s.primed = true;
