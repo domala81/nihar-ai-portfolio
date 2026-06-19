@@ -39,6 +39,14 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-18** — (Experiment, `feature/lime-thread`) v4 still off: the end-snap pulled the dot
+  to the big green dot on every stop, and projects→experience was a hard sub-second snap.
+  Measured the cause — the loop chased anchors' **viewport** positions, which dive to the screen
+  bottom as the next section enters. → v5: **document-space center-glide** (dot stays at
+  screen-center, slides to the next dot's column, no dive — same smooth feel as network→projects),
+  the experience tip engages only once it's risen into the upper screen (no bottom-edge yank), and
+  on stop the dot **fades in place** unless it's almost on a dot (then snaps the last bit). Softer
+  ease. → Entry 023.
 - **2026-06-18** — (Experiment, `feature/lime-thread`) v3 harden overshot — the dot felt too
   snappy and the dwell-band made it **vanish far from the dots before arriving**. User wanted the
   v2 feel back: slow, smooth, simple, travels all the way to each dot, snaps only a little at the
@@ -216,6 +224,37 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 023 — Lime thread: document-space center-glide + fade-in-place
+
+**Prompt** — The dot felt weird: it snaps to the big green dot when stopped (want it to fade in
+place, only snap if almost near), and projects→experience is a hard sub-second snap (want it smooth
+like network→projects). "Plan properly, ask if doubts."
+
+**Flow** — Diagnosed first: measured the trace tip entering at the **screen bottom** (vpY 904→476)
+— the loop interpolated *viewport* positions, so the target dives to the edge as the next section
+enters = the jerk. Asked one question (between-section feel → user chose **center-glide**). Rewrote
+the targeting; verified the dot now holds ~screen-center across the transition (y 441–468, no dive)
+and fades in place mid-travel (frozen at y 450, op decaying, no snap). `tsc` + `next build` clean.
+
+**Decisions** —
+- **Document-space center-glide:** interpolate the target in document Y then subtract `scrollY`.
+  Since `dockScroll = docCenterY − vh/2`, the dot pins to viewport center and glides sideways to the
+  next dot's column — no diving to the edge, identical smoothness for every transition regardless of
+  section height. (x interpolates directly; it doesn't scroll.)
+- **Tip handoff:** the experience tip-follow now engages only when the tip has risen to `vpY <
+  0.55·vh`, so it no longer yanks the dot to the bottom edge as experience enters; the center-glide
+  has the dot at center ≈ the tip there, so it's continuous.
+- **Fade in place + near-snap:** on stop, if the dot is within ~70px of the nearest dock it eases
+  on + blooms; otherwise it **freezes where it is** and fades. No more travel to the big dot.
+- **Softer ease** (0.14) for a gentler glide.
+
+**Output** —
+- `components/thread/LimeThread.tsx` only.
+- Verified: `tsc` clean; `next build` passes; probes confirm center-band travel (no dive) + fade in
+  place; mid-scroll capture clean. `main` untouched.
 
 ---
 

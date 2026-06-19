@@ -115,21 +115,25 @@ export default function LimeThread() {
         }
       }
 
-      // target: ride the trace tip while it's on screen (experience), else the polyline
-      const onTip = !!track && track.onScreen;
+      // engage the experience tip only once it has risen into the upper screen, so it
+      // doesn't yank the dot down to the bottom edge as the section scrolls in
+      const onTip = !!track && track.onScreen && track.vpy < vh * 0.55;
+
       let tx: number, ty: number;
       if (onTip) {
         tx = track!.vpx;
         ty = track!.vpy;
       } else {
+        // center-glide: interpolate the target in DOCUMENT space then convert to viewport,
+        // so the dot stays at screen-center and slides to the next dot's column (no diving)
         const first = stations[0];
         const last = stations[stations.length - 1];
         if (scrollY <= first.dockScroll) {
           tx = first.vpx;
-          ty = first.vpy;
+          ty = first.docCenterY - scrollY;
         } else if (scrollY >= last.dockScroll) {
           tx = last.vpx;
-          ty = last.vpy;
+          ty = last.docCenterY - scrollY;
         } else {
           let i = 0;
           while (
@@ -141,27 +145,36 @@ export default function LimeThread() {
           const b = stations[i + 1];
           const t = (scrollY - a.dockScroll) / Math.max(1, b.dockScroll - a.dockScroll);
           tx = a.vpx + (b.vpx - a.vpx) * t;
-          ty = a.vpy + (b.vpy - a.vpy) * t;
-        }
-        // settled: glide the last bit onto the nearest dot, then fade into it
-        if (idle) {
-          tx = nd.vpx;
-          ty = nd.vpy;
+          ty = a.docCenterY + (b.docCenterY - a.docCenterY) * t - scrollY;
         }
       }
 
-      // slow, smooth glide (snap on the first frame only)
-      const k = s.primed ? 0.2 : 1;
+      // when stopped: fade in place — unless the dot is almost on a dot, then snap onto it
+      let snapped = false;
+      if (idle) {
+        const dist = Math.hypot(s.x - nd.vpx, s.y - nd.vpy);
+        if (dist < 70) {
+          tx = nd.vpx;
+          ty = nd.vpy;
+          snapped = true;
+        } else {
+          tx = s.x;
+          ty = s.y;
+        }
+      }
+
+      // soft glide (snap to target on the first frame only)
+      const k = s.primed ? 0.14 : 1;
       s.x += (tx - s.x) * k;
       s.y += (ty - s.y) * k;
       s.primed = true;
 
-      // visible the whole way; gently fades only once settled at a dot
+      // visible the whole way; gently fades when stopped
       const opTarget = idle ? 0 : 0.82;
       s.op += (opTarget - s.op) * 0.1;
 
-      // bloom once when settling into the nearest dock
-      if (idle && !s.wasIdle && nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });
+      // bloom once, only when it actually settled onto a dot
+      if (idle && !s.wasIdle && snapped && nd) setBloom({ x: nd.vpx, y: nd.vpy, key: now });
       s.wasIdle = idle;
 
       // comet trail follow chain
