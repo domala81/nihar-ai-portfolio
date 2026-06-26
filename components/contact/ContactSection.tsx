@@ -14,8 +14,7 @@ import {
 } from "framer-motion";
 import { Mail } from "lucide-react";
 import ContactAnchor from "@/components/thread/ContactAnchor";
-
-const EMAIL = "ndomala81@gmail.com";
+import { personal } from "@/data";
 
 /**
  * Section 5 — The Convergent Output Node & Contact.
@@ -55,13 +54,9 @@ type Channel = {
 };
 
 const CHANNELS: Channel[] = [
-  { label: "email", value: EMAIL, copy: true },
-  { label: "github", value: "/domala81", href: "https://github.com/domala81" },
-  {
-    label: "linkedin",
-    value: "/in/nihar-domala",
-    href: "https://www.linkedin.com/in/nihar-domala/",
-  },
+  { label: "email", value: personal.email, copy: true },
+  { label: "github", value: personal.socials.github.display, href: personal.socials.github.href },
+  { label: "linkedin", value: personal.socials.linkedin.display, href: personal.socials.linkedin.href },
 ];
 
 // Converging synapses, in a 0–100 box: fan in from the top edge → all meet the node center.
@@ -104,7 +99,9 @@ export default function ContactSection() {
 
   // Per-element reveal windows over the latched progress (overlapping top→down stagger).
   const syn = useTransform(revealed, [0, 0.5], [0, 1], { ease: EASE_FN });
-  const nodeOpacity = useTransform(revealed, [0.1, 0.45], [0, 1], { ease: EASE_FN });
+  const nodeOpacity = useTransform(revealed, [0.1, 0.45], [0, 1], {
+    ease: EASE_FN,
+  });
   const statusR = useReveal(revealed, 0.3, 0.6);
   const headR = useReveal(revealed, 0.42, 0.75);
   const proseR = useReveal(revealed, 0.55, 0.85);
@@ -113,7 +110,9 @@ export default function ContactSection() {
 
   // Curtain-flavored soft mask wipe: a fade edge that lifts down the stack as it reveals.
   // Overshoots past 100% so the resting state is fully opaque (fully visible).
-  const maskPos = useTransform(revealed, [0, 0.6], [10, 130], { ease: EASE_FN });
+  const maskPos = useTransform(revealed, [0, 0.6], [10, 130], {
+    ease: EASE_FN,
+  });
   const maskImage = useMotionTemplate`linear-gradient(to bottom, #000 0%, #000 ${maskPos}%, transparent calc(${maskPos}% + 16%))`;
 
   const copyEmail = async () => {
@@ -121,7 +120,7 @@ export default function ContactSection() {
     // Modern path: needs a secure context + user gesture (the real click provides it).
     try {
       if (navigator.clipboard?.writeText) {
-        await navigator.clipboard.writeText(EMAIL);
+        await navigator.clipboard.writeText(personal.email);
         ok = true;
       }
     } catch {
@@ -130,7 +129,7 @@ export default function ContactSection() {
     if (!ok) {
       try {
         const ta = document.createElement("textarea");
-        ta.value = EMAIL;
+        ta.value = personal.email;
         ta.style.position = "fixed";
         ta.style.opacity = "0";
         document.body.appendChild(ta);
@@ -213,7 +212,11 @@ export default function ContactSection() {
         </motion.p>
 
         <motion.h2
-          style={active ? { ...headR, fontSize: HEADING_SIZE } : { fontSize: HEADING_SIZE }}
+          style={
+            active
+              ? { ...headR, fontSize: HEADING_SIZE }
+              : { fontSize: HEADING_SIZE }
+          }
           className="mt-4 text-balance font-sans font-semibold tracking-tightish text-ink"
         >
           Ready to solve your problem next.
@@ -231,8 +234,8 @@ export default function ContactSection() {
             transform (a framer inline transform would override hover:-translate/scale). */}
         <motion.div style={active ? ctaR : undefined} className="mt-9">
           <a
-            href="mailto:ndomala81@gmail.com"
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.2] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+            href={`mailto:${personal.email}`}
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.06] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
           >
             <span
               aria-hidden
