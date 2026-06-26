@@ -17,24 +17,38 @@ design or build work.
 Skim this before exploring the tree — saves a re-scan each session.
 
 ```
+data/                   ← EDIT HERE to update content (one file per domain)
+  personal.ts           name, email, socials, tagline, location, resume — used by Hero, Contact, Footer
+  projects.ts           ProjectEntry[] — add a project here; pipeline + orbital pick it up automatically
+  experience.ts         ExperienceEntry[] — add a role here; pipeline + timeline pick it up automatically
+  skills.ts             SkillEntry[] + PassionEntry[] — skills and passions for pipeline layer 1+2
+  index.ts              barrel re-export (import { projects, personal, … } from "@/data")
 app/
   page.tsx              homepage entry — composes all sections
   layout.tsx            root layout wrapper
   globals.css           Tailwind + global styles
 components/
-  Hero.tsx              typographic hero section
+  Hero.tsx              typographic hero section (reads personal from @/data)
   pipeline/             Section 2 — neural pipeline (canvas synapses + DOM node tokens)
     NeuralPipeline.tsx  canvas synapse/packet loop + DOM node layout (signature feature)
     PipelineContent.tsx layout wrapper for the pipeline
     DetailCard.tsx      Framer Motion glass detail card (node hover)
     NodeBadge.tsx       node glyph (brand icon, or per-kind/per-id lucide glyph)
     NodeToken.tsx       DOM node token (the circular interactive node)
-    networkData.ts      graph structure + node/project/role definitions (single source)
-    iconData.ts         icon mappings
+    networkData.ts      pipeline ADAPTER — maps data/ → PipeLayer[]; do not edit for content changes
+    iconData.ts         icon mappings (simple-icons slugs → SVG paths)
   projects/
     OrbitalProjects.tsx Section 3 — radial project orbit + fixed detail panel + static fallback
   experience/
     ExperienceTimeline.tsx Section 4 — "Signal Trace" cobalt-spine timeline
+  contact/
+    ContactSection.tsx  Section 5 — convergent node + terminal contact channels (reads personal)
+  footer/
+    SiteFooter.tsx      inference colophon footer (reads personal)
+  thread/
+    LimeThread.tsx      page-spanning lime "me" dot traveler (scroll-driven, docks on anchors)
+    ContactAnchor.tsx   registers the contact node as the thread's final dock target
+    anchorStore.ts      shared registry: sections register anchors the thread docks onto
 public/resume.pdf       downloadable resume (stub)
 scripts/gen-icons.mjs   icon generation helper
 ```
@@ -105,7 +119,11 @@ Once scaffolded as a standard Next.js app, expect `npm run dev` / `build` / `lin
 These are the non-obvious rules from the spec that shape every decision. Violating
 them defeats the purpose of the design:
 
-1. **Canvas renders the synapse web; nodes are DOM tokens.** (Shipped architecture —
+1. **Content lives in `data/`; `networkData.ts` is a pipeline adapter, not a data store.**
+   To add a project, skill, or role — edit the relevant `data/` file only. `networkData.ts`
+   maps those plain objects into `PipeLayer[]` for the canvas; do not hardcode content there.
+
+2. **Canvas renders the synapse web; nodes are DOM tokens.** (Shipped architecture —
    evolved from the original canvas-only plan; `NeuralPipeline.tsx` is the source of
    truth.)
    - The **synapse web, in-flight packets, and glows** are painted on a *single*
@@ -116,19 +134,19 @@ them defeats the purpose of the design:
    - Framer Motion also drives the other DOM overlays: hero fades, the glass detail card +
      layer chips, the project orbit, the experience timeline, the contact node.
 
-2. **Network/packet state lives in plain JS arrays of objects.** The layout and in-flight
+3. **Network/packet state lives in plain JS arrays of objects.** The layout and in-flight
    packets track vector math (`x`, `y`, target positions, radius, alpha, interpolation
    state). The node *tokens* read their position from that JS layout; the heavy per-frame
    work (synapses, packets, glows) stays off the DOM.
 
-3. **The animation is autonomous.** Even with zero user interaction, data packets
+4. **The animation is autonomous.** Even with zero user interaction, data packets
    continuously fire down synapses top→bottom (forward pass) and flash back upward
    (backprop), driven by `gsap.ticker` / `requestAnimationFrame`.
 
-4. **Pause the loop when off-screen.** The canvas animation must stop automatically
+5. **Pause the loop when off-screen.** The canvas animation must stop automatically
    when the user has scrolled past the canvas zone, to save CPU/GPU.
 
-5. **Mobile fallback (< 768px width).** Disable the complex canvas hover math and
+6. **Mobile fallback (< 768px width).** Disable the complex canvas hover math and
    degrade to a clean vertically-stacked static node layout, so scrolling stays
    smooth on phones.
 

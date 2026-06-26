@@ -29,7 +29,8 @@ reproducible. `←` marks where we are.
 | 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done |
 | 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done |
 | 10 | `/impeccable craft` — experience→contact transition | "Curtain-flavored" scroll-driven reveal of Section 5 (from a reference footer's curtain reveal): synapses draw + node + content unfurl top→down on scroll, latched, soft mask wipe; thread/convergence kept intact (Option C) | ✅ done |
-| 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done  ← |
+| 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done |
+| — | (out-of-flow) — centralized `data/` layer | Extracted all content into `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`; `networkData.ts` → adapter. Adding content now = edit one file. | ✅ done ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -41,6 +42,13 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-26** — Wanted a centralized config so adding a new project, skill, or role
+  reflects everywhere without knowing pipeline internals. Judged CMS overkill for a
+  static portfolio; plain TypeScript `data/` files compile away at build time (zero
+  runtime cost, Vercel/Netlify free tier compatible). Chose domain-split `data/` layer
+  (Option B) over single siteConfig (Option A) so each content type lives in its own
+  obvious file. `networkData.ts` became a pipeline adapter — content owners never touch it.
+  → Entry 031.
 - **2026-06-19** — Footer felt clumsy / too tall → **redesign, shorter**. Collapsed the 3-zone
   two-line-stack layout into a compact centered colophon: live `● session complete _` line over a
   single wrapping credit line (`© · built with ♥ · Next.js · Canvas · GSAP`), back-to-top a bare `↑`
@@ -298,6 +306,44 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 031 — Centralized data layer (`data/` folder)
+
+**Prompt:** "I want a config type to maintain my details and continuously easy to
+change when I add any new thing, like a new project, a new skill — should reflect
+changes in every place. Judge if sensible for free deployment."
+
+**Flow:**
+1. Audited the codebase — found content scattered across `networkData.ts` (projects,
+   skills, experience, passions hardcoded as PipeNode arrays), `Hero.tsx` (name, socials),
+   `ContactSection.tsx` (email, channels), `SiteFooter.tsx` (copyright name).
+2. Judged plain TypeScript the right approach: compiled away at build time, zero runtime
+   cost, no database, no CMS subscription. Free-tier compatible.
+3. Brainstormed 3 options; chose Option B (domain-split `data/` layer with `networkData.ts`
+   as adapter) over Option A (single siteConfig) and Option C (mega-file).
+4. Wrote spec (`docs/superpowers/specs/`) and plan (`docs/superpowers/plans/`), then
+   executed all 7 tasks via subagent-driven development with per-task review.
+
+**Decisions:**
+- `data/` at repo root (not `src/data/`) to match the existing flat structure.
+- `networkData.ts` kept all its public exports (`LAYERS`, `LAYER_COUNTS`, `ALL_NODES`,
+  `nodeByLabel`) with identical signatures — NeuralPipeline, DetailCard, NodeToken consume
+  them and were not touched.
+- `ProjectEntry.tech` (not `.connections`) and `ExperienceEntry.skills` (not `.connections`)
+  — cleaner semantic names even though networkData internally maps them back to `connections`.
+- Task review caught 3 visual regressions in Task 2 (ContactSection `hover:scale-[1.2]`
+  changed to `[1.06]`, SiteFooter `gap-2` → `gap-3`, stray hairline divider added);
+  all reverted before merge.
+
+**Output:**
+- Created: `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`,
+  `data/index.ts`
+- Refactored: `components/pipeline/networkData.ts` (adapter, 297→126 lines)
+- Updated: `Hero.tsx`, `ContactSection.tsx`, `SiteFooter.tsx`, `OrbitalProjects.tsx`,
+  `ExperienceTimeline.tsx`
+- Docs: `CLAUDE.md` folder map + architecture constraints updated; this BUILD_LOG entry
 
 ---
 
