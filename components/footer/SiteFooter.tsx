@@ -20,7 +20,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="relative border-t border-border-soft px-6 py-7 sm:px-10">
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-3 text-center font-mono text-xs text-ink-muted">
+      <div className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center font-mono text-xs text-ink-muted">
         {/* Live machine-voice status — cobalt dot (done/structural) + blinking terminal cursor. */}
         <p className="flex items-center gap-2 tracking-[0.04em]">
           <span aria-hidden className="text-infra">
@@ -42,9 +42,6 @@ export default function SiteFooter() {
             </motion.span>
           </span>
         </p>
-
-        {/* Hairline divider — a clean partition between the status line and the colophon. */}
-        <span aria-hidden className="h-px w-8 bg-border-soft" />
 
         {/* Colophon — one wrapping line. The ♥ is the footer's single live signal. */}
         <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 leading-relaxed">
