@@ -14,7 +14,8 @@ import {
   Code2,
   type LucideIcon,
 } from "lucide-react";
-import { LAYERS, type PipeNode } from "../pipeline/networkData";
+import { projects, type ProjectEntry } from "@/data";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * Section 3 — Projects ("Output layer").
@@ -23,14 +24,12 @@ import { LAYERS, type PipeNode } from "../pipeline/networkData";
  * core on the left; a spotlight auto-cycles which one shows in a fixed detail panel
  * on the right. Move the pointer near the orbit and the nearest node takes over and
  * holds while you read (and while you're on the panel); move away and autoplay
- * resumes. Reads straight off the canvas Outputs layer (pipeline Layer 3) — one data
- * source for the pipeline, this section, and the timeline.
+ * resumes. Reads from data/projects.ts — one data source for the pipeline, this
+ * section, and the timeline.
  *
  * Below lg, and under prefers-reduced-motion, the orbit is replaced by a calm,
  * fully-readable stack of scannable case-study cards (no rotation, no autoplay).
  */
-
-const PROJECTS = LAYERS[2].nodes;
 
 // Distinct lucide glyph per project (the canvas uses one "project" glyph; here each
 // output gets its own mark).
@@ -90,17 +89,24 @@ function OrbitView() {
 
   const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rafRef = useRef<number | null>(null);
+  const coreRef = useRef<HTMLDivElement>(null);
+
+  // Register the lime core as the projects "me" anchor for the page thread.
+  useEffect(
+    () => (coreRef.current ? registerAnchor("projects", coreRef.current) : undefined),
+    [],
+  );
 
   const engaged = nearOrbit || overPanel;
 
   const go = (delta: number) =>
-    setActiveIndex((i) => (i + delta + PROJECTS.length) % PROJECTS.length);
+    setActiveIndex((i) => (i + delta + projects.length) % projects.length);
 
   // Autoplay: advance the spotlight while the user isn't engaged.
   useEffect(() => {
-    if (engaged || PROJECTS.length < 2) return;
+    if (engaged || projects.length < 2) return;
     const id = setInterval(() => {
-      setActiveIndex((i) => (i + 1) % PROJECTS.length);
+      setActiveIndex((i) => (i + 1) % projects.length);
     }, AUTO_MS);
     return () => clearInterval(id);
   }, [engaged]);
@@ -160,6 +166,7 @@ function OrbitView() {
         />
         {/* center — the lime "me" / output node, same big lime core as the network's result node */}
         <div
+          ref={coreRef}
           aria-hidden
           className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2"
         >
@@ -179,11 +186,11 @@ function OrbitView() {
 
         {/* spinning ring of nodes */}
         <div className="absolute inset-0 animate-spin" style={spin()}>
-          {PROJECTS.map((p, i) => {
+          {projects.map((p, i) => {
             // Position by trig + center on the point → nodes sit exactly on the orbit
             // circle (radius = ORBIT_RADIUS) and rotation about the stage center keeps
             // them there. No rotate()/origin tricks that drifted them off the line.
-            const rad = ((-90 + i * (360 / PROJECTS.length)) * Math.PI) / 180;
+            const rad = ((-90 + i * (360 / projects.length)) * Math.PI) / 180;
             const x = ORBIT_RADIUS * Math.cos(rad);
             const y = ORBIT_RADIUS * Math.sin(rad);
             const isActive = i === activeIndex;
@@ -205,7 +212,7 @@ function OrbitView() {
                       nodeRefs.current[i] = el;
                     }}
                     type="button"
-                    aria-label={`${p.label} — view details`}
+                    aria-label={`${p.title} — view details`}
                     aria-pressed={isActive}
                     onFocus={() => {
                       setActiveIndex(i);
@@ -239,7 +246,7 @@ function OrbitView() {
                         isActive ? "text-ink" : "text-ink-muted"
                       }`}
                     >
-                      {p.label}
+                      {p.title}
                     </span>
                   </button>
                 </div>
@@ -263,14 +270,14 @@ function OrbitView() {
           />
           <AnimatePresence mode="wait" initial={false}>
             <motion.div
-              key={PROJECTS[activeIndex].id}
+              key={projects[activeIndex].id}
               initial={{ opacity: 0, y: 8 }}
               animate={{ opacity: 1, y: 0 }}
               exit={{ opacity: 0, y: -8 }}
               transition={{ duration: 0.28, ease: [0.22, 1, 0.36, 1] }}
               className="relative z-10"
             >
-              <ProjectBody p={PROJECTS[activeIndex]} />
+              <ProjectBody p={projects[activeIndex]} />
             </motion.div>
           </AnimatePresence>
         </div>
@@ -287,7 +294,7 @@ function OrbitView() {
           </button>
 
           <div className="flex items-center gap-2" aria-hidden>
-            {PROJECTS.map((p, i) => (
+            {projects.map((p, i) => (
               <span
                 key={p.id}
                 className={`h-1 rounded-full transition-all duration-300 ${
@@ -314,7 +321,7 @@ function OrbitView() {
 function StaticProjects({ className = "" }: { className?: string }) {
   return (
     <div className={`grid gap-4 sm:grid-cols-2 ${className}`}>
-      {PROJECTS.map((p) => (
+      {projects.map((p) => (
         <div
           key={p.id}
           className="rounded-lg border border-border-soft bg-surface p-5 sm:p-6"
@@ -327,7 +334,7 @@ function StaticProjects({ className = "" }: { className?: string }) {
 }
 
 /** Shared project content: header + Problem / Approach / Impact / stack / actions. */
-function ProjectBody({ p }: { p: PipeNode }) {
+function ProjectBody({ p }: { p: ProjectEntry }) {
   const Glyph = PROJECT_GLYPH[p.id] ?? Boxes;
   return (
     <>
@@ -337,7 +344,7 @@ function ProjectBody({ p }: { p: PipeNode }) {
             <Glyph className="h-4 w-4" strokeWidth={1.75} aria-hidden />
           </span>
           <h3 className="font-sans text-lg font-semibold tracking-tightish text-ink">
-            {p.label}
+            {p.title}
           </h3>
         </div>
         {p.date && (
@@ -359,9 +366,9 @@ function ProjectBody({ p }: { p: PipeNode }) {
         </div>
       )}
 
-      {p.connections && p.connections.length > 0 && (
+      {p.tech && p.tech.length > 0 && (
         <ul className="mt-5 flex flex-wrap gap-2">
-          {p.connections.map((c) => (
+          {p.tech.map((c) => (
             <li
               key={c}
               className="rounded border border-border-soft bg-bg px-2 py-0.5 font-mono text-[11px] text-ink-muted"

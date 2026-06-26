@@ -26,8 +26,10 @@ reproducible. `←` marks where we are.
 | 5 | `/impeccable shape` + build experience | Build Section 4 — "Signal Trace" experience timeline (cobalt spine, scroll-drawn trace + packet dot, lime `running` head) | ✅ done |
 | 6 | `/impeccable shape` + polish experience | More-life pass on Section 4 — card hover-zoom, year pulled to an outside-left gutter, role-icon spine nodes, removed the autonomous spine pulse | ✅ done |
 | 7 | `/impeccable craft` — experience pop + shine | Scroll-in "pop" on the timeline cards (scale 0.96→1 + rise), plus a faint diagonal cool-white hover shine across the card surface | ✅ done |
-| 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done  ← |
-| 9 | CLI contact (Section 5, planned) | Convergent output node + terminal contact form | ⬜ planned |
+| 8 | `/impeccable craft` — projects (Section 3) | Orbital "Output layer": projects orbit a core, spotlight autoplay + proximity-open, fixed right detail panel; static scannable cards on mobile / reduced-motion. Polish: on-orbit fix, cobalt nodes, lime "me" core, panel hover pop+shine | ✅ done |
+| 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done |
+| 10 | `/impeccable craft` — experience→contact transition | "Curtain-flavored" scroll-driven reveal of Section 5 (from a reference footer's curtain reveal): synapses draw + node + content unfurl top→down on scroll, latched, soft mask wipe; thread/convergence kept intact (Option C) | ✅ done |
+| 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done  ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -39,6 +41,107 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-19** — Footer felt clumsy / too tall → **redesign, shorter**. Collapsed the 3-zone
+  two-line-stack layout into a compact centered colophon: live `● session complete _` line over a
+  single wrapping credit line (`© · built with ♥ · Next.js · Canvas · GSAP`), back-to-top a bare `↑`
+  circle pinned bottom-right on desktop / inline-centered on mobile. Dropped "All rights reserved" +
+  the "rerun" label. Height ~180px → **101px**. Contact + footer still share one screen, all revealed.
+  → amends Entry 030.
+- **2026-06-19** — Footer follow-up. (1) Too big a gap between the contact and the footer — at the
+  page bottom the contact was pushed up; **"scrolling to the end should not hide the last contact,
+  not even a bit"** (loses the recruiter's context/CTA). Fix: removed Entry 029's `h-[24vh]` contact
+  runway spacer (the footer is the runway now) + restored `py-24` → contact content + footer now share
+  one screen at rest (desktop: content [21–584px] + footer [680–860px]; mobile: only the decorative
+  node glow clips, all CTA/channels + footer visible). The `center center` reveal stays reachable +
+  still plays on scroll. (2) Make `session complete` more live → added a **blinking terminal cursor**
+  (`_`, framer step-blink, `useReducedMotion` → static), kept ink/cobalt not lime (one-live-signal).
+  → amends Entries 029/030.
+- **2026-06-19** — Wanted a simple footer like a pasted reference (the cinematic footer's bottom bar:
+  `© left · crafted-with-♥ pill center · ↑ back-to-top right`), with portfolio details (rights,
+  built-with-love, etc.); asked for options first, keep it simple/low-token. Showed 3 options; picked
+  **B "Inference colophon"**. Built it debranded of the reference's glass pill + giant text (both
+  banned by DESIGN.md) and on-concept: a machine-voice `● session complete` line, `built with ♥` +
+  tech credit, `↑ rerun` back-to-top. **One-live-signal fix:** the ♥ is the only lime; the status
+  dot is cobalt (done/structural, not live). → Entry 030.
+- **2026-06-19** — After Option C shipped: **"I can't see anything working, same as before."** Correct.
+  Diagnosed: in normal flow the reveal finished during *entry* while the content was still low /
+  off-screen (the page bottoms out right as the content reaches center, so the reveal completed
+  ~300px before the content was where the eye looks). Picked **"flow + runway"**: retargeted
+  `useScroll` to the **content block** (not the section) with `["start end","center center"]`, and
+  added a small **trailing spacer** (`h-[24vh]`) so "content centered" is reachable. Now the content
+  rises through the middle of the viewport while it unfurls — visibly staggered (node→status→
+  headline→prose→CTA→channels), thread still docks. → Entry 029.
+- **2026-06-19** — Wanted the experience→contact transition to feel like a reference component
+  the user pasted (a "cinematic/curtain footer"): take **only** its transition + the slow reveal
+  of content while transitioning, ignore everything else (its footer content, shadcn setup, etc.).
+  The reference's literal move is a `position: fixed` panel behind a `clip-path` curtain — which
+  **conflicts** with the lime thread (it docks the dot using `rect.top + scrollY`, assuming the node
+  is in normal flow; pinning breaks that). I rated three resolutions for fit; user picked **Option C
+  (9/10): keep the node in flow, drive the reveal from scroll** so the convergence climax + no-jank
+  bar are preserved while still reading as a curtain-flavored reveal. Reveal confirmed
+  **scroll-driven + latched** (unfurls while transitioning, never un-reveals). → Entry 029.
+- **2026-06-19** — Thread bug: scrolling back **up** from contact, the dot rejoined the experience
+  spine mid-way instead of riding the trace tip. Cause = my earlier descent-fix (`approachingContact`)
+  had no direction guard, so it suppressed the tip-follow on the way up too. Fixed with a **sticky
+  scroll direction** (held through pauses); ascending re-grabs the left spine tip immediately and glides
+  onto it gently (slow, my taste). → Entry 028.
+- **2026-06-19** — `say_hello` CTA: wanted it off the terminal-prompt look but still on-theme,
+  asked for options. Picked **cobalt ghost button + card hover-shine** (transparent + cobalt
+  border, Geist "Say hello" + `ArrowUpRight`, hover glow/shine/lift). Node stays the only lime;
+  removed the now-unused `caret-blink` CSS. → Entry 027.
+- **2026-06-19** — Section 5 polish. (1) The lime thread's last leg (experience→contact) felt a
+  little fast: "start it a little before and move it a bit slowly, like the others." (2) The white
+  `say_hello` button looked totally off; redesign + show options for the 3-contact arrangement.
+  (3) Make the email **copyable** (not a redirect) since `say_hello` already does the mailto. → User
+  picked the **terminal-prompt-list** option (no button box; `> say_hello` prompt + a mono `>` listing).
+  Built: thread hands off to the contact glide ~0.85·vh earlier + gentler ease; the white button is
+  gone; email row click-copies with a lime `copied ✓`; github/linkedin stay external. → Entry 026.
+- **2026-06-19** — Section 5 (contact). User did the research themselves: top dev portfolios
+  (Brittany Chiang's most-cloned template) **skip the contact form** — recruiters distrust
+  no-confirmation forms and prefer a direct email + links they can use in their own client; forms
+  that exist pair with a visible direct-contact fallback. → Built it as a **no-form** node:
+  convergent lime node with faint cobalt synapses fanning in (echoes Section 2's converge-to-one),
+  a restrained `> say_hello` mailto + a mono `>` channel listing (email / github / linkedin). Asked
+  for terminal-literalness (chose restrained prompt, not a skeuomorphic terminal window) and whether
+  to draw the converging lines (yes). Résumé row skipped (PDF still a stub). → Entry 025.
+- **2026-06-19** — Asked to sync the docs to the as-built brand/design (they drift while
+  building). → Updated `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md` to the shipped reality:
+  page scrolls top→bottom but Section 2 is **horizontal**; the network is a **canvas/DOM
+  hybrid** (synapses + packets + glows on canvas, **nodes are DOM tokens**) — corrected the
+  old "nodes never DOM" hard constraint; **hover/active = cobalt**, lime reserved for the
+  "me"/output node + the one impact metric; documented the **project orbit** (Section 3) +
+  the **experience "Signal Trace"** (Section 4) + the card hover-pop/diagonal-shine; fixed
+  the Geist-not-Inter font typo + the folder map. The lime thread was left out (branch-only
+  experiment, not yet decided). → Entry 024.
+- **2026-06-18** — (Experiment, `feature/lime-thread`) v4 still off: the end-snap pulled the dot
+  to the big green dot on every stop, and projects→experience was a hard sub-second snap.
+  Measured the cause — the loop chased anchors' **viewport** positions, which dive to the screen
+  bottom as the next section enters. → v5: **document-space center-glide** (dot stays at
+  screen-center, slides to the next dot's column, no dive — same smooth feel as network→projects),
+  the experience tip engages only once it's risen into the upper screen (no bottom-edge yank), and
+  on stop the dot **fades in place** unless it's almost on a dot (then snaps the last bit). Softer
+  ease. → Entry 023.
+- **2026-06-18** — (Experiment, `feature/lime-thread`) v3 harden overshot — the dot felt too
+  snappy and the dwell-band made it **vanish far from the dots before arriving**. User wanted the
+  v2 feel back: slow, smooth, simple, travels all the way to each dot, snaps only a little at the
+  end. → v4 re-tune: removed the dwell-band (visible the whole travel), slowed the glide (ease
+  0.2) + gentle fade (decay 0.1), and added an **end-snap** onto the nearest dot at idle so it
+  always dissolves *on* a dot. Kept the experience trace-sync (gap 0). → Entry 022.
+- **2026-06-18** — (Experiment, `feature/lime-thread`) **Keep & harden** the lime thread.
+  Three fixes: **snappier dissolve** (frame-delta idle at 90ms + faster op decay, ignoring
+  momentum/settle scroll events that lagged it to ~1s); **experience sync** — the lime dot now
+  glues exactly to the cobalt trace tip (measured gap **0px**) by following an invisible
+  scaleY-clone of the trace; **dwell-band emergence** — the dot stays dissolved while a
+  section's dot is comfortably in view and only emerges during between-section travel, so
+  projects no longer pops in (it appears as the core passes ~top-30%). → Entry 021.
+- **2026-06-18** — (Experiment, on `feature/lime-thread`, not merged) Refined the
+  "lime me threads the page" idea into the **anchored traveler (v2)**: the dot starts/ends at
+  each section's real lime dot, **dissolves into** the current section's dot at rest (fixes
+  the v1 duplicate/floating problem), rides the **spine** through experience, and leaves a
+  faint comet trail; each dot blooms on dock. First set up a **git snapshot + branch** so the
+  whole thing is one-command revertible (`git init`; `main` = the pre-experiment state). Added
+  lime anchors to experience (consolidated the "running" chip into a spine "now" dot) + contact;
+  a registry connects all four. → Entry 020.
 - **2026-06-18** — Wanted **small prev/next arrows** on the projects detail panel to step
   left/right, almost invisible, popping lightly on hover. → Added near-invisible (`opacity-20`)
   chevron buttons flanking the spotlight dots; hover/focus pops them (full opacity + scale +
@@ -195,6 +298,348 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 030 — Footer: the "inference colophon"
+
+**Prompt** — `/impeccable craft` "design a simple footer, like this [reference image of the cinematic
+footer's bottom bar]. Add portfolio details (license, rights, built with love, anything else). Give
+design options first, then implement; keep it simple, low-token."
+
+**Flow** — Setup already loaded this session (PRODUCT/DESIGN/brand). Showed 3 text+ASCII options
+(faithful 3-zone / inference colophon / bare one-liner); user picked **B**. Built `SiteFooter.tsx`,
+wired one import into `app/page.tsx`. `tsc` + `next build` clean; verified in-browser (browse) at
+desktop + mobile, back-to-top scrolls to 0, no new console errors.
+
+**Decisions** — (1) **Debrand the reference**: dropped the glass pill (glassmorphism-as-default ban)
+and the giant background text + glow ("glow belongs to the network, not chrome"). Flat, hairline-top,
+mono machine voice. (2) **One-live-signal:** the ♥ ("built with love" = the brand's *alive*) is the
+only lime mark; the `● session complete` status dot is **cobalt** (a done/structural status, not
+live). (3) On-concept copy: `● session complete` + `↑ rerun` back-to-top (scroll to top = re-run the
+inference). (4) Tech credit `Next.js · Canvas · GSAP` doubles as a work-sample for the engineer
+reader. (5) One gentle motion touch: a slow lime ♥ heartbeat (framer `motion.span`, `useReducedMotion`
+→ static) — a callback to the reference's heartbeat, kept calm per the user's slow/smooth taste.
+(6) a11y: `aria-hidden` ♥ + `sr-only "love"` so SR reads "built with love"; back-to-top `aria-label`,
+keyboard-focusable; year hardcoded `2026` (static-prerender safe). ContactSection + thread untouched.
+
+**Output** — `components/footer/SiteFooter.tsx` (new) + `app/page.tsx` (one import + render).
+`next build` clean (201 kB). On `feature/lime-thread`.
+
+**Follow-up (same day)** — (1) Closed the contact↔footer gap: removed Entry 029's `h-[24vh]` contact
+spacer + restored `py-24` so the contact and footer share one screen at rest (the contact is never
+scrolled out of view — recruiter context stays put). (2) `session complete` gained a **blinking
+terminal cursor** (`_`) for a small "alive" pulse; ink/cobalt, not lime (one-live-signal). See the
+idea thread.
+
+---
+
+## Entry 029 — Experience→contact: curtain-flavored scroll reveal (Section 5)
+
+**Prompt** — `/impeccable craft` "I want the last contact page transition like this [pasted a
+'cinematic/curtain footer' reference] — only the transition from experience→contact and the slow
+reveal of content while transitioning; ignore everything else in that prompt. Ask before
+implementing; show the plan." (caveman session.)
+
+**Flow** — Read the reference: a `position: fixed` panel behind a `clip-path` curtain + GSAP
+ScrollTrigger `scrub` reveals. Flagged the conflict: pinning breaks `LimeThread`'s dock math
+(`docCenterY = rect.top + scrollY` assumes normal flow). Confirmed two decisions with the user
+(reveal = scroll-driven + **latched**; approach = **Option C**, rated 9/10 — keep the node in flow,
+reveal from scroll, soft curtain mask). Reworked `ContactSection.tsx` only; `tsc` + `next build`
+clean; verified in-browser (browse): opacities 0→1 across the entry scroll, **latch holds on
+scroll-up**, all 6 rows = opacity 1 at the page-bottom rest, console adds nothing new (the framer
+`useScroll` "non-static container" warning is **pre-existing/global** — container defaults to the
+static `<html>`; `ExperienceTimeline` already triggers it; `warnOnce` dedupes).
+
+**Decisions** — (1) Replaced the one-shot `whileInView` batch with a **scroll-progress-driven**
+reveal: `useScroll` → a `useMotionValue` latched to the running max via `useMotionValueEvent` (never
+un-reveals). (2) Per-element overlapping windows (synapses pathLength, then node, status, headline,
+prose, CTA, channels) via a small `useReveal` helper + a soft `useMotionTemplate` mask wipe = the
+"curtain." (3) **Reveal styles live on wrappers, not the CTA `<a>`** (a framer inline transform would
+override its Tailwind `hover:scale`); **node is opacity-only** (scaling it would wobble the thread's
+live dock target → jank). (4) **Default-visible** gate: `active = mounted && !reduce`, so SSR / no-JS
+/ reduced-motion render static + ungated (no blank ship); latch seeded from current scroll on mount
+(deep-link/reload-scrolled). (5) **Visibility fix (see idea thread):** target the **content block**
+with `["start end","center center"]` so the reveal completes when the *content* is centered (where
+the eye is), not when the section top passes — plus an `h-[24vh]` trailing spacer so that point is
+reachable (contact is the last section; without runway the page bottoms out mid-reveal). Verified:
+content rises bottom→center while staggering in; rests ~43% with all rows at full opacity; thread
+still docks. No thread changes; convergence climax intact.
+
+**Output** — `components/contact/ContactSection.tsx` (only code file; `py-24`→`pt-24` + trailing
+spacer for runway). `next build` clean (201 kB, was 199 kB; +2 kB for the framer scroll hooks). On
+`feature/lime-thread`.
+
+---
+
+## Entry 028 — Thread fix: ride the spine tip when scrolling back up
+
+**Prompt** — "Scrolled to contact then back up: the dot joins the timeline spine in the middle, not
+near the tip. Make it move a lot more left, not fast." (slow = the known taste.)
+
+**Flow** — Probed in-browser (the gotcha: global `scroll-behavior: smooth` made `scrollTo` animate, so
+discrete probes read positions the page never reached — disabling it per-probe fixed the readings).
+Added a temp debug hook to read the loop's live decision, confirmed `onTip` was being suppressed on the
+way up, fixed it, re-probed (dot now tracks the tip x→420), removed the debug. `next build` clean.
+
+**Decisions** — `LimeThread.tsx`: (1) **sticky scroll direction** `s.dir` (only updates on real
+movement, held through pauses — so a mid-scroll pause doesn't snap the dot back to center). (2) The
+descent-only `approachingContact` now carries `!goingUp`, so ascending no longer suppresses the tip
+follow. (3) Ascending, `onTip` engages the moment the tip is on screen (not just upper-third). (4)
+Gentle ease (k=0.085) for the leftward re-grab so it's slow. Descending behaviour unchanged.
+
+**Output** — `components/thread/LimeThread.tsx`. `next build` clean (199 kB). On `feature/lime-thread`.
+
+---
+
+## Entry 027 — say_hello CTA: cobalt ghost button (off the terminal look)
+
+**Prompt** — "Make say_hello a different design, not the same terminal. Ask options relevant to the
+whole folio / theme, then implement. Small change, minimize tokens."
+
+**Flow** — Offered 3 on-theme directions (cobalt ghost button / node-is-the-button / lime pill);
+user chose the **cobalt ghost button**. One-file change + a CSS cleanup. `next build` clean, screenshot
+confirmed.
+
+**Decisions** — Final: the CTA **matches the hero buttons in cobalt** — `border-infra bg-infra/10`,
+mono "Say hello" + leading lucide `Mail` icon. Hover = cobalt **border glow + card-style diagonal shine
+sweep** (no fill) + a 1px lift (the fill-on-hover pass was rejected as too harsh; a Geist ghost pass
+before that read bad).  Kept lime rare: the convergent node stays the
+only lime, so the CTA is cobalt (structure); #3B82F6 on near-black ≈ 5.5:1 (AA). Dropped the now-unused
+`caret-blink` keyframe.
+
+**Output** — `components/contact/ContactSection.tsx` (CTA), `app/globals.css` (removed `caret-blink`).
+`next build` clean (199 kB). On `feature/lime-thread`.
+
+---
+
+## Entry 026 — Contact polish: terminal-prompt CTA, click-to-copy email, slower thread last leg
+
+**Prompt** — Three asks on the just-built Section 5: the thread dot from experience→contact is a bit
+fast (start earlier, move slower, like the other legs); the white `say_hello` button is "totally off
+looking" — redesign it and show options for the 3-contact arrangement; and make the email copyable to
+clipboard (not a redirect), since `say_hello` already does the mailto.
+
+**Flow** — `/impeccable craft` in plan mode. Re-read the thread loop + anchor registry, then offered
+four layout options (terminal prompt list / neural node-chips / ghost command bar / branching synapse
+outputs) with ASCII previews. User chose the **terminal prompt list**. Built all three changes,
+verified in-browser (redesign screenshot, click-to-copy shows `copied ✓`, dot-position probe across the
+approach), `next build` clean.
+
+**Decisions** —
+- **Kill the white button.** The Instrument-White primary was right per DESIGN.md but jarring on the
+  dark finale. Replaced with a terminal prompt: `> say_hello` (lime `>` + ink text + blinking lime
+  caret), hover = lime underline-sweep + faint lime text-glow. No box. Restraint over a slab.
+- **Email = copy, not redirect.** `say_hello` owns the mailto; the email row is now a `<button>` that
+  copies the address (clipboard API → `execCommand` fallback so it survives insecure/denied contexts)
+  and flashes a lime `copied ✓` (aria-live). github/linkedin stay external links. Resolves the old
+  email-appears-twice redundancy too.
+- **Thread last leg, earlier + slower.** Root cause: the dot stayed glued to the experience trace tip
+  until the tip left the upper screen, by which point `scrollY` was already at the contact dock — so
+  the final hop rushed. Fix in `LimeThread.tsx`: hand off the tip ~0.85·vh before the contact dock
+  (`approachingContact`) so the center-glide carries the dot in over a long runway, with a gentler
+  ease (k 0.14 → 0.10) for that leg only. Probe confirms the dot holds the center band (x=720, y≈400)
+  the whole approach instead of diving.
+
+**Output** —
+- `components/contact/ContactSection.tsx` (prompt CTA, copy handler + `copied` state, channel rows as
+  button/link), `components/thread/LimeThread.tsx` (early contact handoff + softer ease).
+- Verified: `next build` clean (199 kB); copy shows `copied ✓` (DOM + screenshot); dot-probe shows
+  smooth center-band approach; redesign confirmed at desktop. On `feature/lime-thread`.
+
+---
+
+## Entry 025 — Contact (Section 5): convergent node + no-form terminal direct-contact
+
+**Prompt** — Resume context → "Build Section 5." On the submit-path question the user came back
+with research: the best dev portfolios skip the contact form (recruiters distrust no-confirmation
+forms; they want a direct email + links). "Plan this again using impeccable craft, modern clean, on
+brand, connect the dot from the top, subtle life, no AI slop. Ask design options then proceed."
+
+**Flow** — Routed brainstorm → `/impeccable craft`. Loaded PRODUCT/DESIGN + brand register; read the
+live tokens, the thread docking (`LimeThread` reads anchor rects), and the timeline's reveal pattern.
+Compact shape brief + two taste calls (terminal-literalness → restrained prompt; converging lines →
+yes). Got the real links from the user. Built the section, fixed node↔line alignment, verified at
+desktop/tablet/mobile. `next build` clean (199 kB first load).
+
+**Decisions** —
+- **No form, by design** (the user's research): lead with a real `mailto` + a visible mono channel
+  listing (email / github / linkedin), the higher-trust path for recruiters.
+- **Restrained terminal, not a window.** A skeuomorphic terminal (traffic-lights + fake typing) is
+  the "literal terminal" slop lane and would undercut the site's restraint pitch. Terminal voice
+  lives in the `>` prompt, the mono rows, and one blinking caret — exactly what DESIGN.md prescribes.
+- **Connect the dot from the top, two ways:** the page-spanning lime thread already docks onto the
+  contact anchor; added faint cobalt synapses fanning in to **converge on the lime node**, paying off
+  Section 2's "network converges to one output." Pinned the dot center exactly to the line vertex
+  (killed `ContactAnchor`'s `mb-10` offset so the synapses meet the dot, not empty space below it).
+- **Subtle life, slow taste:** staggered `whileInView` reveal reusing the timeline's ease
+  `[0.22,1,0.36,1]`, `pathLength` draw-in on the synapses, hover underline-sweep on channel rows,
+  slow blinking caret. Reduced-motion: everything static + visible (paths render plain, no blink).
+
+**Output** —
+- New `components/contact/ContactSection.tsx`; `app/globals.css` (caret-blink keyframe,
+  reduced-motion-safe); `app/page.tsx` (swapped the stub `<section>` for `<ContactSection />`,
+  dropped the now-unused `ContactAnchor` import there).
+- Verified: `next build` clean (199 kB); no console errors; node/synapse alignment + responsive
+  composition confirmed in-browser at 1440 / 768 / 390. On `feature/lime-thread`.
+
+---
+
+## Entry 024 — Docs sync: PRODUCT/DESIGN/CLAUDE to the as-built design
+
+**Prompt** — "update the product.md and other docs with the current brand design things and
+details, as some keep changing as I build."
+
+**Flow** — Read the docs vs the shipped code, fixed the factual drifts. No code changes.
+
+**Decisions** — Synced three docs to reality:
+- **Horizontal Section 2 / vertical page:** killed "scrolling strictly vertically" in
+  PRODUCT.md + DESIGN.md; the page scrolls top→bottom, the Section 2 network is horizontal.
+- **Canvas/DOM hybrid:** the original "every node + synapse on canvas, never DOM" was false —
+  synapses/packets/glows are canvas, **nodes are DOM tokens** (`NodeToken`, Framer). Updated
+  DESIGN.md's signature component + Don'ts and CLAUDE.md's hard constraint #1/#2.
+- **Color logic:** hover/active brightens **cobalt**, not lime; lime is reserved for the
+  "me"/result node + the one impact metric. Rewrote the One Live Signal Rule + the lime
+  description.
+- **New components documented:** the project orbit (Section 3) and the experience "Signal
+  Trace" (Section 4) as signature components; the card hover-pop + diagonal-shine treatment.
+- **Misc:** Geist (not "Inter") in the Overview; CLAUDE folder map now lists
+  `components/projects` + `components/experience`; the Framer/icons stack lines.
+- **Left out:** the lime "me" thread (branch-only experiment, undecided — not baked into the
+  design system yet).
+
+**Output** — `PRODUCT.md`, `DESIGN.md`, `CLAUDE.md`. Committed on `feature/lime-thread` (the
+content is main-valid; merges along or can be re-applied to main if the branch is dropped).
+
+---
+
+## Entry 023 — Lime thread: document-space center-glide + fade-in-place
+
+**Prompt** — The dot felt weird: it snaps to the big green dot when stopped (want it to fade in
+place, only snap if almost near), and projects→experience is a hard sub-second snap (want it smooth
+like network→projects). "Plan properly, ask if doubts."
+
+**Flow** — Diagnosed first: measured the trace tip entering at the **screen bottom** (vpY 904→476)
+— the loop interpolated *viewport* positions, so the target dives to the edge as the next section
+enters = the jerk. Asked one question (between-section feel → user chose **center-glide**). Rewrote
+the targeting; verified the dot now holds ~screen-center across the transition (y 441–468, no dive)
+and fades in place mid-travel (frozen at y 450, op decaying, no snap). `tsc` + `next build` clean.
+
+**Decisions** —
+- **Document-space center-glide:** interpolate the target in document Y then subtract `scrollY`.
+  Since `dockScroll = docCenterY − vh/2`, the dot pins to viewport center and glides sideways to the
+  next dot's column — no diving to the edge, identical smoothness for every transition regardless of
+  section height. (x interpolates directly; it doesn't scroll.)
+- **Tip handoff:** the experience tip-follow now engages only when the tip has risen to `vpY <
+  0.55·vh`, so it no longer yanks the dot to the bottom edge as experience enters; the center-glide
+  has the dot at center ≈ the tip there, so it's continuous.
+- **Fade in place + near-snap:** on stop, if the dot is within ~70px of the nearest dock it eases
+  on + blooms; otherwise it **freezes where it is** and fades. No more travel to the big dot.
+- **Softer ease** (0.14) for a gentler glide.
+
+**Output** —
+- `components/thread/LimeThread.tsx` only.
+- Verified: `tsc` clean; `next build` passes; probes confirm center-band travel (no dive) + fade in
+  place; mid-scroll capture clean. `main` untouched.
+
+---
+
+## Entry 022 — Lime thread: re-tune to the v2 feel (slow, smooth, lands on the dot)
+
+**Prompt** — The v3 harden felt wrong: "snapping is too much," the dot "disappears before
+arriving at the dot," "far from the main dots." Liked the previous version — "slow smooth simple
+clean." Snap only a little at the end, smoothly.
+
+**Flow** — One-file re-tune of `LimeThread.tsx`. Verified probes (gentle fade; experience sync
+still gap 0) + a mid-scroll capture showing the dot gliding all the way to the orbit core, then
+settling into it. `tsc` + `next build` clean. Branch only.
+
+**Decisions** —
+- **Removed the dwell-band** (the main villain): visibility back to `idle ? 0 : 0.82`, so the dot
+  stays visible the whole way to each dot instead of vanishing mid-travel.
+- **Slowed it down**: position ease `0.2` (was 0.3/0.45), op decay `0.1` (was 0.3), idle `150ms`
+  (was 90) — slow, smooth fade, not a snap.
+- **End-snap**: at idle the dot eases onto the **nearest dock's exact center**, so it always
+  dissolves *on* a main dot, never far away. Experience (riding the tip) fades in place on the
+  spine instead.
+- **Kept** the experience trace-tip follow (gap 0) and the comet trail.
+
+**Output** —
+- `components/thread/LimeThread.tsx` only (`anchorStore.ts` + the experience tip marker unchanged).
+- Verified: `tsc` clean; `next build` passes; gentle dissolve + 0px trace sync + visible travel to
+  the dot confirmed. `main` untouched.
+
+---
+
+## Entry 021 — Lime thread harden: snappy dissolve, trace-sync, dwell-band
+
+**Prompt** — Keep & harden: make the dissolve snappier; in experience the lime dot leads/lags
+the cobalt "blue line" (sync it); in projects the dot appears instantly — dwell, then emerge
+when the core dot is ~top-30% of the viewport (soft rule, "make it look clean").
+
+**Flow** — Three targeted fixes to `LimeThread.tsx` (+ `anchorStore.ts`, `ExperienceTimeline.tsx`).
+Verified numerically via opacity/position probes (dissolve op→0 by ~0.4s and stays; experience
+dot vs trace tip **gap 0px** at three scroll positions; projects op=0 with the core centered)
+and a mid-scroll capture (traveler + comet trail intact). `tsc` + `next build` clean. Branch only.
+
+**Decisions** —
+- **Snappy dissolve:** idle is detected by **frame-delta** (scrollY actually changing) at a 90ms
+  threshold + op decay 0.3. A `scroll`-event listener was *worse* — momentum/settle events at the
+  same Y kept refreshing "moving," delaying the dissolve.
+- **Experience sync:** added an invisible **scaleY clone** of the trace (same `scrollYProgress`
+  mapping) whose bottom edge is the live trace tip; registered it as a `track` anchor; the
+  traveler **follows it directly** while on screen → glued to the blue line (gap 0). Replaced the
+  static spine-bottom waypoint.
+- **Dwell-band:** the dot is hidden while the nearest dock's viewport-center fraction is in
+  `[0.30, 0.72]` (section comfortably in view) and only visible during between-section travel, so
+  it no longer pops in at projects. Experience is exempt (rides the tip visibly). Idle always
+  forces the dissolve.
+
+**Output** —
+- `components/thread/LimeThread.tsx` (loop rewrite), `anchorStore.ts` (`track` meta),
+  `ExperienceTimeline.tsx` (trace-tip marker; spine-end waypoint removed).
+- Verified: `tsc` clean; `next build` passes; probes confirm snappy dissolve + 0px trace sync +
+  projects dwell. `main` untouched.
+
+---
+
+## Entry 020 — Lime "me" thread: anchored traveler (on feature/lime-thread)
+
+**Prompt** — A series: build the page-spanning lime "me" node, then refine — start/end at the
+green dots, reveal each section's items after the dot, make experience travel the spine (not
+random), and have the dot dissolve into the section's dot at rest and re-appear on scroll.
+"Judge first, ask, then implement." Plus: set up easy rollback before building.
+
+**Flow** — Set up a **git snapshot + feature branch** (the project wasn't a repo yet) so the
+work is one-command revertible. Judged the refinements (the dissolve mechanic fixes the v1
+duplicate/floating lime; the network nodes are DOM — `tokenRefs` — so anchoring is feasible).
+Asked 3 questions → bloom-sync, all-four-sections, dot+trail. Built the registry + rewrote the
+traveler. Verified each section at rest (single lime dot, dissolve works) and mid-scroll
+(traveler + comet trail). `tsc` + `next build` clean. All on `feature/lime-thread`.
+
+**Decisions** —
+- **Anchor registry** (`components/thread/anchorStore.ts`): each section registers its lime
+  element; the traveler reads live `getBoundingClientRect` → layout-proof (no hardcoded vw/vh
+  like the v1 prototype, which floated off-anchor).
+- **Traveler** (`LimeThread.tsx`): rAF loop, routes the dot along the polyline of live anchor
+  centers by scroll; comet **follow-chain trail** with `mix-blend-mode: screen` (clean over
+  text); **dissolve** on scroll-idle (~160ms) into the nearest dock + a one-shot **bloom**;
+  re-emerges on scroll. Caught a framer-vs-inline-transform bug on the bloom (positioned
+  wrapper + inner scaling span).
+- **Experience**: added a lime **"now"** dot at the spine head, **consolidating** the old
+  lime "running" chip into it (one lime, not two) + an invisible spine-bottom waypoint so the
+  dot **rides the wire** down. Role nodes stay cobalt.
+- **Contact**: a placeholder lime node (previews the planned Section 5 convergent node).
+- **Fallbacks**: `prefers-reduced-motion` + `< lg` → no traveler; the four static lime dots
+  remain (the recurring-anchor motif).
+
+**Output** —
+- New: `components/thread/anchorStore.ts`, `LimeThread.tsx` (rewrite), `ContactAnchor.tsx`.
+- Registrations: `NeuralPipeline.tsx` (result node), `OrbitalProjects.tsx` (orbit core),
+  `ExperienceTimeline.tsx` (spine "now" + waypoint, running chip removed), `app/page.tsx`
+  (contact node).
+- Verified: `tsc` clean; `next build` passes; screenshots confirm at-rest single dots +
+  mid-scroll traveler/trail. `main` untouched — awaiting the user's keep/revert call.
 
 ---
 

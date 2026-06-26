@@ -1,7 +1,7 @@
-<!-- SEED: real tokens below are taken from IDEA.md's committed theme. Component specs are provisional best-practice defaults; re-run /impeccable document once the components are built to capture the actual rendered values. -->
+<!-- Documented from the built code (scan mode). Tokens mirror app/globals.css + tailwind.config.ts; component specs are the actual shipped values. -->
 ---
 name: Nihar Domala — AI Systems Portfolio
-description: A single-page portfolio rendered as a neural network at inference, scrolling strictly top-to-bottom into a "ready" contact node.
+description: A single-page portfolio rendered as a neural network at inference; the page scrolls top→bottom into a "ready" output node, with the Section 2 network laid out horizontally.
 colors:
   bg: "#05070C"
   surface: "#0B0F17"
@@ -115,8 +115,9 @@ icon-heading-text card grids).
 - Near-black charcoal canvas (`#05070C`), drenched and absolute.
 - Two-color logic: cobalt = infrastructure, lime = life. Nothing else competes.
 - Monospace for anything machine-spoken (labels, metrics, code, the terminal form);
-  Inter for anything human-spoken (headings, prose).
-- One signature interaction (the autonomous canvas pipeline) instead of many small ones.
+  Geist for anything human-spoken (headings, prose).
+- Two signature interactions — the autonomous **horizontal** pipeline and the radial
+  **project orbit** — instead of many small ones.
 - Performance is visual integrity: a stutter breaks the illusion that the machine is real.
 
 ## 2. Colors
@@ -126,10 +127,11 @@ structure, electric lime for life. Cool, instrumental, and almost monochrome unt
 something becomes active.
 
 ### Primary
-- **Electric Lime** (`#CCFF00`): The "live" signal, and the only warm-bright in the
-  system. Reserved for the *active* state: a hovered/firing node, the single key
-  impact metric per case study, the "ready" output node, and one primary CTA. It
-  means "this is alive right now." Never used for reading-length text.
+- **Electric Lime** (`#CCFF00`): The "live" / identity signal, and the only warm-bright in
+  the system. Reserved for the one element that represents *you* — the network's result /
+  output node and the project orbit's central "me" core — plus the single key impact metric
+  per card and one primary CTA. It means "this is the live output." A node's hover/active
+  state is **not** lime (that is cobalt). Kept rare; never used for reading-length text.
 
 ### Secondary
 - **Synapse Cobalt** (`#3B82F6`): The infrastructure color. Synapses, connection
@@ -153,10 +155,11 @@ something becomes active.
   layer-hover boxes, cards, and inputs.
 
 ### Named Rules
-**The One Live Signal Rule.** Lime means exactly one thing: active *right now*. If an
-element is lime, it is being hovered, is currently firing, is the single headline
-metric, or is the one moment asking to be clicked. Cobalt carries everything that is
-merely structural. If a second static thing is also lime, one of them is wrong.
+**The One Live Signal Rule.** Lime is the identity/output signal, not a generic hover
+color. An element is lime only if it is the "me" / result node, the single headline metric
+on a card, or the one moment asking to be clicked. Everything structural — including a
+node's *hover/active* state — brightens in **cobalt**, not lime. If a second lime thing
+appears in the same view that isn't the me-node or its metric, one of them is wrong.
 
 **The Tone-Not-Shadow Rule.** Depth on this dark surface comes from lifting tone
 (`#05070C` → `#0B0F17`), not from drop shadows. Glows are the only exception, and
@@ -247,6 +250,11 @@ form*, not in heavy chrome. Components recede so the canvas leads.
 - **Border:** `rgba(255,255,255,0.12)`, 1px, all sides. Never a single colored side-stripe.
 - **Internal Padding:** `24px`–`32px`. The single key impact metric per card is the
   one lime element; everything else (problem, solution, stack) stays neutral.
+- **Hover:** a soft "pop" — `~2px` lift + `1.015` scale (transform only, no layout
+  shift), border brightens to cobalt, surface lifts a touch, and a faint cool-white
+  **diagonal shine** sweeps the surface (low-alpha `linear-gradient`, brightest top-left,
+  fading out by ~52%). On scroll-in, cards rise + scale up gently (no opacity gate, so
+  they never ship blank). `prefers-reduced-motion` drops the motion.
 - **Anti-pattern:** Case-study panels must NOT collapse into an identical
   icon-heading-text grid. Vary the layout; let the headline metric break the grid.
 
@@ -264,16 +272,34 @@ form*, not in heavy chrome. Components recede so the canvas leads.
   single vertical scroll, so heavy nav is unnecessary. If present: mono labels,
   Muted Ink default, Instrument White on active section.
 
-### Signature Component — The Neural Pipeline Canvas
-A single `<canvas>` rendering the entire network: nodes and synapses are plain JS
-objects with vector math, never DOM elements. Resting state is Hairline lines and
-dim Deep-Cobalt synapses; data packets fire downward (forward pass) in Synapse
-Cobalt and flash back upward (backprop) subtly. Node-hover isolates the node, dims
-other lines, brightens its paths, and lights it lime (the live signal). DOM overlays
-(glassmorphic layer box, Framer Motion tooltip, terminal chip) ride *above* the
-canvas; they are the only sanctioned glass in the system. Below 768px the canvas
-degrades to a static stacked node layout; `prefers-reduced-motion` replaces the
-autonomous firing with a calm static (or barely-breathing) network.
+### Signature Components
+
+**The Neural Pipeline (Section 2) — canvas/DOM hybrid.** Laid out **horizontally**:
+five columns left→right (Inputs → Transformation → Outputs → Deployment → Core Result).
+The **synapse web, glows, and firing packets are painted on a single `<canvas>`** (plain
+JS objects with vector math); the **nodes ride above as DOM tokens** (Framer Motion, a
+small capped count so there is no DOM bloat) for buttery hover/scale interaction. Resting
+synapses are Hairline + dim Deep-Cobalt; packets fire left→right (forward pass) in Synapse
+Cobalt and flash back subtly (backprop). Node-hover isolates the node, dims other lines,
+brightens its paths, and lights the node **cobalt** (its active state); only the final
+result node is lime. A Framer Motion glass detail card + terminal chips ride above the
+canvas (the only sanctioned glass). Below 768px it degrades to a static stacked layout;
+`prefers-reduced-motion` replaces the autonomous firing with a calm static network.
+
+**The Project Orbit (Section 3) — "Output layer".** The shipped projects orbit a central
+lime "me" core on the left; a spotlight autoplays through them while a fixed detail panel
+on the right shows the active project (Problem / Approach / Impact metric / stack / Code +
+Demo buttons). Project nodes are **cobalt** icon tokens (only the center core is lime).
+Pointer proximity hands a node the spotlight and holds it; near-invisible prev/next chevrons
+flank the panel. Below `lg` and under reduced-motion it degrades to a static stack of
+scannable case-study cards.
+
+**The Experience Timeline (Section 4) — "Signal Trace".** A cobalt spine (the network's
+synapse continued) with role-icon nodes (Briefcase / Backpack / GraduationCap) that light
+**cobalt** as a scroll-drawn trace reaches them; lifted cards with the hover pop + diagonal
+shine and a faint per-role glyph watermark; the year sits in an outside-left gutter on
+desktop; the current role carries the one lime "live" marker. Reduced-motion + <768px keep
+a calm, fully-readable stack.
 
 ## 6. Do's and Don'ts
 
@@ -308,6 +334,7 @@ autonomous firing with a calm static (or barely-breathing) network.
 - **Don't** put a colored `border-left`/`border-right` stripe on cards or callouts;
   use full hairline borders.
 - **Don't** glow UI chrome (buttons, cards, inputs). Glow belongs to the machine.
-- **Don't** render network nodes or synapses as DOM/SVG elements; everything inside
-  the network is painted on the single canvas.
+- **Don't** render the synapse web, packets, or glows as DOM/SVG; those stay painted on
+  the single canvas. The nodes themselves are DOM tokens (for smooth interaction) — keep
+  their count capped so there's no DOM bloat.
 - **Don't** use lime for error states; errors get a dedicated dim red-orange.

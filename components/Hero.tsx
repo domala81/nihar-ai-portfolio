@@ -2,14 +2,11 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Github, Linkedin, FileText, ArrowDown } from "lucide-react";
+import { personal } from "@/data";
 
 const SOCIALS = [
-  { label: "GitHub", href: "https://github.com/domala81", Icon: Github },
-  {
-    label: "LinkedIn",
-    href: "https://www.linkedin.com/in/nihar-domala/",
-    Icon: Linkedin,
-  },
+  { label: "GitHub", href: personal.socials.github.href, Icon: Github },
+  { label: "LinkedIn", href: personal.socials.linkedin.href, Icon: Linkedin },
 ];
 
 export default function Hero() {
@@ -59,7 +56,7 @@ export default function Hero() {
             </a>
           ))}
           <a
-            href="/resume.pdf"
+            href={personal.resume}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-md border border-border-soft px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:border-infra hover:text-ink"
@@ -82,7 +79,7 @@ export default function Hero() {
         <motion.div variants={item} className="mb-7">
           <span className="inline-flex items-center gap-2.5 rounded-full border border-border-soft bg-surface/60 px-3.5 py-1.5 font-mono text-xs text-ink-muted backdrop-blur-sm">
             <StatusDot reduce={!!reduce} />
-            Accepting Missions
+            {personal.statusPill}
           </span>
         </motion.div>
 
@@ -92,7 +89,7 @@ export default function Hero() {
           className="text-balance font-sans font-semibold leading-[0.95] tracking-display text-ink"
           style={{ fontSize: "clamp(2.75rem, 9vw, 5.75rem)" }}
         >
-          Nihar Domala
+          {personal.name}
         </motion.h1>
 
         {/* Tagline */}
@@ -101,7 +98,7 @@ export default function Hero() {
           className="mt-6 max-w-measure text-pretty text-lg leading-relaxed text-ink sm:text-xl"
         >
           <span className="font-mono text-base text-infra sm:text-lg">
-            AI Systems · Data Engineering · Cloud.
+            {personal.tagline}.
           </span>{" "}
           Building the infrastructure that puts models into production.
         </motion.p>
@@ -111,7 +108,7 @@ export default function Hero() {
           variants={item}
           className="mt-5 flex flex-col items-start gap-1.5 font-mono text-xs text-ink-muted sm:flex-row sm:items-center sm:gap-3"
         >
-          <span>Washington, DC</span>
+          <span>{personal.location}</span>
           <span className="hidden h-px w-8 bg-border-soft sm:block" aria-hidden />
           <span>Open to AI / Data / Cloud roles</span>
         </motion.div>
@@ -128,7 +125,7 @@ export default function Hero() {
             </span>
           </a>
           <a
-            href="/resume.pdf"
+            href={personal.resume}
             target="_blank"
             rel="noreferrer noopener"
             className="inline-flex items-center gap-2 rounded-md border border-border-soft px-5 py-3 font-mono text-sm text-ink transition-all duration-200 ease-out-quint hover:-translate-y-px hover:border-ink/40 motion-reduce:hover:translate-y-0"

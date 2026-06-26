@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef } from "react";
+import { useEffect, useRef } from "react";
 import {
   motion,
   useReducedMotion,
@@ -14,8 +14,9 @@ import {
   Cloud,
   type LucideIcon,
 } from "lucide-react";
-import { LAYERS } from "../pipeline/networkData";
+import { experience, type ExperienceEntry } from "@/data";
 import { ICONS } from "../pipeline/iconData";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * Section 4 — Professional Experience ("Signal Trace").
@@ -23,8 +24,7 @@ import { ICONS } from "../pipeline/iconData";
  * The neural network's synapse, continued: a thin cobalt spine runs down the left
  * edge; each role is a node that lights as the scroll-drawn trace reaches it, with
  * the detail living in a lifted card that pops on hover. Single source of truth —
- * reads straight off the canvas Deployment layer (pipeline Layer 4), so the timeline
- * and the network can never drift apart.
+ * reads from data/experience.ts, so the timeline and the network can never drift apart.
  *
  * Each spine node is a small role-icon token (echoing the canvas NodeToken), the year
  * sits in an outside-left gutter on desktop, and cards zoom a touch with a node glow on
@@ -33,9 +33,6 @@ import { ICONS } from "../pipeline/iconData";
  * Everything degrades to a calm, fully-readable static layout under
  * prefers-reduced-motion and stacks cleanly on small screens.
  */
-
-// The canvas Deployment layer is the data source; the timeline only re-presents it.
-const ENTRIES = LAYERS[3].nodes;
 
 // Rail center — the spine and the nodes sit here. On sm the rail shifts right to
 // make room for the outside-left year gutter.
@@ -61,6 +58,19 @@ const ROLE_GLYPH: Record<string, LucideIcon> = {
 export default function ExperienceTimeline() {
   const reduce = useReducedMotion();
   const listRef = useRef<HTMLOListElement>(null);
+  const nowRef = useRef<HTMLDivElement>(null);
+  const tipRef = useRef<HTMLDivElement>(null);
+
+  // Register the lime "now" head (dock) + the live trace tip (track) for the page thread.
+  useEffect(() => {
+    const cleanups: Array<() => void> = [];
+    if (nowRef.current) cleanups.push(registerAnchor("experience", nowRef.current));
+    if (tipRef.current)
+      cleanups.push(
+        registerAnchor("experience-tip", tipRef.current, { dock: false, track: true }),
+      );
+    return () => cleanups.forEach((c) => c());
+  }, []);
 
   // Scroll progress through the list draws the cobalt trace down the spine.
   const { scrollYProgress } = useScroll({
@@ -110,7 +120,30 @@ export default function ExperienceTimeline() {
             style={reduce ? { scaleY: 1 } : { scaleY: scrollYProgress }}
             className={`absolute ${RAIL} bottom-8 top-7 w-px origin-top -translate-x-1/2 bg-infra`}
           />
-          {ENTRIES.map((node, i) => {
+          {/* Lime "now / me" anchor at the spine head — present day; history flows down.
+              The page thread docks here (consolidates the old lime "running" chip). */}
+          <div
+            ref={nowRef}
+            aria-hidden
+            className={`absolute ${RAIL} -top-1 z-20 -translate-x-1/2`}
+          >
+            <span className="relative flex h-3 w-3 items-center justify-center">
+              {!reduce && (
+                <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-live/40" />
+              )}
+              <span className="relative h-2.5 w-2.5 rounded-full bg-live shadow-[0_0_10px_2px_rgba(204,255,0,0.5)]" />
+            </span>
+          </div>
+          {/* Invisible clone of the trace — its bottom edge is the live trace tip the page
+              thread follows, kept perfectly in sync with the cobalt line by construction. */}
+          <motion.div
+            aria-hidden
+            style={reduce ? { scaleY: 1 } : { scaleY: scrollYProgress }}
+            className={`pointer-events-none absolute ${RAIL} bottom-8 top-7 w-0 origin-top -translate-x-1/2`}
+          >
+            <div ref={tipRef} className="absolute bottom-0 left-0 h-0 w-0" />
+          </motion.div>
+          {experience.map((node: ExperienceEntry, i) => {
             const isHead = i === 0; // most-recent role = the live "running" deploy
             const bullets =
               node.bullets ?? (node.description ? [node.description] : []);
@@ -123,7 +156,7 @@ export default function ExperienceTimeline() {
               >
                 {/* Outside-left gutter — the year, scannable beside the spine (desktop) */}
                 <div className="col-start-1 hidden pt-[18px] text-right font-mono text-xs leading-tight text-ink-muted transition-colors duration-200 group-hover:text-infra sm:block">
-                  {node.date}
+                  {node.period}
                 </div>
 
                 {/* Node on the spine — lights as the trace reaches it */}
@@ -171,9 +204,8 @@ export default function ExperienceTimeline() {
                     {/* Header */}
                     <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
                       <h3 className="font-sans text-lg font-semibold tracking-tightish text-ink sm:text-xl">
-                        {node.label}
+                        {node.role}
                       </h3>
-                      {isHead && <RunningTag reduce={!!reduce} />}
                     </div>
 
                     {/* Meta — org always; date only on mobile (desktop shows it in the gutter) */}
@@ -181,7 +213,7 @@ export default function ExperienceTimeline() {
                       {node.org}
                       <span className="sm:hidden">
                         {node.org ? " · " : ""}
-                        {node.date}
+                        {node.period}
                       </span>
                     </p>
 
@@ -213,9 +245,9 @@ export default function ExperienceTimeline() {
                     )}
 
                     {/* Tech chips with brand glyphs */}
-                    {node.connections && node.connections.length > 0 && (
+                    {node.skills && node.skills.length > 0 && (
                       <ul className="mt-5 flex flex-wrap gap-2">
-                        {node.connections.map((c) => (
+                        {node.skills.map((c) => (
                           <li
                             key={c}
                             className="inline-flex items-center gap-1.5 rounded border border-border-soft bg-bg px-2 py-0.5 font-mono text-[11px] text-ink-muted transition-colors duration-200 group-hover:border-white/20 group-hover:text-ink"
@@ -312,25 +344,6 @@ function Node({
           />
         )}
       </motion.span>
-    </span>
-  );
-}
-
-/** The one live signal: a breathing lime "running" tag on the current role. */
-function RunningTag({ reduce }: { reduce: boolean }) {
-  return (
-    <span className="inline-flex shrink-0 items-center gap-1.5 rounded-full border border-live/30 bg-live/10 px-2 py-0.5 font-mono text-[11px] text-live">
-      <span className="relative inline-flex h-1.5 w-1.5">
-        {!reduce && (
-          <motion.span
-            className="absolute inline-flex h-full w-full rounded-full bg-live"
-            animate={{ scale: [1, 2.2], opacity: [0.6, 0] }}
-            transition={{ duration: 1.8, repeat: Infinity, ease: "easeOut" }}
-          />
-        )}
-        <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-live" />
-      </span>
-      running
     </span>
   );
 }

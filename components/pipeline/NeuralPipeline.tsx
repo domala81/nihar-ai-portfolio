@@ -9,6 +9,7 @@ import DetailCard from "./DetailCard";
 import PipelineContent from "./PipelineContent";
 import NodeToken, { type TokenState } from "./NodeToken";
 import { ALL_NODES, LAYERS, LAYER_COUNTS, nodeByLabel, type NodeKind } from "./networkData";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * The Inference Engine — horizontal neural pipeline (Section 2), DOM/canvas hybrid.
@@ -92,6 +93,13 @@ export default function NeuralPipeline() {
   const [layout, setLayout] = useState<Layout | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [demoId, setDemoId] = useState<string | null>(null);
+
+  // Register the result (core) node as the "network" anchor for the page lime thread.
+  useEffect(() => {
+    const core = layout?.nodes.find((n) => n.isCore);
+    const el = core ? tokenRefs.current[core.id] : null;
+    return el ? registerAnchor("network", el) : undefined;
+  }, [layout]);
 
   const clearActive = useCallback(() => {
     engineHoverRef.current = null;
