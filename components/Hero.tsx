@@ -106,12 +106,15 @@ export default function Hero() {
         {/* Tagline */}
         <motion.p
           variants={item}
-          className="mt-6 max-w-measure text-pretty text-lg leading-relaxed text-ink sm:text-xl"
+          className="mt-6 max-w-measure text-pretty leading-relaxed text-ink"
         >
           <span className="font-mono text-base text-infra sm:text-lg">
-            {personal.tagline}.
-          </span>{" "}
-          Building the infrastructure that puts models into production.
+            {personal.tagline}
+          </span>
+          <span className="mt-2 block text-base text-ink sm:text-lg">
+            From ingestion to inference - I build pipelines that feed models and
+            AI systems that ship
+          </span>
         </motion.p>
 
         {/* Location */}
