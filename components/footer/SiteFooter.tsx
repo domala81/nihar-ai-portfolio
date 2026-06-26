@@ -8,10 +8,10 @@ import { personal } from "@/data";
  * Site footer — a compact "inference colophon".
  *
  * One tight centered block: a live machine-voice status line (cobalt dot + blinking terminal
- * cursor) over a single wrapping credit line (© · built with ♥ · stack). Back-to-top is pinned
- * to the right edge on desktop, inline on mobile. Debranded from the reference footer — no glass,
- * no glow on chrome. One lime mark only: the ♥ ("built with love" = the brand's *alive*); the
- * status dot is cobalt and the cursor is ink, so neither competes for the live signal.
+ * cursor) over a single wrapping credit line (© · hand-prompted credit · stack). Back-to-top is
+ * pinned to the right edge on desktop, inline on mobile. Debranded from the reference footer — no
+ * glass, no glow on chrome. No lime here — the colophon stays fully muted; the status dot is
+ * cobalt and the cursor is ink, keeping the footer quiet.
  */
 export default function SiteFooter() {
   const reduce = useReducedMotion();
@@ -20,7 +20,7 @@ export default function SiteFooter() {
 
   return (
     <footer className="relative border-t border-border-soft px-6 py-7 sm:px-10">
-      <div className="mx-auto flex max-w-2xl flex-col items-center gap-2 text-center font-mono text-xs text-ink-muted">
+      <div className="mx-auto flex max-w-6xl flex-col items-center gap-2 text-center font-mono text-xs text-ink-muted">
         {/* Live machine-voice status — cobalt dot (done/structural) + blinking terminal cursor. */}
         <p className="flex items-center gap-2 tracking-[0.04em]">
           <span aria-hidden className="text-infra">
@@ -44,18 +44,12 @@ export default function SiteFooter() {
         </p>
 
         {/* Colophon — one wrapping line. The ♥ is the footer's single live signal. */}
-        <p className="flex flex-wrap items-center justify-center gap-x-2 gap-y-0.5 leading-relaxed">
-          <span>© {new Date().getFullYear()} {personal.name}</span>
+        <p className="flex flex-wrap items-center justify-center gap-x-10 gap-y-1 leading-relaxed">
+          <span className="whitespace-nowrap">© {new Date().getFullYear()} {personal.name}</span>
           <span aria-hidden className="text-white/15">·</span>
-          <span className="inline-flex items-center gap-1">
-            built with
-            <span aria-hidden className="text-live">
-              ♥
-            </span>
-            <span className="sr-only">love</span>
-          </span>
+          <span className="whitespace-nowrap text-ink">100% hand-prompted, Claude did the typing</span>
           <span aria-hidden className="text-white/15">·</span>
-          <span>Next.js · Canvas · GSAP</span>
+          <span className="whitespace-nowrap">Next.js · Canvas · GSAP</span>
         </p>
 
         {/* Back to top — "rerun" the inference. Inline-centered on mobile, pinned right on desktop. */}

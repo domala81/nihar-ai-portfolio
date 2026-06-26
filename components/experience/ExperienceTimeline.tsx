@@ -46,13 +46,17 @@ const CONNECTION_SLUG: Record<string, string> = {
   Python: "python",
   PostgreSQL: "postgresql",
   Snowflake: "snowflake",
+  Databricks: "databricks",
+  Terraform: "terraform",
 };
 
 // Large, faint watermark glyph per role — gives each card its own identity.
 const ROLE_GLYPH: Record<string, LucideIcon> = {
-  "exp-de": Briefcase, // job — same glyph the network gives experience nodes (NodeBadge)
-  "exp-intern": Backpack, // internship — distinct from the job briefcase
-  "exp-ms": GraduationCap, // schooling
+  "exp-capitalone": Briefcase, // job — same glyph the network gives experience nodes (NodeBadge)
+  "exp-samsung": Backpack, // internship — distinct from the job briefcase
+  "exp-iquanti": Backpack, // internship
+  "edu-gwu": GraduationCap, // schooling
+  "edu-iit": GraduationCap, // schooling
 };
 
 export default function ExperienceTimeline() {

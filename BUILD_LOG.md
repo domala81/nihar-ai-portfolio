@@ -42,6 +42,11 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-06-26** — Provided the real resume + a `knowledge/` folder; wanted the site's
+  `data/` content updated to real, accurate info, explicitly asking me to *ask, not assume*.
+  Confirmed: resume email over account email; 3 showcase projects (CloudMart / VisionVoice /
+  IEEE CNN-pooling paper); timeline = 3 jobs + both degrees; passions drafted from the resume.
+  → Entry 032.
 - **2026-06-26** — Wanted a centralized config so adding a new project, skill, or role
   reflects everywhere without knowing pipeline internals. Judged CMS overkill for a
   static portfolio; plain TypeScript `data/` files compile away at build time (zero
@@ -306,6 +311,44 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 032 — Real content: resume + knowledge → `data/`
+
+**Prompt:** "I can provide my real resume and more details — start updating the content
+of my website in the data folder. Resume at `…/master-1page/resume.pdf`, rename to
+`NiharDomala_Resume_DataEngineer`. More context in the `knowledge/` folder. Update the
+content accordingly. Ask me if you have any questions, do not assume."
+
+**Flow:**
+1. Read the resume PDF + `knowledge/` (experience, projects, skills, achievements) and
+   mapped the `data/` wiring: pipeline matches layers by **label**, and two component
+   maps (`CONNECTION_SLUG`, `ROLE_GLYPH`) key off entry **ids/labels**.
+2. Asked four decision questions (email, which projects, timeline scope, passions source).
+3. Replaced all placeholder content: `personal` (email, Aldie VA, résumé path), 3 real
+   projects, 5 experience entries (3 jobs + 2 degrees), 4 real passions + 7 core skills.
+4. Synced the id/label-keyed maps to the new entry ids; copied the résumé into `public/`.
+5. Added brand icons (`databricks`, `terraform`) via `gen-icons.mjs`; AWS has no
+   simple-icons mark (trademark) so it falls back to the kind glyph.
+6. `npm run build` — compiled clean, types valid.
+
+**Decisions (user-confirmed):**
+- **Email** = `nihardomala.dev@gmail.com` (resume), over the old `ndomala81@…`.
+- **Projects (3):** CloudMart, VisionVoice, Bonferroni CNN pooling (IEEE). The iQuanti
+  NLP work stays in *experience*, not promoted to a project.
+- **Timeline (5):** Capital One, Samsung, iQuanti + GWU (MS) + IIT Kharagpur (BTech).
+  Capital One is `i===0` → keeps the lime "live" head.
+- **Passions** drafted from the resume profile (AI in production / distributed data /
+  pipeline reliability / cloud-native), confirmed at plan approval.
+- **AWS iconless** — simple-icons dropped the AWS brand mark; `icon: ""` → Cpu/kind
+  fallback in the pipeline, Cloud glyph in timeline chips (existing `aws|cloud` regex).
+- **`networkData.ts` untouched** — content-only change, per the data-layer contract.
+
+**Output:** `data/personal.ts`, `data/projects.ts`, `data/experience.ts`,
+`data/skills.ts`, `scripts/gen-icons.mjs`, `components/pipeline/iconData.ts` (regen),
+`components/pipeline/NodeBadge.tsx`, `components/experience/ExperienceTimeline.tsx`,
+`public/NiharDomala_Resume_DataEngineer.pdf` (new).
 
 ---
 

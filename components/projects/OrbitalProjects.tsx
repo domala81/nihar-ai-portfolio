@@ -379,9 +379,16 @@ function ProjectBody({ p }: { p: ProjectEntry }) {
         </ul>
       )}
 
-      {p.links && p.links.length > 0 && (
+      {(() => {
+        // Demo buttons hidden for now — keep them in data + render path so they
+        // can be re-enabled later in the same style by dropping this filter.
+        const links = (p.links ?? []).filter(
+          (l) => l.label.toLowerCase() !== "demo",
+        );
+        if (links.length === 0) return null;
+        return (
         <div className="mt-5 flex flex-wrap gap-2">
-          {p.links.map((l) => {
+          {links.map((l) => {
             const primary = l.label.toLowerCase() === "demo";
             return (
               <a
@@ -403,7 +410,8 @@ function ProjectBody({ p }: { p: ProjectEntry }) {
             );
           })}
         </div>
-      )}
+        );
+      })()}
     </>
   );
 }

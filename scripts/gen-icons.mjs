@@ -14,6 +14,8 @@ const SLUGS = [
   "postgresql",
   "snowflake",
   "pytorch",
+  "databricks",
+  "terraform",
 ];
 
 const exportName = (slug) => "si" + slug.charAt(0).toUpperCase() + slug.slice(1);

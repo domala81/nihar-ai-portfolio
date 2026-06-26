@@ -3,6 +3,8 @@
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Github, Linkedin, FileText, ArrowDown } from "lucide-react";
 import { personal } from "@/data";
+import HeroSleepingNet from "@/components/HeroSleepingNet";
+import HeroNodeSonar from "@/components/HeroNodeSonar";
 
 const SOCIALS = [
   { label: "GitHub", href: personal.socials.github.href, Icon: Github },
@@ -32,8 +34,14 @@ export default function Hero() {
     // now live in the shared stage (NeuralPipeline) so one network spans hero →
     // pipeline; NeuralPipeline fades this whole block out as the network resolves.
     <div className="min-h-hero relative">
+      <HeroSleepingNet />
+
+      {/* Me-node — right side of hero */}
+      <div className="absolute right-[6%] xl:right-[10%] top-1/2 -translate-y-1/2 z-20 hidden lg:flex items-center justify-center">
+        <HeroNodeSonar />
+      </div>
       {/* Top bar */}
-      <header className="absolute inset-x-0 top-0 z-10 flex items-center justify-between px-6 py-5 sm:px-10">
+      <header className="absolute inset-x-0 top-0 z-30 flex items-center justify-between px-6 py-5 sm:px-10">
         <a
           href="#top"
           className="relative inline-block font-mono text-sm tracking-tightish text-ink transition-colors after:absolute after:-bottom-1 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-infra after:transition-transform after:duration-300 after:ease-out hover:after:scale-x-100 motion-reduce:after:hidden"
@@ -49,7 +57,10 @@ export default function Hero() {
               rel="noreferrer noopener"
               className="group inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:text-ink"
             >
-              <Icon className="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-y-px" aria-hidden />
+              <Icon
+                className="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-y-px"
+                aria-hidden
+              />
               <span className="relative hidden sm:inline after:absolute after:-bottom-0.5 after:left-0 after:h-px after:w-full after:origin-left after:scale-x-0 after:bg-infra after:transition-transform after:duration-300 after:ease-out group-hover:after:scale-x-100 motion-reduce:after:hidden">
                 {label}
               </span>
@@ -109,18 +120,27 @@ export default function Hero() {
           className="mt-5 flex flex-col items-start gap-1.5 font-mono text-xs text-ink-muted sm:flex-row sm:items-center sm:gap-3"
         >
           <span>{personal.location}</span>
-          <span className="hidden h-px w-8 bg-border-soft sm:block" aria-hidden />
+          <span
+            className="hidden h-px w-8 bg-border-soft sm:block"
+            aria-hidden
+          />
           <span>Open to AI / Data / Cloud roles</span>
         </motion.div>
 
         {/* CTAs */}
-        <motion.div variants={item} className="mt-10 flex flex-wrap items-center gap-3">
+        <motion.div
+          variants={item}
+          className="mt-10 flex flex-wrap items-center gap-3"
+        >
           <a
             href="#contact"
-            className="group inline-flex items-center gap-2 rounded-md border border-live bg-live/10 px-5 py-3 font-mono text-sm text-live transition-all duration-200 ease-out-quint hover:-translate-y-px hover:bg-live hover:text-bg motion-reduce:hover:translate-y-0"
+            className="group inline-flex items-center gap-2 rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-all duration-200 ease-out-quint hover:-translate-y-px hover:bg-infra hover:text-bg motion-reduce:hover:translate-y-0"
           >
             Get in touch
-            <span aria-hidden className="transition-transform duration-200 ease-out-quint group-hover:translate-x-0.5">
+            <span
+              aria-hidden
+              className="transition-transform duration-200 ease-out-quint group-hover:translate-x-0.5"
+            >
               →
             </span>
           </a>

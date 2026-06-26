@@ -27,9 +27,11 @@ const GLYPH: Record<NodeKind, typeof Sparkles> = {
 // Per-node glyph overrides (id wins over the kind default), so the experience
 // nodes read distinctly — job, internship, schooling — matching the timeline.
 const ROLE_GLYPH: Partial<Record<string, typeof Sparkles>> = {
-  "exp-de": Briefcase,
-  "exp-intern": Backpack,
-  "exp-ms": GraduationCap,
+  "exp-capitalone": Briefcase,
+  "exp-samsung": Backpack,
+  "exp-iquanti": Backpack,
+  "edu-gwu": GraduationCap,
+  "edu-iit": GraduationCap,
 };
 
 export function hasBrand(icon?: string) {

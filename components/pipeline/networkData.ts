@@ -28,6 +28,10 @@ export type PipeNode = {
 export type PipeLayer = {
   index: 0 | 1 | 2 | 3 | 4;
   moniker: string;
+  /** Dim lead-in shown before the keyword in the column label, e.g. "Layer 1 · Inputs" */
+  prefix: string;
+  /** Bright accent word(s) — the focal part of the column label, e.g. "Passions" */
+  keyword: string;
   short: string;
   kind: NodeKind;
   nodes: PipeNode[];
@@ -37,6 +41,8 @@ export const LAYERS: PipeLayer[] = [
   {
     index: 0,
     moniker: "LAYER 1: INPUTS (PASSIONS)",
+    prefix: "Layer 1 · Inputs",
+    keyword: "Passions",
     short: "Inputs · Passions",
     kind: "passion",
     nodes: passions.map((p) => ({
@@ -50,6 +56,8 @@ export const LAYERS: PipeLayer[] = [
   {
     index: 1,
     moniker: "LAYER 2: TRANSFORMATION (CORE SKILLS)",
+    prefix: "Layer 2 · Transformation",
+    keyword: "Core Skills",
     short: "Transformation · Core Skills",
     kind: "skill",
     nodes: skills.map((s) => ({
@@ -67,6 +75,8 @@ export const LAYERS: PipeLayer[] = [
   {
     index: 2,
     moniker: "LAYER 3: OUTPUTS (PROJECTS)",
+    prefix: "Layer 3 · Outputs",
+    keyword: "Projects",
     short: "Outputs · Projects",
     kind: "project",
     nodes: projects.map((p) => ({
@@ -84,6 +94,8 @@ export const LAYERS: PipeLayer[] = [
   {
     index: 3,
     moniker: "LAYER 4: DEPLOYMENT (EXPERIENCE)",
+    prefix: "Layer 4 · Deployment",
+    keyword: "Experience",
     short: "Deployment · Experience",
     kind: "experience",
     nodes: experience.map((e) => ({
@@ -100,6 +112,8 @@ export const LAYERS: PipeLayer[] = [
   {
     index: 4,
     moniker: "INFERENCE STATUS: READY FOR THE NEXT MISSION",
+    prefix: "Inference Status",
+    keyword: "Ready for the next mission",
     short: "Core Result",
     kind: "result",
     nodes: [

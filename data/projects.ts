@@ -18,42 +18,48 @@ export type ProjectEntry = {
 
 export const projects: ProjectEntry[] = [
   {
-    id: "nlp",
-    title: "Real-time NLP Pipeline",
-    date: "2024",
-    problem: "Support tickets piled up faster than anyone could route them by hand.",
-    description: "Streaming text classification that tags and routes every message in production.",
-    metric: "10M+ rows/day · latency −40%",
-    tech: ["Apache Spark", "Kafka", "PyTorch"],
+    id: "cloudmart",
+    title: "CloudMart",
+    date: "2025",
+    problem:
+      "An e-commerce platform drowning in support tickets, with sales insight stranded across disconnected clouds.",
+    description:
+      "MultiCloud AI storefront: AWS (EKS, Bedrock, Terraform, CodePipeline), GCP (BigQuery, Looker Studio) and Azure sentiment, fronted by a Claude Bedrock assistant with RAG-based catalog retrieval.",
+    metric: "support cost −90% · real-time sales analytics",
+    tech: ["AWS", "Amazon Bedrock", "Terraform", "BigQuery"],
     links: [
-      { label: "Code", href: "#" },
+      { label: "Code", href: "https://github.com/domala81" },
       { label: "Demo", href: "#" },
     ],
   },
   {
-    id: "proj2",
-    title: "Feature Store & Serving",
+    id: "visionvoice",
+    title: "VisionVoice",
     date: "2024",
-    problem: "Models trained on features that had already drifted from what production served.",
-    description: "Point-in-time feature store with online and offline parity.",
-    metric: "train/serve skew → 0 · p99 ‹<50ms›",
-    tech: ["Feast", "Redis", "dbt"],
+    problem:
+      "Visually impaired users had no fast way to know what was in an image.",
+    description:
+      "Image-captioning system pairing a CNN encoder with an RNN decoder (EfficientNet-B3), then speaking each caption aloud via text-to-speech.",
+    metric: "BLEU 0.20 · spoken captions for accessibility",
+    tech: ["PyTorch", "Python", "EfficientNet"],
     links: [
-      { label: "Code", href: "#" },
+      { label: "Code", href: "https://github.com/domala81" },
       { label: "Demo", href: "#" },
     ],
   },
   {
-    id: "proj3",
-    title: "Model Serving Gateway",
+    id: "cnn-pooling",
+    title: "Bonferroni Mean Pooling in CNNs",
     date: "2023",
-    problem: "Every model shipped its own bespoke API, with no shared auth or rollout control.",
-    description: "One inference gateway: dynamic batching, canary rollout, token auth.",
-    metric: "throughput ‹+3×› · cost/req ‹−45%›",
-    tech: ["FastAPI", "Triton", "Kubernetes"],
+    problem:
+      "Classical pooling layers throw away information that matters on real medical images.",
+    description:
+      "Novel Bonferroni mean-based aggregation in the pooling layer, implemented in PyTorch and benchmarked against classical pooling on state-of-the-art CNN architectures.",
+    metric: "IEEE INDICON 2023 · MV Chauhan Best Paper",
+    tech: ["PyTorch", "Python"],
     links: [
-      { label: "Code", href: "#" },
-      { label: "Demo", href: "#" },
+      { label: "Paper", href: "#" },
+      { label: "Code", href: "https://github.com/domala81" },
     ],
   },
 ];

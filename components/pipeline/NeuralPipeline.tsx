@@ -725,12 +725,14 @@ export default function NeuralPipeline() {
                     ref={(el) => {
                       monikerRefs.current[i] = el;
                     }}
-                    className={`pointer-events-none absolute top-[12%] z-10 font-mono text-[10px] uppercase leading-snug tracking-wider opacity-0 ${
-                      isResult ? "text-right text-infra" : "-translate-x-1/2 text-center text-ink-muted"
+                    className={`pointer-events-none absolute top-[16%] z-10 font-mono uppercase leading-snug tracking-wider opacity-0 ${
+                      isResult ? "text-right" : "-translate-x-1/2 text-center"
                     }`}
-                    style={isResult ? { right: layout.cols[0], maxWidth: 132 } : { left: layout.cols[i], maxWidth: 104 }}
+                    style={isResult ? { right: layout.cols[0], maxWidth: 150 } : { left: layout.cols[i], maxWidth: 120 }}
                   >
-                    {l.moniker}
+                    <span className="block text-[11px] font-semibold tracking-wide text-infra/80">
+                      {l.keyword}
+                    </span>
                   </div>
                 );
               })}
