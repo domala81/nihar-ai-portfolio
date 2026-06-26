@@ -14,7 +14,7 @@ import {
   Cloud,
   type LucideIcon,
 } from "lucide-react";
-import { LAYERS } from "../pipeline/networkData";
+import { experience, type ExperienceEntry } from "@/data";
 import { ICONS } from "../pipeline/iconData";
 import { registerAnchor } from "../thread/anchorStore";
 
@@ -34,9 +34,6 @@ import { registerAnchor } from "../thread/anchorStore";
  * Everything degrades to a calm, fully-readable static layout under
  * prefers-reduced-motion and stacks cleanly on small screens.
  */
-
-// The canvas Deployment layer is the data source; the timeline only re-presents it.
-const ENTRIES = LAYERS[3].nodes;
 
 // Rail center — the spine and the nodes sit here. On sm the rail shifts right to
 // make room for the outside-left year gutter.
@@ -147,7 +144,7 @@ export default function ExperienceTimeline() {
           >
             <div ref={tipRef} className="absolute bottom-0 left-0 h-0 w-0" />
           </motion.div>
-          {ENTRIES.map((node, i) => {
+          {experience.map((node: ExperienceEntry, i) => {
             const isHead = i === 0; // most-recent role = the live "running" deploy
             const bullets =
               node.bullets ?? (node.description ? [node.description] : []);
@@ -160,7 +157,7 @@ export default function ExperienceTimeline() {
               >
                 {/* Outside-left gutter — the year, scannable beside the spine (desktop) */}
                 <div className="col-start-1 hidden pt-[18px] text-right font-mono text-xs leading-tight text-ink-muted transition-colors duration-200 group-hover:text-infra sm:block">
-                  {node.date}
+                  {node.period}
                 </div>
 
                 {/* Node on the spine — lights as the trace reaches it */}
@@ -208,7 +205,7 @@ export default function ExperienceTimeline() {
                     {/* Header */}
                     <div className="flex flex-wrap items-start justify-between gap-x-3 gap-y-2">
                       <h3 className="font-sans text-lg font-semibold tracking-tightish text-ink sm:text-xl">
-                        {node.label}
+                        {node.role}
                       </h3>
                     </div>
 
@@ -217,7 +214,7 @@ export default function ExperienceTimeline() {
                       {node.org}
                       <span className="sm:hidden">
                         {node.org ? " · " : ""}
-                        {node.date}
+                        {node.period}
                       </span>
                     </p>
 
@@ -249,9 +246,9 @@ export default function ExperienceTimeline() {
                     )}
 
                     {/* Tech chips with brand glyphs */}
-                    {node.connections && node.connections.length > 0 && (
+                    {node.skills && node.skills.length > 0 && (
                       <ul className="mt-5 flex flex-wrap gap-2">
-                        {node.connections.map((c) => (
+                        {node.skills.map((c) => (
                           <li
                             key={c}
                             className="inline-flex items-center gap-1.5 rounded border border-border-soft bg-bg px-2 py-0.5 font-mono text-[11px] text-ink-muted transition-colors duration-200 group-hover:border-white/20 group-hover:text-ink"
