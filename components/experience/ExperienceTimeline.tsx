@@ -24,8 +24,7 @@ import { registerAnchor } from "../thread/anchorStore";
  * The neural network's synapse, continued: a thin cobalt spine runs down the left
  * edge; each role is a node that lights as the scroll-drawn trace reaches it, with
  * the detail living in a lifted card that pops on hover. Single source of truth —
- * reads straight off the canvas Deployment layer (pipeline Layer 4), so the timeline
- * and the network can never drift apart.
+ * reads from data/experience.ts, so the timeline and the network can never drift apart.
  *
  * Each spine node is a small role-icon token (echoing the canvas NodeToken), the year
  * sits in an outside-left gutter on desktop, and cards zoom a touch with a node glow on

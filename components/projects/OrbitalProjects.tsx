@@ -24,8 +24,8 @@ import { registerAnchor } from "../thread/anchorStore";
  * core on the left; a spotlight auto-cycles which one shows in a fixed detail panel
  * on the right. Move the pointer near the orbit and the nearest node takes over and
  * holds while you read (and while you're on the panel); move away and autoplay
- * resumes. Reads straight off the canvas Outputs layer (pipeline Layer 3) — one data
- * source for the pipeline, this section, and the timeline.
+ * resumes. Reads from data/projects.ts — one data source for the pipeline, this
+ * section, and the timeline.
  *
  * Below lg, and under prefers-reduced-motion, the orbit is replaced by a calm,
  * fully-readable stack of scannable case-study cards (no rotation, no autoplay).
