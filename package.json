@@ -2,6 +2,7 @@
   "name": "nihar-ai-portfolio",
   "version": "0.1.0",
   "private": true,
+  "homepage": "https://nihar-ai-portfolio.vercel.app/",
   "scripts": {
     "dev": "next dev",
     "build": "next build",

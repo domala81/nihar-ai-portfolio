@@ -1,5 +1,7 @@
 # nihar.dev
 
+**Live:** [nihar-ai-portfolio.vercel.app](https://nihar-ai-portfolio.vercel.app/)
+
 Personal portfolio for [Nihar Domala](https://www.linkedin.com/in/nihar-domala/) — Data Engineer transitioning into AI Systems Engineering.
 
 The signature feature is an interactive neural-network visualization: passions flow as inputs through an engineering stack into shipped projects, all rendered on a single HTML5 Canvas with DOM nodes riding above it for smooth interaction.
