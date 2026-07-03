@@ -3,7 +3,8 @@
 import { motion } from "framer-motion";
 import { Zap, Link2, Github, ExternalLink } from "lucide-react";
 import NodeBadge, { hasBrand } from "./NodeBadge";
-import type { PipeNode } from "./networkData";
+import { nodeByLabel, type PipeNode } from "./networkData";
+import AnimatedMetric from "../ui/AnimatedMetric";
 
 /**
  * The glassmorphic floating detail card (the one sanctioned glass + soft shadow in
@@ -74,7 +75,16 @@ export default function DetailCard({ node, onChipClick, onPointerEnter, onPointe
       {node.description && (
         <p className="mt-2 text-pretty text-sm leading-relaxed text-ink-muted">{node.description}</p>
       )}
-      {node.metric && <p className="mt-3 font-mono text-[13px] text-live">{node.metric}</p>}
+      {node.metric && (
+        <p className="mt-3 font-mono text-[13px] text-live">
+          <AnimatedMetric text={node.metric} />
+        </p>
+      )}
+      {isResult && (
+        <p className="mt-3 font-mono text-[11px] text-ink-muted">
+          <span className="text-infra">↩</span> click node — run backprop
+        </p>
+      )}
 
       {/* Energy / competency bar (skills) */}
       {typeof node.energy === "number" && (
@@ -98,27 +108,40 @@ export default function DetailCard({ node, onChipClick, onPointerEnter, onPointe
             <Link2 className="h-3 w-3" aria-hidden /> Connected nodes
           </p>
           <div className="flex flex-wrap gap-1.5">
-            {node.connections.map((c) => (
-              <button
-                key={c}
-                type="button"
-                onClick={() => onChipClick?.(c)}
-                className="group inline-flex items-center gap-1 rounded-sm border border-border-soft bg-surface px-2 py-1 font-mono text-[11px] text-ink-muted transition-colors hover:border-infra hover:text-ink"
-              >
-                {c}
-                <span className="text-infra transition-transform group-hover:translate-x-0.5" aria-hidden>
-                  →
+            {node.connections.map((c) =>
+              // Only labels that resolve to a real node get the button + arrow;
+              // the rest render as plain chips so the affordance never lies.
+              nodeByLabel(c) ? (
+                <button
+                  key={c}
+                  type="button"
+                  onClick={() => onChipClick?.(c)}
+                  className="group inline-flex items-center gap-1 rounded-sm border border-border-soft bg-surface px-2 py-1 font-mono text-[11px] text-ink-muted transition-colors hover:border-infra hover:text-ink"
+                >
+                  {c}
+                  <span className="text-infra transition-transform group-hover:translate-x-0.5" aria-hidden>
+                    →
+                  </span>
+                </button>
+              ) : (
+                <span
+                  key={c}
+                  className="inline-flex items-center rounded-sm border border-border-soft bg-surface px-2 py-1 font-mono text-[11px] text-ink-muted"
+                >
+                  {c}
                 </span>
-              </button>
-            ))}
+              ),
+            )}
           </div>
         </div>
       )}
 
-      {/* Project links */}
-      {node.links && node.links.length > 0 && (
+      {/* Project links — Demo hidden for now, same policy as OrbitalProjects */}
+      {node.links && node.links.filter((l) => l.label.toLowerCase() !== "demo").length > 0 && (
         <div className="mt-4 flex gap-2">
-          {node.links.map((l) => (
+          {node.links
+            .filter((l) => l.label.toLowerCase() !== "demo")
+            .map((l) => (
             <a
               key={l.label}
               href={l.href}

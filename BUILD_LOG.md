@@ -30,7 +30,8 @@ reproducible. `←` marks where we are.
 | 9 | `/impeccable craft` — contact (Section 5) | Convergent output node + **no-form** terminal direct-contact (converging synapses → lime node, restrained `>` prompt, channel rows) | ✅ done |
 | 10 | `/impeccable craft` — experience→contact transition | "Curtain-flavored" scroll-driven reveal of Section 5 (from a reference footer's curtain reveal): synapses draw + node + content unfurl top→down on scroll, latched, soft mask wipe; thread/convergence kept intact (Option C) | ✅ done |
 | 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done |
-| — | (out-of-flow) — centralized `data/` layer | Extracted all content into `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`; `networkData.ts` → adapter. Adding content now = edit one file. | ✅ done ← |
+| — | (out-of-flow) — centralized `data/` layer | Extracted all content into `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`; `networkData.ts` → adapter. Adding content now = edit one file. | ✅ done |
+| — | (out-of-flow) — brutal review → 4-phase fix pass | Full-site review (7/10) then: bug fixes + OG/favicon/JSON-LD, perf + keyboard a11y, micro-animations (count-ups, metallic hero, progress hairline, panel tilt), personality (model card, ⌘K terminal, backprop click, telemetry strip, console egg) | ✅ done ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -42,6 +43,12 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-07-03** — Asked for a **brutal, honest rating** of the whole site plus every
+  possible improvement (bugs, uniqueness, micro-animations, background-relevant
+  features): "showcase my expertise and personality, not another fancy resume."
+  Review scored it 7/10; user approved **all four** proposed phases (bugs +
+  shareability, perf + a11y, micro-animation polish, personality features).
+  → Entry 033. Still owed by user: real per-project repo/paper/demo URLs.
 - **2026-06-26** — Provided the real resume + a `knowledge/` folder; wanted the site's
   `data/` content updated to real, accurate info, explicitly asking me to *ask, not assume*.
   Confirmed: resume email over account email; 3 showcase projects (CloudMart / VisionVoice /
@@ -311,6 +318,54 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 033 — Brutal full-site review → four-phase fix + feature pass
+
+**Prompt:** "Understand the entire website and honestly rate it brutally… bugs,
+improvements, eye-catchy unique features relevant to my background, micro-animations —
+give me all possible changes." All four proposed phases approved.
+
+**Flow:** Read every component + data file, ran tsc/lint, wrote a scored review
+(overall 7/10: concept 9, motion 8, shareability 3), then executed four phases and
+verified each in a headless browser (screenshots at desktop + 375px, console, OG/icon
+endpoints).
+
+**Decisions:**
+- Shareability was the worst gap (no OG image / favicon / JSON-LD — a LinkedIn share
+  rendered as a bare link), so it went into Phase 1 with the bug fixes.
+- Dead `#` links (Demo, Paper) removed from `data/projects.ts` rather than hidden in
+  every renderer; DetailCard got the same Demo filter as OrbitalProjects. Real repo /
+  paper URLs still needed from the user.
+- Connected-node chips only render as buttons when the label resolves via
+  `nodeByLabel`; unresolvable labels (PySpark, BigQuery…) are plain chips so the `→`
+  affordance never lies.
+- The "About" gap is filled by a **model card** (`nihar.model_card.md` styled section)
+  — HF grammar pointed at a person; human voice without breaking the network metaphor.
+- Backprop: clicking the lime result node fires a right→left packet wave (spec always
+  promised backprop; now it's an interaction). Hint line added to the result card.
+- Skipped the planned orbit label letter-fade: letter-splitting inside a
+  counter-rotating element jitters — against the slow-and-smooth motion rule.
+- Perf: HeroSleepingNet pauses via IntersectionObserver; LimeThread's rAF sleeps when
+  idle+faded and wakes on scroll; orbit autoplay/spin pause off-screen. NeuralPipeline
+  decides interactive-vs-static in useLayoutEffect so phones never flash the 2.6×100svh
+  scene.
+- A11y: NodeToken is now a real `<button>` (focus opens the card, Escape closes).
+
+**Output:** Phase 1 — `OrbitalProjects.tsx` (stale `PROJECT_GLYPH` ids → distinct
+icons), `data/projects.ts`, `DetailCard.tsx`, `ContactSection.tsx` (hover scale
+1.2→1.03), `data/personal.ts` + `Hero.tsx` (subTagline moved to data, em dash),
+`.eslintrc.json` (lint was unconfigured), deleted stub `public/resume.pdf`,
+`app/layout.tsx` (metadataBase/OG/Twitter/JSON-LD), new `app/opengraph-image.tsx` +
+`app/icon.tsx`. Phase 2 — `HeroSleepingNet.tsx`, `LimeThread.tsx`,
+`NeuralPipeline.tsx`, `NodeToken.tsx`, `OrbitalProjects.tsx`. Phase 3 — new
+`ui/AnimatedMetric.tsx` (count-ups, year-safe) + `ui/InferenceProgress.tsx` (top
+hairline, cobalt fill + lime tip), hero `.hero-metallic` gradient + one-shot shine
+(`globals.css`), panel tilt (±2°) in `OrbitalProjects.tsx`. Phase 4 — new
+`data/stats.ts` (hero telemetry strip), `data/modelCard.ts` +
+`about/ModelCardSection.tsx`, `ui/TerminalPalette.tsx` (⌘K), `ui/ConsoleSignature.tsx`
+(devtools banner), backprop in `NeuralPipeline.tsx`, footer `try ⌘K` hint.
 
 ---
 

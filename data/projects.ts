@@ -27,10 +27,7 @@ export const projects: ProjectEntry[] = [
       "MultiCloud AI storefront: AWS (EKS, Bedrock, Terraform, CodePipeline), GCP (BigQuery, Looker Studio) and Azure sentiment, fronted by a Claude Bedrock assistant with RAG-based catalog retrieval.",
     metric: "support cost −90% · real-time sales analytics",
     tech: ["AWS", "Amazon Bedrock", "Terraform", "BigQuery"],
-    links: [
-      { label: "Code", href: "https://github.com/domala81" },
-      { label: "Demo", href: "#" },
-    ],
+    links: [{ label: "Code", href: "https://github.com/domala81" }],
   },
   {
     id: "visionvoice",
@@ -42,10 +39,7 @@ export const projects: ProjectEntry[] = [
       "Image-captioning system pairing a CNN encoder with an RNN decoder (EfficientNet-B3), then speaking each caption aloud via text-to-speech.",
     metric: "BLEU 0.20 · spoken captions for accessibility",
     tech: ["PyTorch", "Python", "EfficientNet"],
-    links: [
-      { label: "Code", href: "https://github.com/domala81" },
-      { label: "Demo", href: "#" },
-    ],
+    links: [{ label: "Code", href: "https://github.com/domala81" }],
   },
   {
     id: "cnn-pooling",
@@ -57,9 +51,7 @@ export const projects: ProjectEntry[] = [
       "Novel Bonferroni mean-based aggregation in the pooling layer, implemented in PyTorch and benchmarked against classical pooling on state-of-the-art CNN architectures.",
     metric: "IEEE INDICON 2023 · MV Chauhan Best Paper",
     tech: ["PyTorch", "Python"],
-    links: [
-      { label: "Paper", href: "#" },
-      { label: "Code", href: "https://github.com/domala81" },
-    ],
+    // Paper link intentionally omitted until a real URL exists (was a dead "#").
+    links: [{ label: "Code", href: "https://github.com/domala81" }],
   },
 ];

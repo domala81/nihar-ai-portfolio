@@ -2,9 +2,10 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Github, Linkedin, FileText, ArrowDown } from "lucide-react";
-import { personal } from "@/data";
+import { personal, stats } from "@/data";
 import HeroSleepingNet from "@/components/HeroSleepingNet";
 import HeroNodeSonar from "@/components/HeroNodeSonar";
+import AnimatedMetric from "@/components/ui/AnimatedMetric";
 
 const SOCIALS = [
   { label: "GitHub", href: personal.socials.github.href, Icon: Github },
@@ -97,7 +98,7 @@ export default function Hero() {
         {/* Name */}
         <motion.h1
           variants={item}
-          className="text-balance font-sans font-semibold leading-[0.95] tracking-display text-ink"
+          className="hero-metallic text-balance font-sans font-semibold leading-[0.95] tracking-display"
           style={{ fontSize: "clamp(2.75rem, 9vw, 5.75rem)" }}
         >
           {personal.name}
@@ -112,8 +113,7 @@ export default function Hero() {
             {personal.tagline}
           </span>
           <span className="mt-2 block text-base text-ink sm:text-lg">
-            From ingestion to inference - I build pipelines that feed models and
-            AI systems that ship
+            {personal.subTagline}
           </span>
         </motion.p>
 
@@ -157,6 +157,23 @@ export default function Hero() {
             Download résumé
           </a>
         </motion.div>
+
+        {/* Telemetry strip — production numbers, machine-voice */}
+        <motion.dl
+          variants={item}
+          className="mt-14 flex flex-wrap gap-x-10 gap-y-4 border-t border-hairline pt-6 font-mono"
+        >
+          {stats.map((s) => (
+            <div key={s.id} className="flex flex-col gap-1">
+              <dd className="order-first text-lg text-ink">
+                <AnimatedMetric text={s.value} />
+              </dd>
+              <dt className="text-[11px] uppercase tracking-wider text-ink-muted">
+                {s.label}
+              </dt>
+            </div>
+          ))}
+        </motion.dl>
       </motion.div>
 
       {/* Scroll cue — decorative; invites scrolling down into the resolving network */}

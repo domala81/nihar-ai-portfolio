@@ -57,3 +57,36 @@
     scroll-behavior: auto;
   }
 }
+
+/* Hero name — silver→white metallic gradient (DESIGN.md heading treatment),
+   plus a one-shot shine sweep after load. Two background layers, both clipped
+   to the glyphs: [0] the moving highlight, [1] the static metallic ramp. */
+.hero-metallic {
+  color: transparent;
+  -webkit-background-clip: text;
+  background-clip: text;
+  background-image: linear-gradient(
+      105deg,
+      transparent 0%,
+      transparent 42%,
+      rgba(255, 255, 255, 0.9) 50%,
+      transparent 58%,
+      transparent 100%
+    ),
+    linear-gradient(180deg, #ffffff 0%, #dbe0e8 55%, #a8b0bd 100%);
+  background-size: 260% 100%, 100% 100%;
+  background-position: -160% 0, 0 0;
+}
+@media (prefers-reduced-motion: no-preference) {
+  .hero-metallic {
+    animation: hero-shine 1.9s cubic-bezier(0.22, 1, 0.36, 1) 1s 1 both;
+  }
+}
+@keyframes hero-shine {
+  from {
+    background-position: -160% 0, 0 0;
+  }
+  to {
+    background-position: 160% 0, 0 0;
+  }
+}

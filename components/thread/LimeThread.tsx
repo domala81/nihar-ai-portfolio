@@ -52,6 +52,7 @@ export default function LimeThread() {
   useEffect(() => {
     if (!enabled) return;
     let raf = 0;
+    let sleeping = false;
     const s = st.current;
 
     const frame = (now: number) => {
@@ -224,10 +225,27 @@ export default function LimeThread() {
         el.style.transform = `translate3d(${tn.x}px, ${tn.y}px, 0) translate(-50%, -50%)`;
         el.style.opacity = String(fade);
       }
+
+      // Fully idle + faded out → stop the loop; the scroll listener wakes it.
+      if (idle && s.op < 0.008) {
+        cancelAnimationFrame(raf);
+        sleeping = true;
+      }
     };
 
+    const wake = () => {
+      if (!sleeping) return;
+      sleeping = false;
+      s.lastMoveT = performance.now();
+      raf = requestAnimationFrame(frame);
+    };
+    window.addEventListener("scroll", wake, { passive: true });
+
     raf = requestAnimationFrame(frame);
-    return () => cancelAnimationFrame(raf);
+    return () => {
+      window.removeEventListener("scroll", wake);
+      cancelAnimationFrame(raf);
+    };
   }, [enabled]);
 
   if (reduce || !enabled) return null;

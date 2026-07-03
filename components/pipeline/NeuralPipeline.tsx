@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
 import { gsap } from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { motion } from "framer-motion";
@@ -88,8 +88,18 @@ export default function NeuralPipeline() {
   const bootStartedRef = useRef(false);
   const bootedRef = useRef(false);
   const fireDemoRef = useRef<() => void>(() => {});
+  const backpropRef = useRef<() => void>(() => {});
 
   const [interactive, setInteractive] = useState(true);
+
+  // Decide the mode before first paint so phones never flash the 2.6×100svh
+  // interactive scene (SSR ships the interactive markup; this corrects it
+  // synchronously on mobile / reduced-motion / coarse-pointer clients).
+  useLayoutEffect(() => {
+    const fine = window.matchMedia("(pointer: fine)").matches;
+    const reduce = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+    setInteractive(fine && !reduce && window.innerWidth >= MOBILE_BP);
+  }, []);
   const [layout, setLayout] = useState<Layout | null>(null);
   const [activeId, setActiveId] = useState<string | null>(null);
   const [demoId, setDemoId] = useState<string | null>(null);
@@ -242,6 +252,23 @@ export default function NeuralPipeline() {
       const dir: 1 | -1 = Math.random() < 0.22 ? -1 : 1;
       packets.push({ syn, t: dir === 1 ? 0 : 1, speed: rand(0.005, 0.01), dir, flow: false });
     }
+    // Backprop moment — click the result node and the whole network flashes
+    // backward, column by column right→left (the training pass to the forward
+    // inference the ambient packets play).
+    function spawnBackprop() {
+      if (!lay || !bootedRef.current) return;
+      const current = lay;
+      current.synapses.forEach(([a], idx) => {
+        // rightmost synapse column fires first, earlier columns follow
+        const colFromRight = LAYER_COUNTS.length - 2 - current.nodes[a].col;
+        setTimeout(() => {
+          if (layoutRef.current !== current) return; // layout replaced by a resize
+          packets.push({ syn: idx, t: 1, speed: rand(0.016, 0.026), dir: -1, flow: true });
+        }, colFromRight * 170);
+      });
+    }
+    backpropRef.current = spawnBackprop;
+
     function spawnFlow(hoverId: string) {
       if (!lay) return;
       const touching: { syn: number; from: 0 | 1 }[] = [];
@@ -662,6 +689,7 @@ export default function NeuralPipeline() {
                       demo={n.id === demoId}
                       onHoverStart={() => activate(n.id)}
                       onHoverEnd={onNodeLeave}
+                      onClick={n.isCore ? () => backpropRef.current() : undefined}
                     />
                   </div>
                 );

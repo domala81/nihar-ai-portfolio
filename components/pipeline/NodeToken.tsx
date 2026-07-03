@@ -1,7 +1,7 @@
 "use client";
 
 import { motion, type Variants } from "framer-motion";
-import NodeBadge, { hasBrand } from "./NodeBadge";
+import NodeBadge from "./NodeBadge";
 import type { PipeNode } from "./networkData";
 
 /**
@@ -10,7 +10,8 @@ import type { PipeNode } from "./networkData";
  * transition. Four states: rest → active (pop: scale + fill + glow) → related
  * (gentle pulse) → dimmed. The result node uses the lime `isCore` palette.
  *
- * Decorative (aria-hidden) — the accessible content path is the PipelineContent list.
+ * A real <button>: hover or keyboard focus opens the detail card, Escape closes.
+ * The full text content also lives in the PipelineContent sr-only list.
  */
 
 export type TokenState = "rest" | "active" | "related" | "dimmed";
@@ -112,6 +113,7 @@ export default function NodeToken({
   demo = false,
   onHoverStart,
   onHoverEnd,
+  onClick,
 }: {
   node: PipeNode;
   size: number;
@@ -122,19 +124,30 @@ export default function NodeToken({
   demo?: boolean;
   onHoverStart: () => void;
   onHoverEnd: () => void;
+  onClick?: () => void;
 }) {
   const showDemo = demo && state === "rest";
   return (
-    <motion.div
-      aria-hidden
+    <motion.button
+      type="button"
+      aria-label={`${node.label} — show details`}
       onHoverStart={onHoverStart}
       onHoverEnd={onHoverEnd}
+      onFocus={onHoverStart}
+      onBlur={onHoverEnd}
+      onClick={onClick}
+      onKeyDown={(e) => {
+        if (e.key === "Escape") {
+          onHoverEnd();
+          e.currentTarget.blur();
+        }
+      }}
       initial={false}
       animate={showDemo ? "demo" : state}
       variants={isCore ? LIME : COBALT}
       transition={reduce ? { duration: 0 } : SPRING}
       style={{ width: size, height: size, borderWidth: 1.5 }}
-      className="relative flex cursor-pointer items-center justify-center rounded-full border"
+      className="relative flex cursor-pointer items-center justify-center rounded-full border p-0"
     >
       <NodeBadge
         icon={node.icon}
@@ -155,6 +168,6 @@ export default function NodeToken({
           transition={{ duration: 1.5, repeat: Infinity, ease: "easeOut" }}
         />
       )}
-    </motion.div>
+    </motion.button>
   );
 }

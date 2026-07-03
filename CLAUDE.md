@@ -49,7 +49,7 @@ components/
     LimeThread.tsx      page-spanning lime "me" dot traveler (scroll-driven, docks on anchors)
     ContactAnchor.tsx   registers the contact node as the thread's final dock target
     anchorStore.ts      shared registry: sections register anchors the thread docks onto
-public/resume.pdf       downloadable resume (stub)
+public/NiharDomala_Resume_DataEngineer.pdf  downloadable resume (real)
 scripts/gen-icons.mjs   icon generation helper
 ```
 

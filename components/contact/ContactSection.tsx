@@ -153,7 +153,7 @@ export default function ContactSection() {
     >
       <motion.div
         ref={contentRef}
-        className="mx-auto flex w-full max-w-2xl flex-col items-center text-center"
+        className="relative mx-auto flex w-full max-w-2xl flex-col items-center text-center"
         style={active ? { maskImage, WebkitMaskImage: maskImage } : undefined}
       >
         {/* Convergent node — faint cobalt synapses fan in and meet the lime "me" dot. */}
@@ -235,7 +235,7 @@ export default function ContactSection() {
         <motion.div style={active ? ctaR : undefined} className="mt-9">
           <a
             href={`mailto:${personal.email}`}
-            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.2] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
+            className="group relative inline-flex items-center gap-2 overflow-hidden rounded-md border border-infra bg-infra/10 px-5 py-3 font-mono text-sm text-infra transition-[box-shadow,transform] duration-200 ease-out-quint hover:-translate-y-0.5 hover:scale-[1.03] hover:shadow-[0_0_22px_-2px_rgba(59,130,246,0.6)] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100"
           >
             <span
               aria-hidden

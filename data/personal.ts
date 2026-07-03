@@ -3,6 +3,9 @@ export const personal = {
   name: "Nihar Domala",
   location: "Aldie, Virginia",
   tagline: "AI Systems · Data Engineering · Cloud",
+  /** Hero sub-tagline, the line under the mono tagline */
+  subTagline:
+    "From ingestion to inference — I build pipelines that feed models and AI systems that ship",
   /** Hero status pill text */
   statusPill: "Accepting Missions",
   /** Contact section prose + Hero location bar */

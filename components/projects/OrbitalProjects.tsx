@@ -1,11 +1,17 @@
 "use client";
 
 import { useCallback, useEffect, useRef, useState } from "react";
-import { AnimatePresence, motion, useReducedMotion } from "framer-motion";
 import {
-  Languages,
-  Database,
-  Server,
+  AnimatePresence,
+  motion,
+  useMotionValue,
+  useReducedMotion,
+  useSpring,
+} from "framer-motion";
+import {
+  ShoppingCart,
+  Eye,
+  Layers,
   Boxes,
   Target,
   ChevronLeft,
@@ -16,6 +22,7 @@ import {
 } from "lucide-react";
 import { projects, type ProjectEntry } from "@/data";
 import { registerAnchor } from "../thread/anchorStore";
+import AnimatedMetric from "../ui/AnimatedMetric";
 
 /**
  * Section 3 — Projects ("Output layer").
@@ -34,9 +41,9 @@ import { registerAnchor } from "../thread/anchorStore";
 // Distinct lucide glyph per project (the canvas uses one "project" glyph; here each
 // output gets its own mark).
 const PROJECT_GLYPH: Record<string, LucideIcon> = {
-  nlp: Languages,
-  proj2: Database,
-  proj3: Server,
+  cloudmart: ShoppingCart,
+  visionvoice: Eye,
+  "cnn-pooling": Layers,
 };
 
 const ORBIT_RADIUS = 168; // px — node ring radius on the lg stage
@@ -86,10 +93,23 @@ function OrbitView() {
   const [activeIndex, setActiveIndex] = useState(0);
   const [nearOrbit, setNearOrbit] = useState(false);
   const [overPanel, setOverPanel] = useState(false);
+  const [inView, setInView] = useState(false);
 
   const nodeRefs = useRef<(HTMLButtonElement | null)[]>([]);
   const rafRef = useRef<number | null>(null);
   const coreRef = useRef<HTMLDivElement>(null);
+  const rootRef = useRef<HTMLDivElement>(null);
+
+  // Pause autoplay + the orbit spin while the section is off screen.
+  useEffect(() => {
+    const el = rootRef.current;
+    if (!el) return;
+    const io = new IntersectionObserver(([entry]) => setInView(entry.isIntersecting), {
+      threshold: 0,
+    });
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
 
   // Register the lime core as the projects "me" anchor for the page thread.
   useEffect(
@@ -99,17 +119,34 @@ function OrbitView() {
 
   const engaged = nearOrbit || overPanel;
 
+  // Subtle 3D tilt toward the cursor on the detail panel (±2°, springy, slow).
+  const tiltX = useMotionValue(0);
+  const tiltY = useMotionValue(0);
+  const rotateX = useSpring(tiltX, { stiffness: 110, damping: 20, mass: 0.6 });
+  const rotateY = useSpring(tiltY, { stiffness: 110, damping: 20, mass: 0.6 });
+  const handleTilt = (e: React.MouseEvent<HTMLDivElement>) => {
+    const r = e.currentTarget.getBoundingClientRect();
+    const px = (e.clientX - r.left) / r.width - 0.5;
+    const py = (e.clientY - r.top) / r.height - 0.5;
+    tiltY.set(px * 4);
+    tiltX.set(-py * 4);
+  };
+  const resetTilt = () => {
+    tiltX.set(0);
+    tiltY.set(0);
+  };
+
   const go = (delta: number) =>
     setActiveIndex((i) => (i + delta + projects.length) % projects.length);
 
-  // Autoplay: advance the spotlight while the user isn't engaged.
+  // Autoplay: advance the spotlight while the user isn't engaged (and we're on screen).
   useEffect(() => {
-    if (engaged || projects.length < 2) return;
+    if (engaged || !inView || projects.length < 2) return;
     const id = setInterval(() => {
       setActiveIndex((i) => (i + 1) % projects.length);
     }, AUTO_MS);
     return () => clearInterval(id);
-  }, [engaged]);
+  }, [engaged, inView]);
 
   // Pointer proximity: nearest node within NEAR_PX takes the spotlight and holds.
   const handleMove = useCallback((e: React.PointerEvent<HTMLDivElement>) => {
@@ -147,11 +184,14 @@ function OrbitView() {
       animationTimingFunction: "linear",
       animationIterationCount: "infinite",
       animationDirection: reverse ? "reverse" : "normal",
-      animationPlayState: engaged ? "paused" : "running",
+      animationPlayState: engaged || !inView ? "paused" : "running",
     }) as const;
 
   return (
-    <div className="mt-12 hidden grid-cols-[minmax(0,440px)_1fr] items-center gap-x-10 lg:grid">
+    <div
+      ref={rootRef}
+      className="mt-12 hidden grid-cols-[minmax(0,440px)_1fr] items-center gap-x-10 lg:grid"
+    >
       {/* Left: orbit stage */}
       <div
         onPointerMove={handleMove}
@@ -259,8 +299,15 @@ function OrbitView() {
       {/* Right: fixed detail panel */}
       <div
         onMouseEnter={() => setOverPanel(true)}
-        onMouseLeave={() => setOverPanel(false)}
+        onMouseLeave={() => {
+          setOverPanel(false);
+          resetTilt();
+        }}
+        onMouseMove={handleTilt}
       >
+        {/* tilt lives on its own wrapper so it never fights the card's CSS hover
+            transform; the crossfade child only animates opacity/y */}
+        <motion.div style={{ rotateX, rotateY, transformPerspective: 900 }}>
         {/* stable wrapper carries the hover pop + diagonal shine (same as the experience
             cards); the crossfade child only animates opacity/y, so no transform conflict */}
         <div className="group/panel relative overflow-hidden rounded-lg border border-border-soft bg-surface p-6 transition-[transform,border-color,background-color] duration-200 ease-out-quint will-change-transform hover:-translate-y-0.5 hover:scale-[1.015] hover:border-infra/45 hover:bg-[#0d121c] motion-reduce:transition-none motion-reduce:hover:translate-y-0 motion-reduce:hover:scale-100">
@@ -281,6 +328,7 @@ function OrbitView() {
             </motion.div>
           </AnimatePresence>
         </div>
+        </motion.div>
 
         {/* spotlight position + prev/next (near-invisible, pop on hover) */}
         <div className="mt-4 flex items-center gap-3">
@@ -362,7 +410,9 @@ function ProjectBody({ p }: { p: ProjectEntry }) {
           <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">
             Impact
           </p>
-          <p className="mt-1 font-mono text-sm text-live">{p.metric}</p>
+          <p className="mt-1 font-mono text-sm text-live">
+            <AnimatedMetric text={p.metric} />
+          </p>
         </div>
       )}
 

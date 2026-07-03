@@ -27,7 +27,7 @@ export default function SiteFooter() {
             ●
           </span>
           <span>
-            session complete
+            session complete · <span className="text-ink-muted/70">try ⌘K</span>
             <motion.span
               aria-hidden
               className="ml-1 inline-block text-ink"

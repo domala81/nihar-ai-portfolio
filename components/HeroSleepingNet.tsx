@@ -143,6 +143,19 @@ export default function HeroSleepingNet() {
       raf = requestAnimationFrame(draw);
     }
 
+    // Pause the loop entirely while the hero is scrolled out of view.
+    let inView = true;
+    let running = false;
+    const startLoop = () => {
+      if (running) return;
+      running = true;
+      raf = requestAnimationFrame(draw);
+    };
+    const stopLoop = () => {
+      running = false;
+      cancelAnimationFrame(raf);
+    };
+
     // ── events ───────────────────────────────────────────────────────────────
     function onMouseMove(e: MouseEvent) {
       const rect = canvas!.getBoundingClientRect();
@@ -160,10 +173,21 @@ export default function HeroSleepingNet() {
     const parent = canvas.parentElement!;
     parent.addEventListener("mousemove", onMouseMove);
     parent.addEventListener("mouseleave", onMouseLeave);
-    draw();
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        inView = entry.isIntersecting;
+        if (inView) startLoop();
+        else stopLoop();
+      },
+      { threshold: 0 },
+    );
+    io.observe(parent);
+    if (inView) startLoop();
 
     return () => {
-      cancelAnimationFrame(raf);
+      stopLoop();
+      io.disconnect();
       ro.disconnect();
       parent.removeEventListener("mousemove", onMouseMove);
       parent.removeEventListener("mouseleave", onMouseLeave);

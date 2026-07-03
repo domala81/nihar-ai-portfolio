@@ -1,13 +1,22 @@
 import NeuralPipeline from "@/components/pipeline/NeuralPipeline";
 import OrbitalProjects from "@/components/projects/OrbitalProjects";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
+import ModelCardSection from "@/components/about/ModelCardSection";
 import LimeThread from "@/components/thread/LimeThread";
 import ContactSection from "@/components/contact/ContactSection";
 import SiteFooter from "@/components/footer/SiteFooter";
+import InferenceProgress from "@/components/ui/InferenceProgress";
+import TerminalPalette from "@/components/ui/TerminalPalette";
+import ConsoleSignature from "@/components/ui/ConsoleSignature";
 
 export default function Home() {
   return (
     <main>
+      {/* Top hairline — page scroll as inference progress (cobalt fill, lime tip). */}
+      <InferenceProgress />
+      {/* ⌘K terminal + devtools console signature (easter eggs). */}
+      <TerminalPalette />
+      <ConsoleSignature />
       {/* PROTOTYPE — the lime "me" node threading the whole page (feature/lime-thread). */}
       <LimeThread />
       {/* Section 1 (hero) + Section 2 (interactive neural pipeline) — one continuous canvas */}
@@ -18,6 +27,9 @@ export default function Home() {
 
       {/* Section 4 — Experience "Signal Trace". */}
       <ExperienceTimeline />
+
+      {/* Section 4.5 — About, written as a model card (the human voice). */}
+      <ModelCardSection />
 
       {/* Section 5 — Convergent Output Node + direct-contact terminal. */}
       <ContactSection />
