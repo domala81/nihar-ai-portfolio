@@ -43,13 +43,14 @@ export default function PipelineContent({ variant }: Props) {
       className="border-t border-border-soft px-6 py-20 sm:px-10"
     >
       <div className="mx-auto w-full max-w-3xl">
-        <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">The pipeline</p>
+        <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">The map</p>
         <h2 className="mt-3 text-balance font-sans text-2xl font-semibold tracking-tightish text-ink">
           From passions to shipped systems
         </h2>
         <p className="mt-3 max-w-measure text-pretty leading-relaxed text-ink-muted">
-          Passions feed a core engineering and ML stack, flow into shipped projects and
-          deployed experience, and converge on one result: ready for the next mission.
+          What drives me feeds what I&apos;m good at, which becomes things I&apos;ve
+          shipped and places I&apos;ve worked — all pointing at one thing: the next
+          mission.
         </p>
 
         <div className="mt-12 flex flex-col gap-11">

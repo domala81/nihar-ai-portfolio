@@ -2,10 +2,9 @@
 
 import { motion, useReducedMotion, type Variants } from "framer-motion";
 import { Github, Linkedin, FileText, ArrowDown } from "lucide-react";
-import { personal, stats } from "@/data";
+import { personal } from "@/data";
 import HeroSleepingNet from "@/components/HeroSleepingNet";
 import HeroNodeSonar from "@/components/HeroNodeSonar";
-import AnimatedMetric from "@/components/ui/AnimatedMetric";
 
 const SOCIALS = [
   { label: "GitHub", href: personal.socials.github.href, Icon: Github },
@@ -76,6 +75,21 @@ export default function Hero() {
             <FileText className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Résumé</span>
           </a>
+          {/* Quiet pointer to the ⌘K terminal (keyboard feature — desktop only) */}
+          <button
+            type="button"
+            title="Open the terminal"
+            aria-label="Open the command terminal"
+            onClick={() =>
+              window.dispatchEvent(
+                new KeyboardEvent("keydown", { key: "k", metaKey: true }),
+              )
+            }
+            className="hidden items-center gap-1.5 rounded-md border border-border-soft px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:border-infra hover:text-ink lg:inline-flex"
+          >
+            <span aria-hidden className="text-infra">&gt;_</span>
+            ⌘K
+          </button>
         </nav>
       </header>
 
@@ -157,23 +171,6 @@ export default function Hero() {
             Download résumé
           </a>
         </motion.div>
-
-        {/* Telemetry strip — production numbers, machine-voice */}
-        <motion.dl
-          variants={item}
-          className="mt-14 flex flex-wrap gap-x-10 gap-y-4 border-t border-hairline pt-6 font-mono"
-        >
-          {stats.map((s) => (
-            <div key={s.id} className="flex flex-col gap-1">
-              <dd className="order-first text-lg text-ink">
-                <AnimatedMetric text={s.value} />
-              </dd>
-              <dt className="text-[11px] uppercase tracking-wider text-ink-muted">
-                {s.label}
-              </dt>
-            </div>
-          ))}
-        </motion.dl>
       </motion.div>
 
       {/* Scroll cue — decorative; invites scrolling down into the resolving network */}

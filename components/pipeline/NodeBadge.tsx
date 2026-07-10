@@ -4,6 +4,8 @@ import {
   Boxes,
   Briefcase,
   Backpack,
+  Cloud,
+  Database,
   GraduationCap,
   Target,
 } from "lucide-react";
@@ -26,12 +28,16 @@ const GLYPH: Record<NodeKind, typeof Sparkles> = {
 
 // Per-node glyph overrides (id wins over the kind default), so the experience
 // nodes read distinctly — job, internship, schooling — matching the timeline.
+// aws/sql have no simple-icons brand mark; give each its own glyph so the two
+// don't render as identical Cpu fallbacks side by side in the skills column.
 const ROLE_GLYPH: Partial<Record<string, typeof Sparkles>> = {
   "exp-capitalone": Briefcase,
   "exp-samsung": Backpack,
   "exp-iquanti": Backpack,
   "edu-gwu": GraduationCap,
   "edu-iit": GraduationCap,
+  aws: Cloud,
+  sql: Database,
 };
 
 export function hasBrand(icon?: string) {

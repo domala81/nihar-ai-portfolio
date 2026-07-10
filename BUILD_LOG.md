@@ -31,7 +31,9 @@ reproducible. `←` marks where we are.
 | 10 | `/impeccable craft` — experience→contact transition | "Curtain-flavored" scroll-driven reveal of Section 5 (from a reference footer's curtain reveal): synapses draw + node + content unfurl top→down on scroll, latched, soft mask wipe; thread/convergence kept intact (Option C) | ✅ done |
 | 11 | `/impeccable craft` — footer | "Inference colophon": flat 3-zone footer (© + rights · built-with-♥ + tech credit · ↑ rerun back-to-top), machine-voice `● session complete` line; debranded the reference's glass/giant-text; one lime mark (♥) | ✅ done |
 | — | (out-of-flow) — centralized `data/` layer | Extracted all content into `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`; `networkData.ts` → adapter. Adding content now = edit one file. | ✅ done |
-| — | (out-of-flow) — brutal review → 4-phase fix pass | Full-site review (7/10) then: bug fixes + OG/favicon/JSON-LD, perf + keyboard a11y, micro-animations (count-ups, metallic hero, progress hairline, panel tilt), personality (model card, ⌘K terminal, backprop click, telemetry strip, console egg) | ✅ done ← |
+| — | (out-of-flow) — brutal review → 4-phase fix pass | Full-site review (7/10) then: bug fixes + OG/favicon/JSON-LD, perf + keyboard a11y, micro-animations (count-ups, metallic hero, progress hairline, panel tilt), personality (model card, ⌘K terminal, backprop click, telemetry strip, console egg) | ✅ done |
+| 12 | `/impeccable craft` — about ("Operator File") | Dossier about section: scanned-portrait anchor + asymmetric bento (bio, hobbies, route trace, sandbox ticker); then v2: 4-para personal bio arc, `pull_toward_ai` signal curve, compact hobby icon strip w/ typewriter captions, topo watermark | ✅ done |
+| 13 | `/impeccable craft` — operator vitals rings | Replaced the `pull_toward_ai` constellation with four vertical fitness-style rings (self-reported personality metrics, sweep-from-zero + count-up, one lime) | ✅ done ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -43,6 +45,103 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-07-10 (about copy)** — Title/subtitle "simpler like the other pages":
+  "Who's behind the network / The operator, declassified." → "A bit about me /
+  Bio, vitals, and what happens when the laptop closes." Also removed the
+  "* self-reported" footnote under the rings. Amends Entry 044.
+- **2026-07-10 (vitals tune)** — Reworked the set: caffeine 40 · fitness 65
+  (small talk out) · sleep 75 · **curiosity 200%** as the lime ring — chose the
+  exaggerated 200% ("to exaggerate if it is relevant"); ring fill caps at a full
+  circle while the number counts to 200. Amends Entry 044.
+- **2026-07-10 (vitals rings)** — After two batches of graph ideas, chose
+  reference-image-style **rings** with personality metrics ("#2"): constellation
+  out, four vertical Apple-fitness-style rings in (sweep from zero + count-up),
+  labels kept short ("just caffeine, small talk, sleep"). → Entry 044.
+- **2026-07-10 (new studio portrait)** — "Try the latest 2 photos downloaded today"
+  — two Higgsfield AI studio shots (black bg, lime+cobalt rim light — matches theme
+  natively, no CSS needed). Both tried in the slot with screenshots; user picked
+  **A (wider chest-up framing)** over B (tight face crop, heavier green cast).
+  HIGGSFIELD watermark cropped off (bottom 105px, PIL — `sips -c` center-crops and
+  had eaten headroom) → `operator.jpg` 896×1095, 84KB q78. Leftover
+  `operator_2.jpg` deleted; public/ = resume PDF + operator.jpg only.
+- **2026-07-04 (duotone out)** — "Why is it all blue and monotonous?" — challenged
+  the cobalt duotone on the portrait. Tried light tint (saturate 0.85 + 18% wash),
+  then final call: **fully natural photo, zero color filters** — only the bottom
+  gradient (name-strip legibility) + dossier framing (grid, brackets, scan line)
+  remain. Rule learned: no filters on the user's own photo, period. Amends
+  Entry 043.
+- **2026-07-04 (photo landed)** — Added the real portrait (`potrait.png`, 768×1376,
+  1.5MB) and asked to flip the ready flag. Renamed → recompressed to
+  `operator.jpg` (224KB, q78; duotone wash hides compression), `photo.ready:
+  true`. Scan reveal + cobalt duotone now run on the real photo; header reads
+  "scan complete". Amends Entry 043.
+- **2026-07-04 (graph redo)** — "Didn't like the idea as well as the placement,
+  coz it's too much stretched" — the full-width signal curve. Given 4 options,
+  chose the **origin constellation** (nodes + synapses beside the bio). Also asked
+  where About belongs; after ratings, kept it after Experience. → Entry 043.
+- **2026-07-04 (watermark out)** — Asked why concentric circles were in the
+  hobbies box (the approved topo watermark) → once explained, "remove that".
+  `TopoWatermark` deleted; section graphic count back to one (the signal curve).
+- **2026-07-04 (fade-in)** — "Ease in should be invisible to visible, I think that
+  looks better" — about cards + portrait now fade (opacity 0→1) with the rise.
+  Conscious exception to the no-opacity-gate habit, scoped to this section;
+  reduced-motion still ships fully visible. Amends Entry 042.
+- **2026-07-04 (about motion)** — Bottom boxes must **not resize** while the hobby
+  caption types (fix to required size); exploring card's bottom space "looks
+  weird"; wants **minimal smooth scroll animations** — boxes ease up, graph draws
+  base→end with the green dot, photo scan-reveal or center-zoom, "decide which
+  goes with the theme". Chose scan-reveal (dossier fiction). → Entry 042.
+- **2026-07-04 (about polish)** — Looks good; wants bottom boxes shorter (empty
+  space in exploring), **graph labels aligned with dots on any screen**, photo +
+  icons sized down to match, and the bio to **fill the card width** (right side
+  was empty). Applied → Entry 041.
+- **2026-07-04 (about fit)** — Section must fit **one viewport**: route trace out,
+  ritual (desk/ambient/fuel) out ("not easily understandable"), curve smaller but
+  "a little bit fancy", hobby captions must **name the hobby** before the tagline,
+  body font smaller but not messy. Applied → Entry 040.
+- **2026-07-04 (about v3)** — Likes the Operator File; wants **more personal text**
+  (gave LinkedIn about + the childhood-maths → IIT KGP → data science origin story),
+  hobbies box **very small, icons only** with hover one-liners in a corner slot
+  (reference image), **ping pong** added, and 1–2 simple graphics à la the
+  reference's mountain graph/rings — "ideas first, give me options", no icon mess.
+  Chose signal curve + topo watermark; asked captions to auto-cycle with a fast
+  typewriter type/erase, pinning on hover. → Entry 039.
+- **2026-07-03 (about v2)** — **"I did not like the model card"** → brought a dossier
+  reference (tall left portrait + modular personal-life grid) and asked for
+  theme-synced improvisation, ideas first. Brainstormed 4 directions via
+  /impeccable craft; user superseded with their own dossier idea + supplied real
+  personal content (Warangal → KGP → DC route; trekking/badminton/gym taglines;
+  standing desk · telugu & hindi melodies · coconut water; sandbox list). Plant card
+  skipped by user → replaced with Route Trace. Photo pending → placeholder mode.
+  Shipped as the "Operator File" section. → Entry 038.
+- **2026-07-03 (correction)** — **"I never used airflow in capone, come on, verify
+  them again"** — caught a skill I'd inferred into the Capital One card. Re-verified
+  every role chip against the resume PDF; Airflow removed everywhere (node + chips),
+  SQL added as a skill node instead. Standing rule: per-role skills need a resume
+  bullet or explicit user say-so. → Entry 037.
+- **2026-07-03 (network realism)** — **"Connect the neural network dots to only
+  relevant nodes, not all to all"** + surface the recruiter-keyword skills in the
+  experience/project cards ("databricks and snowflake, delta lake ETL etc in cap
+  one"). Synapses now come from real relationships in data/ (~34 edges vs 69
+  all-pairs); Capital One card carries the full stack as chips. → Entry 036.
+- **2026-07-03 (follow-up)** — Kept only the four **section-title** swaps (projects
+  label/heading/sub + experience label/heading/sub) and the mobile pipeline rewrite;
+  everything else from Entry 035 reverted — the small machine-voice references
+  (loader, chip, "inference_status", "Connected nodes", backprop hint, terminal/console
+  strings, model-card heading) "were good before". Net rule: **section titles plain,
+  small in-world references stay technical.** Amends Entry 035.
+- **2026-07-03 (latest)** — **"I didn't like the theme of network, it is pretty
+  confusing"** — wants quirky but easy-to-understand copy. Rewrote every visible
+  network/ML-jargon string (section labels, headings, chip, loader, terminal lines);
+  the canvas visualization itself stays. New voice: first-person quirky-plain
+  ("Things I actually shipped"). → Entry 035.
+- **2026-07-03 (later)** — Supplied real links (IEEE paper DOI, cloudmart + VisionVoice
+  repos) and a **new project to embed: resume-autopilot** (agentic Claude Code resume
+  pipeline). Direction: hero should feel **"personalized, not commercial"** → removed
+  the telemetry stats strip from page 1; surface the hidden ⌘K terminal somewhere
+  relevant (not highlighted) → quiet `>_ ⌘K` chip in the hero nav, click opens it.
+  Offered to drop VisionVoice; kept all 4 (orbit is symmetric at 4, grid becomes 2×2).
+  → Entry 034.
 - **2026-07-03** — Asked for a **brutal, honest rating** of the whole site plus every
   possible improvement (bugs, uniqueness, micro-animations, background-relevant
   features): "showcase my expertise and personality, not another fancy resume."
@@ -318,6 +417,394 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 044 — Operator vitals rings replace the constellation
+
+**Prompt:** "Give me graph ideas for the operator page" (reference: a dark
+dossier template with skill rings) → after two idea batches, picked ring-style
+personality metrics: "remove the pull_toward_ai line graph, keep rings there in
+vertical, animate like Apple fitness rings from zero with the number counting
+up, keep the page format, short names like caffeine, small talk, sleep."
+
+**Flow:** Brainstormed ~25 graph ideas across two batches (scale ramp, loss-curve
+gag, git-graph of life, htop panel, etc.) — none landed. Third angle: rings from
+the user's reference image, but with personality metrics instead of resume-slop
+skill percentages. User chose the self-reported vitals set. Via
+`/impeccable craft`: replaced `OriginConstellation` with `VitalsRings` (vertical
+column of four SVG rings beside the bio), each ring sweeping 0→value with a
+synced count-up number, staggered top→bottom on scroll-in. Verified with a
+production build + desktop/mobile screenshots.
+
+**Decisions:**
+- Vitals: caffeine 20 · small talk 95 (lime, ties to the bio's contact-node
+  line) · sleep 40 · 2am debugging 100. Numbers are editable in `data/about.ts`.
+- Only the small-talk ring is lime (One Live Signal Rule); the rest are cobalt
+  on a hairline track. Footnote "* self-reported. error bars unknown." keeps the
+  machine voice.
+- Ring sweep uses Framer Motion `pathLength` + `animate()` count-up sharing the
+  same delay/duration/ease so ring and number always agree; reduced motion
+  renders rings pre-filled with static numbers.
+- `SignalStop`/`signal` removed from `data/about.ts` (replaced by
+  `VitalEntry`/`vitals`); barrel export updated.
+
+**Output:** `data/about.ts`, `data/index.ts`,
+`components/about/OperatorFile.tsx` (constellation → rings), this log.
+
+---
+
+## Entry 043 — Origin constellation replaces the stretched curve
+
+**Prompt:** "Give me options for a better graph — didn't like the idea or the
+placement, it's too stretched." (Same session, earlier: topo watermark removed on
+request; card ease-in gained an opacity fade per user preference.)
+
+**Flow:** Offered 4 directions with previews (constellation / own bottom card /
+step chart / training-log lines); user picked the recommended **constellation**.
+Rebuilt, hit the pathLength stub bug again, fixed, verified in-browser (section
+now 802px in a 900px viewport).
+
+**Decisions:**
+- **Why the curve failed:** full card width × 64px tall = flat ribbon; 4 data
+  points can't earn a full-width axis. Change of form, not size.
+- **OriginConstellation**: 4 nodes climbing diagonally in a fixed ~210px square
+  beside the bio text (md+: text left / constellation right in the same card;
+  stacks under the text on mobile). Synapse segments draw node-to-node in
+  sequence (0.45s cadence), each node pops as the line reaches it, lime "now"
+  pings last. The site's own network grammar at micro scale — not a chart, so
+  nothing to stretch. Labels alternate sides (right for lower, left for upper).
+- **pathLength lesson, round 2**: even at uniform scale, framer's pathLength
+  dash trick misrenders with `vectorEffect="non-scaling-stroke"` (dash pattern
+  scales by the inverse CTM → segments render as stubs). Dropped the
+  vectorEffect, strokeWidth in viewBox units (0.7). Standing rule: never combine
+  framer pathLength with non-scaling-stroke.
+- Bio card ~60px shorter than the curve version as a bonus.
+
+**Output:** `components/about/OperatorFile.tsx` (SignalCurve →
+OriginConstellation), `data/about.ts` (signal coords now square-space).
+
+---
+
+## Entry 042 — Operator File v5: stable heights + scroll choreography
+
+**Prompt:** "Bottom boxes grow/shrink when the hobby typing wraps to a second
+line — fix to the required size. Currently-exploring bottom space looks weird, do
+something. Add small scroll animations: boxes ease in from a little bottom, graph
+draws base→end with the green dot, photo gets a scan reveal or center zoom —
+decide what fits the theme. Very minimal, smooth, modern."
+
+**Flow:** Fixed the caption jitter, redesigned the exploring card, added the
+scroll choreography, verified mid-animation + settled states in-browser (872px,
+still one viewport), build + lint clean.
+
+**Decisions:**
+- **Caption slot is now hard-fixed height** (`h-[3.25rem]` + overflow-hidden,
+  fits the longest tagline at 2 lines) — was `min-h`, so 2-line taglines grew the
+  card and 1-liners shrank it back, pumping the whole bottom row.
+- **Exploring items became terminal chips** (hairline border, mono 11px,
+  flex-wrap): 4 chips over 2 rows fill the card's vertical space intentionally
+  instead of leaving a bare paragraph + dead bottom.
+- **Scroll choreography** (all pre-existing grammar, nothing new invented):
+  cards keep the y-rise + stagger, portrait card now rises too; the curve's wipe
+  gained **waypoint dots that land as the wipe reaches them** (delay = wipe
+  duration × x%, lime "now" dot lands last); the portrait got the **scan-line
+  reveal** — chose it over center-zoom because the dossier's fiction is "file
+  being scanned", and the line + clip share one duration/ease so the image
+  un-clips exactly behind the sweeping line.
+- Reduced motion: no clip, no dot delays, static caption — everything visible
+  immediately.
+
+**Output:** `components/about/OperatorFile.tsx` only.
+
+---
+
+## Entry 041 — Operator File v4: alignment + density polish
+
+**Prompt:** "Reduce the height from bottom a little; empty space in currently
+exploring box; the dot graph dots are not aligned with the names in x axis —
+correct them and make it screen agnostic; reduce photo size to align with the
+bottom-box reduction; reduce the icons size; the description is not aligned with
+the box size, right part of box is just empty."
+
+**Flow:** Fixed the curve's label alignment, widened the bio measure, tightened
+the bottom row, re-measured in-browser (868px in a 900px viewport), lint clean.
+
+**Decisions:**
+- **Curve labels now share the dots' coordinate system**: each label is
+  absolutely positioned at the same `x%` as its dot (was `justify-between`, which
+  only coincidentally aligned at one width). Middle labels center on the dot;
+  first/last clamp to the edges so nothing clips. Percent-based on both dots and
+  labels = holds at any screen width.
+- **Bio fills the card**: dropped the `max-w-measure` (70ch) cap on the about
+  paragraphs — at this card width it left a dead right third. Conscious trade of
+  the line-length guideline for the user's fill-the-box requirement; text-sm keeps
+  it readable.
+- Bottom row density: both cards `p-4/sm:p-5`, hobby buttons 40→32px with 16px
+  glyphs, caption slot min-height 3.5→2.75rem, exploring text gap tightened.
+- Portrait shrank for free — its lg height tracks the grid, so the bottom-row
+  reduction pulled it down too (no separate change needed).
+
+**Output:** `components/about/OperatorFile.tsx` only.
+
+---
+
+## Entry 040 — Operator File v3: one-viewport fit
+
+**Prompt:** "Page is overflowing, I want all of it in one view page. Remove route
+trace if needed. Reduce the line graph, make it a little bit fancy, just a little
+bit. Name the hobby then the tagline (icons alone confusing). Desk/ambient/fuel
+not easily understandable, remove if not necessary. Reduce description font to
+make space, don't make it messy."
+
+**Flow:** Removed route trace card + ritual status line, restructured the bento,
+shrank the curve, tightened spacing, then measured `#about` height in the browser
+until it fit: 897px inside a 900px viewport at 1440×900. Verified mobile stack +
+the curve's scroll-in draw still work; build + lint clean.
+
+**Decisions:**
+- **Route trace removed** (user-sanctioned) — the Warangal→KGP→DC arc survives in
+  the bio's paragraph 2, so no information is truly lost. `RouteStop` type +
+  data deleted; barrel export updated.
+- **Ritual line removed** entirely (desk/ambient/fuel read as insider jargon).
+- New bento: full-width bio card (arc + curve), bottom row = "Currently exploring"
+  beside the hobbies strip. Exploring got a proper card title (was a bare terminal
+  line, orphaned once its row-mate changed).
+- **Curve**: h-16 (was h-24/28); "a little bit fancy" = a soft vertical-gradient
+  area fill under the line (cobalt 12% → 0). Fill + stroke both live inside the
+  clip-path wipe so the reveal stays one gesture.
+- **Hobby caption names the hobby**: static `trekking:` prefix in ink (swaps
+  instantly with hover/cycle), only the tagline is typed. Clarity without
+  retyping the name every cycle.
+- Density trims: bio → `text-sm`, section `py-24→py-12`, header gap `mt-12→mt-8`,
+  portrait column 340→300px. One-viewport fit measured, not eyeballed
+  (`offsetHeight` 929 → padding trim → 897).
+
+**Output:** `data/about.ts` (route + ritual gone), `data/index.ts` (export swap),
+`components/about/OperatorFile.tsx` (layout, curve, caption).
+
+---
+
+## Entry 039 — Operator File v2: fuller bio, signal curve, compact hobbies strip
+
+**Prompt:** User likes the Operator File but wants more personal text (supplied
+their LinkedIn about + the childhood-maths → IIT KGP AI-spec → data science arc),
+the hobbies box "very small with icons" whose descriptions appear on hover in a
+bottom-corner slot (per their reference image), ping pong added, and 1–2 simple
+graphics in the spirit of the reference's mountain graph + rings — ideas and
+approval first, no icon clutter.
+
+**Flow:** /impeccable craft — proposed structure + three graphic options with ASCII
+previews; user approved **signal curve + topo contour watermark** and specified the
+hobby captions should auto-cycle with a typewriter effect (type in, erase out,
+fast-ish) and pin to the hovered icon. Built, fixed one rendering defect found in
+browser, verified at 1440 and 375.
+
+**Decisions:**
+- **Bio grew to a 4-paragraph arc** (childhood maths → KGP turn → the DE/AI bridge
+  now → the small-talk line), distilled from the LinkedIn about; the hard metrics
+  stay in the experience/project sections, this card stays human.
+- **"pull_toward_ai" signal curve** under the bio: the reference's education
+  mountain graph translated into the site's language — a rising cobalt curve
+  (accelerating bow: slow start, steep end) through 4 waypoints (maths kid → iit
+  kgp · ai spec → data science → now), lime pinging dot on "now", mono header
+  `pull_toward_ai ▲ / epochs: lifetime`. Waypoints live in `data/about.ts`.
+- **Bug found in-browser:** Framer's `pathLength` draw-on animation + a stretched
+  SVG (`preserveAspectRatio="none"` + non-scaling-stroke) renders the curve as
+  broken dashes in Chrome. Replaced with a left→right `clip-path` wipe on a
+  wrapper — same reveal, no dash math.
+- **Hobbies → compact icon strip** (bottom-right of the bento, like the reference):
+  4 icon buttons (Mountain/Dumbbell from lucide; shuttlecock + paddle hand-drawn in
+  the same 24px stroke grammar), one reserved mono caption line below that
+  auto-cycles through taglines with a typewriter (type ~28ms/char, erase ~14ms),
+  hover/focus pins that hobby. Fixed min-height so typing never shifts layout;
+  `aria-live=polite`, per-icon `aria-label` carries the full line; reduced motion
+  = static caption, no cycling. Gym meter dropped (no room in strip; tagline kept).
+- **Topo contour watermark** (4 faint concentric hand-drawn contours, ~5% white)
+  behind the hobbies strip — the trekking nod + the reference's rings without
+  copying either. Second approved graphic; still zero extra lime.
+- Layout reflow: route trace moved up beside a right-hand stack (exploring ticker
+  over hobbies strip); exploring card lost its blinking cursor (the cursor now
+  lives in the hobbies caption — two adjacent blinks read as noise).
+
+**Output:** `data/about.ts` (bio, signal waypoints, +pingpong, meter removed),
+`components/about/OperatorFile.tsx` (SignalCurve, HobbiesStrip, TopoWatermark,
+custom glyphs, layout). Build + lint clean.
+
+---
+
+## Entry 038 — "Operator File": dossier about section replaces the model card
+
+**Prompt:** User rejected the model card and brought their own reference (dark
+dossier: tall left portrait, right modular grid of personal facets), asking for
+theme-synced improvisations, then answered content questions.
+
+**Flow:** /impeccable craft — brainstormed 4 alternative directions first (operator
++ margin notes, system diagnostics, session transcript, weights & biases bar); user
+superseded with the dossier idea; collected real content via Q&A; planned, built,
+verified at 1440/375.
+
+**Decisions:**
+- Kept the user's base idea intact, adapted to the system: the reference's four
+  identical cards became an **asymmetric bento** (identical card grids are banned) —
+  wide bio, hobbies list, route trace, slim full-width ticker.
+- **Portrait = "scanned file"**: cobalt duotone treatment (CSS only), hairline grid
+  overlay, corner brackets, mono `operator.jpg · scan pending` header, one-shot lime
+  scan line on scroll-in. Ships in placeholder mode (dot silhouette + "awaiting
+  operator.jpg") until a real photo lands — flip `about.photo.ready`.
+- **Route Trace** replaces the skipped plant card: Warangal → IIT Kharagpur →
+  Washington DC as waypoint nodes on a scroll-drawn cobalt spine (timeline grammar);
+  DC is the lime "now" dot. Lime budget for the whole section: scan line + that dot.
+- Hobby taglines verbatim from the user; only the gym row gets a terminal meter
+  (`▓▓▓░░░░ 3x/week`) — no invented frequencies.
+- Ritual line (standing desk, telugu & hindi melodies, coconut water) as a mono
+  status footer under the bio. Sandbox card reuses the footer's blinking cursor.
+- Heading kept ("Who's behind the network" — previously user-approved); section
+  content all in `data/about.ts` per the data-layer rule; no thread anchors (normal
+  flow untouched). Motion is scale/y only (no opacity gates) so SSR ships visible.
+
+**Output:** new `data/about.ts` + `components/about/OperatorFile.tsx`; deleted
+`components/about/ModelCardSection.tsx` + `data/modelCard.ts`; `data/index.ts`,
+`app/page.tsx` swapped.
+
+---
+
+## Entry 037 — Resume-verified skills + skills-layer rework (Airflow out, SQL in)
+
+**Prompt:** "I never used airflow in capone, come on, verify them again. Also include
+most relevant and important skills in the skills layer, removing less useful skills —
+do not make it clumsy and more populated."
+
+**Flow:** Read the actual resume PDF (`public/NiharDomala_Resume_DataEngineer.pdf`)
+and re-verified every per-role chip against its bullets, then reworked the skills
+column at the same 7-node count.
+
+**Decisions:**
+- **Airflow removed entirely** (Capital One chip, skill node, icon, slug map). It sits
+  in the resume's general skills list but no bullet uses it — Entry 036 inferred it
+  into the role; that was wrong. New standing rule (saved to memory): role chips and
+  role↔skill edges need a resume bullet or explicit user say-so.
+- **SQL added as a CORE skill node** in Airflow's slot — bullet-backed ("authoring SQL
+  transformation configs and schema validation logic in Databricks") and a top DE
+  recruiter keyword. Database glyph; AWS got a cloud glyph so the two icon-less
+  skills don't render as identical fallbacks.
+- Same node count (7), similar edge count (~34) — nothing got more populated.
+- Other verification fixes: Samsung chips → Python, Plotly (scikit-learn wasn't in
+  the bullet); CloudMart tech chip "Python" removed (repo is primarily JavaScript);
+  Capital One chips now PySpark · AWS Glue · Delta Lake · Databricks · SQL ·
+  Snowflake · AWS Lambda · Python. Snowflake at Capital One stays by the user's own
+  earlier request (not bullet-backed — flagged).
+- Passion links rebalanced: Programming → Python/SQL/Spark; Automation →
+  AWS/Databricks/Snowflake; Maths & Stats and Problem Solving unchanged.
+
+**Output:** `data/skills.ts` (SQL node, passion connections), `data/experience.ts`
+(Capital One/Samsung chips, JSDoc), `data/projects.ts` (CloudMart tech),
+`NodeBadge.tsx` (aws/sql glyphs), `ExperienceTimeline.tsx` + `scripts/gen-icons.mjs`
++ regenerated `iconData.ts` (Airflow icon dropped).
+
+---
+
+## Entry 036 — Meaningful synapses + recruiter-keyword skill chips
+
+**Prompt:** "Connect the neural network dots to only relevant nodes, not all nodes to
+all nodes… also add all the relevant important skills in feature cards (like
+databricks and snowflake, delta lake ETL etc in cap one)."
+
+**Flow:** Replaced the all-pairs adjacent-column edge generation with a graph built
+from the label lists already in `data/` (passions/skills `connections`, projects
+`tech`, experience `skills`), enriched the data so the graph and the cards both tell
+the true story, verified hover isolation + chips in the browser.
+
+**Decisions:**
+- Edges live in the adapter (`networkData.ts` `SYNAPSES`): a pair connects when either
+  endpoint's label list names the other (alias-aware: PySpark→Apache Spark,
+  AWS Glue/Lambda→AWS). Same-column pairs never connect.
+- **Skip synapses** (2 columns apart) allowed only skills→experience, and only for
+  roles whose stack isn't told through a project: Capital One's data stack
+  (Spark/Databricks/Snowflake/Airflow/AWS/Python fan straight into the briefcase) and
+  the two internships (Python, honest since no matching project exists).
+- Structural links the content fields can't encode sit in an explicit `EXTRA_LINKS`
+  list: CloudMart→Capital One, VisionVoice→GWU, cnn-pooling→IIT, all five
+  deployments→result, and resume-autopilot→result (the job-hunt project literally
+  points at the next mission).
+- Hover "related" state now follows actual edges (`NEIGHBORS`) instead of
+  column-adjacency, so isolating a node highlights only its true connections.
+- `nodeByLabel` is alias-aware → the PySpark / AWS Glue chips in detail cards are now
+  clickable and jump to the right skill node.
+- Skills chips: Capital One = PySpark · AWS Glue · Delta Lake · Databricks · Snowflake
+  · Apache Airflow · AWS Lambda · Python; Samsung += scikit-learn, Plotly; iQuanti =
+  Python, TensorFlow, scikit-learn (was PyTorch — bullets say TF); GWU += PyTorch;
+  CloudMart tech += Python. New brand icons generated (tensorflow, scikitlearn,
+  plotly); Delta Lake has no simple-icons mark → plain text chip.
+
+**Output:** `networkData.ts` (ALIAS/SYNAPSES/NEIGHBORS builder), `NeuralPipeline.tsx`
+(uses SYNAPSES + NEIGHBORS), `data/skills.ts` (passion connections),
+`data/experience.ts` (skills lists), `data/projects.ts` (CloudMart tech),
+`ExperienceTimeline.tsx` (CONNECTION_SLUG), `scripts/gen-icons.mjs` + regenerated
+`iconData.ts`.
+
+---
+
+## Entry 035 — De-jargon the copy: network metaphor out of the words
+
+**Prompt:** "I didn't like the theme of network, it is pretty confusing… change the
+titles like 'what the network shipped' and any more references of the network, replace
+with simpler but a bit quirky sentences."
+
+**Flow:** Grepped every user-visible string for network/inference/layer/signal/backprop
+jargon, rewrote them all in one voice, verified renders in the browser.
+
+**Decisions:**
+- The **visualization stays** — the request was about words, not the canvas. The copy
+  now describes what you see plainly (dots, wires) instead of naming ML concepts.
+- One consistent voice: first-person, quirky-plain. Wordplay on wires/dots allowed;
+  ML jargon not. The model card keeps its HF-jargon-as-joke framing (that section's
+  whole bit) — only its heading lost the network reference.
+- Swaps: "Output layer / What the network shipped" → "Proof of work / Things I
+  actually shipped"; "Deployment history / Where the signal has run" → "Track record /
+  Where I've been so far" (sub now points out "the lime dot is today" — orientation
+  aid); "Who's behind the network" → "The human behind all this"; loader
+  "Initializing inference engine" → "Connecting the dots"; chip "Inference: live" →
+  "All wired up"; contact "inference_status: ready" → "status: ready when you are";
+  DetailCard "Connected nodes" → "Wired to"; backprop hint → "click me — watch it all
+  flow backward"; mobile pipeline headings → "What drives me / What I'm good at /
+  What I've shipped / Where I've worked / Where this is going"; terminal + console
+  strings de-jargoned to match.
+
+**Output:** `OrbitalProjects.tsx`, `ExperienceTimeline.tsx`, `ModelCardSection.tsx`,
+`ContactSection.tsx`, `NeuralPipeline.tsx`, `PipelineContent.tsx`, `DetailCard.tsx`,
+`TerminalPalette.tsx`, `ConsoleSignature.tsx`, `networkData.ts` (short labels).
+
+---
+
+## Entry 034 — Resume Autopilot + real links + personal-not-commercial hero
+
+**Prompt:** Real links for cloudmart/VisionVoice + the IEEE paper DOI; embed a new
+project (resume-autopilot) "in similar tone", drop VisionVoice if 4 projects feel
+overwhelming; remove the hero metrics strip ("personalized, not commercial"); hint the
+⌘K terminal somewhere relevant without highlighting it.
+
+**Flow:** Read the resume-autopilot repo (deterministic keyword matcher → Claude edits
+inside an immutable LaTeX template → quality gates → PDF; demo 81%→94% keyword match),
+wrote its entry newest-first in `data/projects.ts`, wired all real links, removed the
+hero telemetry strip, added a `>_ ⌘K` nav chip, verified in the browser (hero, 4-node
+orbit, 4-node pipeline column, chip click opens the terminal).
+
+**Decisions:**
+- **Kept VisionVoice** (4 projects): the orbit is symmetric at 4 nodes, the static grid
+  becomes a clean 2×2, and it's the only applied-DL + accessibility story. Four ≠
+  overwhelming.
+- Also reframed VisionVoice's metric — "BLEU 0.20" read as 20% to recruiters; now
+  "images → spoken descriptions, end-to-end".
+- Telemetry strip: deleted outright (component + `data/stats.ts`), not hidden — the
+  numbers still live in the experience bullets and model card where they have context.
+- ⌘K hint: a quiet mono `>_ ⌘K` chip at the end of the hero nav (desktop only, since
+  it's a keyboard feature). Click dispatches a synthetic ⌘K so it opens the same
+  terminal; footer hint stays as the second breadcrumb.
+
+**Output:** `data/projects.ts` (resume-autopilot entry, real repo links, paper DOI,
+VisionVoice metric), `OrbitalProjects.tsx` (FileCheck2 glyph), `Hero.tsx` (strip
+removed, ⌘K chip), deleted `data/stats.ts` (+ barrel exports).
 
 ---
 

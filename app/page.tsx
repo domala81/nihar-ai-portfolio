@@ -1,7 +1,7 @@
 import NeuralPipeline from "@/components/pipeline/NeuralPipeline";
 import OrbitalProjects from "@/components/projects/OrbitalProjects";
 import ExperienceTimeline from "@/components/experience/ExperienceTimeline";
-import ModelCardSection from "@/components/about/ModelCardSection";
+import OperatorFile from "@/components/about/OperatorFile";
 import LimeThread from "@/components/thread/LimeThread";
 import ContactSection from "@/components/contact/ContactSection";
 import SiteFooter from "@/components/footer/SiteFooter";
@@ -28,8 +28,8 @@ export default function Home() {
       {/* Section 4 — Experience "Signal Trace". */}
       <ExperienceTimeline />
 
-      {/* Section 4.5 — About, written as a model card (the human voice). */}
-      <ModelCardSection />
+      {/* Section 4.5 — About, as an "Operator File" dossier (the human voice). */}
+      <OperatorFile />
 
       {/* Section 5 — Convergent Output Node + direct-contact terminal. */}
       <ContactSection />

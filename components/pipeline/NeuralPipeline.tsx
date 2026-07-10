@@ -8,7 +8,15 @@ import Hero from "../Hero";
 import DetailCard from "./DetailCard";
 import PipelineContent from "./PipelineContent";
 import NodeToken, { type TokenState } from "./NodeToken";
-import { ALL_NODES, LAYERS, LAYER_COUNTS, nodeByLabel, type NodeKind } from "./networkData";
+import {
+  ALL_NODES,
+  LAYERS,
+  LAYER_COUNTS,
+  NEIGHBORS,
+  SYNAPSES,
+  nodeByLabel,
+  type NodeKind,
+} from "./networkData";
 import { registerAnchor } from "../thread/anchorStore";
 
 /**
@@ -217,11 +225,8 @@ export default function NeuralPipeline() {
           nodes.push({ id: d.id, label: d.label, kind: d.kind, icon: d.icon, col, x, y, isCore: col === layersN - 1 });
         }
       });
-      const synapses: [number, number][] = [];
-      for (let i = 0; i < nodes.length; i++)
-        for (let j = 0; j < nodes.length; j++)
-          if (nodes[j].col === nodes[i].col + 1) synapses.push([i, j]);
-      return { w, h, size, cols, nodes, synapses };
+      // Real relationships only (built from data/ in networkData) — not all-to-all.
+      return { w, h, size, cols, nodes, synapses: SYNAPSES };
     }
 
     function resize() {
@@ -669,7 +674,7 @@ export default function NeuralPipeline() {
                   ? "rest"
                   : n.id === activeNode.id
                     ? "active"
-                    : Math.abs(n.col - activeNode.col) === 1
+                    : NEIGHBORS[activeNode.id]?.includes(n.id)
                       ? "related"
                       : "dimmed";
                 return (

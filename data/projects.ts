@@ -18,6 +18,20 @@ export type ProjectEntry = {
 
 export const projects: ProjectEntry[] = [
   {
+    id: "resume-autopilot",
+    title: "Resume Autopilot",
+    date: "2026",
+    problem:
+      "Tailoring a resume for every application is slow, and naive LLM rewrites hallucinate content or wreck the layout.",
+    description:
+      "Agentic Claude Code pipeline: a zero-token keyword matcher scores JD↔resume gaps, Claude plans and edits only the content inside an immutable LaTeX template, and deterministic quality gates check metrics, tone and length before compiling the PDF.",
+    metric: "keyword match 81% → 94% · one-page, ATS-safe by construction",
+    tech: ["Claude Code", "Python", "LaTeX"],
+    links: [
+      { label: "Code", href: "https://github.com/domala81/resume-autopilot" },
+    ],
+  },
+  {
     id: "cloudmart",
     title: "CloudMart",
     date: "2025",
@@ -27,7 +41,7 @@ export const projects: ProjectEntry[] = [
       "MultiCloud AI storefront: AWS (EKS, Bedrock, Terraform, CodePipeline), GCP (BigQuery, Looker Studio) and Azure sentiment, fronted by a Claude Bedrock assistant with RAG-based catalog retrieval.",
     metric: "support cost −90% · real-time sales analytics",
     tech: ["AWS", "Amazon Bedrock", "Terraform", "BigQuery"],
-    links: [{ label: "Code", href: "https://github.com/domala81" }],
+    links: [{ label: "Code", href: "https://github.com/domala81/cloudmart" }],
   },
   {
     id: "visionvoice",
@@ -37,9 +51,9 @@ export const projects: ProjectEntry[] = [
       "Visually impaired users had no fast way to know what was in an image.",
     description:
       "Image-captioning system pairing a CNN encoder with an RNN decoder (EfficientNet-B3), then speaking each caption aloud via text-to-speech.",
-    metric: "BLEU 0.20 · spoken captions for accessibility",
+    metric: "images → spoken descriptions, end-to-end",
     tech: ["PyTorch", "Python", "EfficientNet"],
-    links: [{ label: "Code", href: "https://github.com/domala81" }],
+    links: [{ label: "Code", href: "https://github.com/domala81/VisionVoice" }],
   },
   {
     id: "cnn-pooling",
@@ -51,7 +65,9 @@ export const projects: ProjectEntry[] = [
       "Novel Bonferroni mean-based aggregation in the pooling layer, implemented in PyTorch and benchmarked against classical pooling on state-of-the-art CNN architectures.",
     metric: "IEEE INDICON 2023 · MV Chauhan Best Paper",
     tech: ["PyTorch", "Python"],
-    // Paper link intentionally omitted until a real URL exists (was a dead "#").
-    links: [{ label: "Code", href: "https://github.com/domala81" }],
+    links: [
+      { label: "Paper", href: "https://doi.org/10.1109/INDICON59947.2023.10440845" },
+      { label: "Code", href: "https://github.com/domala81" },
+    ],
   },
 ];

@@ -9,6 +9,7 @@ import {
   useSpring,
 } from "framer-motion";
 import {
+  FileCheck2,
   ShoppingCart,
   Eye,
   Layers,
@@ -41,6 +42,7 @@ import AnimatedMetric from "../ui/AnimatedMetric";
 // Distinct lucide glyph per project (the canvas uses one "project" glyph; here each
 // output gets its own mark).
 const PROJECT_GLYPH: Record<string, LucideIcon> = {
+  "resume-autopilot": FileCheck2,
   cloudmart: ShoppingCart,
   visionvoice: Eye,
   "cnn-pooling": Layers,
@@ -62,17 +64,17 @@ export default function OrbitalProjects() {
     >
       <div className="mx-auto w-full max-w-6xl">
         <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">
-          Output layer
+          Proof of work
         </p>
         <h2
           className="mt-3 text-balance font-sans font-semibold tracking-tightish text-ink"
           style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
         >
-          What the network shipped
+          Things I actually shipped
         </h2>
         <p className="mt-3 max-w-measure text-pretty leading-relaxed text-ink-muted">
-          What the stack above produced: the problem, the approach, and the impact
-          metric that mattered.
+          For each one: the problem, what I did about it, and the number that made
+          it worth it.
         </p>
 
         {reduce ? (

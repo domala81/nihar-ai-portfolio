@@ -10,12 +10,15 @@ import * as si from "simple-icons";
 const SLUGS = [
   "python",
   "apachespark",
-  "apacheairflow",
   "postgresql",
   "snowflake",
   "pytorch",
   "databricks",
   "terraform",
+  "tensorflow",
+  "scikitlearn",
+  "plotly",
+  // no Delta Lake mark in simple-icons — that chip renders as plain text
 ];
 
 const exportName = (slug) => "si" + slug.charAt(0).toUpperCase() + slug.slice(1);

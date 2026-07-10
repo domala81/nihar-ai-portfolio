@@ -28,7 +28,7 @@ export const passions: PassionEntry[] = [
     id: "p-programming",
     label: "Programming",
     description: "Clean code across the stack.",
-    connections: ["Python", "Apache Spark"],
+    connections: ["Python", "SQL", "Apache Spark"],
   },
   {
     id: "p-maths",
@@ -40,7 +40,7 @@ export const passions: PassionEntry[] = [
     id: "p-automation",
     label: "Automation",
     description: "Pipelines that run themselves.",
-    connections: ["Apache Airflow", "Python"],
+    connections: ["AWS", "Databricks", "Snowflake"],
   },
   {
     id: "p-problem-solving",
@@ -92,14 +92,14 @@ export const skills: SkillEntry[] = [
     connections: ["Apache Spark", "Snowflake"],
   },
   {
-    id: "airflow",
-    label: "Apache Airflow",
-    icon: "apacheairflow",
-    expertise: "HIGH",
-    date: "Since 2023",
-    description: "Orchestrating production data pipelines.",
-    energy: 82,
-    connections: ["Python", "Apache Spark"],
+    id: "sql",
+    label: "SQL",
+    icon: "", // no single brand mark for SQL — falls back to the kind glyph
+    expertise: "CORE",
+    date: "Since 2019",
+    description: "Transformations, schema validation, warehouse modeling.",
+    energy: 93,
+    connections: ["Snowflake", "Databricks"],
   },
   {
     id: "pytorch",

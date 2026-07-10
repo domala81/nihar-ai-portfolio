@@ -41,13 +41,15 @@ const RAIL = "left-[18px] sm:left-[84px]";
 // Connection label → simple-icons slug (brand glyphs live in iconData.ts).
 const CONNECTION_SLUG: Record<string, string> = {
   "Apache Spark": "apachespark",
-  "Apache Airflow": "apacheairflow",
   PyTorch: "pytorch",
   Python: "python",
   PostgreSQL: "postgresql",
   Snowflake: "snowflake",
   Databricks: "databricks",
   Terraform: "terraform",
+  TensorFlow: "tensorflow",
+  "scikit-learn": "scikitlearn",
+  Plotly: "plotly",
 };
 
 // Large, faint watermark glyph per role — gives each card its own identity.
@@ -100,16 +102,16 @@ export default function ExperienceTimeline() {
       <div className="mx-auto w-full max-w-3xl">
         {/* Section opener — same machine-voice label grammar as the other sections */}
         <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">
-          Deployment history
+          Track record
         </p>
         <h2
           className="mt-3 text-balance font-sans font-semibold tracking-tightish text-ink"
           style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
         >
-          Where the signal has run
+          Where I&apos;ve been so far
         </h2>
         <p className="mt-3 max-w-measure text-pretty leading-relaxed text-ink-muted">
-          The roles and schooling behind the stack above, most recent first.
+          Jobs and degrees, newest first — the lime dot is today.
         </p>
 
         <ol ref={listRef} className="relative mt-14">

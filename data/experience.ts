@@ -14,9 +14,10 @@ export type ExperienceEntry = {
   /**
    * Related skill labels — used to render brand-logo tech chips.
    * Brand glyphs render for keys in CONNECTION_SLUG in ExperienceTimeline.tsx
-   * ("Apache Spark", "Apache Airflow", "PyTorch", "Python", "PostgreSQL",
-   * "Snowflake", "Databricks", "Terraform"); "AWS"/cloud labels use a cloud
-   * glyph; anything else renders as a plain text chip.
+   * ("Apache Spark", "PyTorch", "Python", "PostgreSQL", "Snowflake",
+   * "Databricks", "Terraform", "TensorFlow", "scikit-learn", "Plotly");
+   * "AWS"/cloud labels use a cloud glyph; anything else renders as a plain
+   * text chip.
    */
   skills: string[];
 };
@@ -33,7 +34,16 @@ export const experience: ExperienceEntry[] = [
       "Developed internal Lambda API tooling that automated pipeline config, testing and deployment — cutting engineering effort ~80%.",
       "Diagnosed and resolved 15+ high-severity pipeline incidents via root cause analysis, eliminating recurring SLA breaches.",
     ],
-    skills: ["PySpark", "AWS", "Databricks", "Python"],
+    skills: [
+      "PySpark",
+      "AWS Glue",
+      "Delta Lake",
+      "Databricks",
+      "SQL",
+      "Snowflake",
+      "AWS Lambda",
+      "Python",
+    ],
   },
   {
     id: "exp-samsung",
@@ -45,7 +55,7 @@ export const experience: ExperienceEntry[] = [
       "Trained a K-Means clustering model on 3,000+ location records to surface the top 30% high-data-consumption sites for new store installations.",
       "Benchmarked 4+ clustering algorithms and built real-time Plotly dashboards to guide site selection.",
     ],
-    skills: ["Python"],
+    skills: ["Python", "Plotly"],
   },
   {
     id: "exp-iquanti",
@@ -57,7 +67,7 @@ export const experience: ExperienceEntry[] = [
       "Led a team of 3 building NLP preprocessing pipelines (TF-IDF, GloVe, BERT tokenization) over 47,684 imbalanced search queries across 5 intent classes.",
       "Benchmarked Naive Bayes, LSTM and BERT for 5-class intent classification, reaching 96.78% validation accuracy with TensorFlow and scikit-learn.",
     ],
-    skills: ["PyTorch", "Python"],
+    skills: ["Python", "TensorFlow", "scikit-learn"],
   },
   {
     id: "edu-gwu",
@@ -69,7 +79,7 @@ export const experience: ExperienceEntry[] = [
       "Awarded the Global Leaders Award — a $17,000 tuition fellowship for academic excellence.",
       "Secured 1st place at the GWU Datathon 2024 for predictive modeling of hotel booking patterns.",
     ],
-    skills: ["Python"],
+    skills: ["Python", "PyTorch"],
   },
   {
     id: "edu-iit",
