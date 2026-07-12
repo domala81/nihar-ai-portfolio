@@ -44,7 +44,10 @@ export default function PipelineContent({ variant }: Props) {
     >
       <div className="mx-auto w-full max-w-3xl">
         <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">The map</p>
-        <h2 className="mt-3 text-balance font-sans text-2xl font-semibold tracking-tightish text-ink">
+        <h2
+          className="mt-3 text-balance font-sans font-semibold tracking-tightish text-ink"
+          style={{ fontSize: "clamp(1.75rem, 3.5vw, 2.5rem)" }}
+        >
           From passions to shipped systems
         </h2>
         <p className="mt-3 max-w-measure text-pretty leading-relaxed text-ink-muted">

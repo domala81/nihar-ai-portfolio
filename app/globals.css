@@ -18,6 +18,8 @@
 @layer base {
   html {
     scroll-behavior: smooth;
+    /* clip, not hidden: hidden creates a scroll container and breaks the pipeline's sticky stage */
+    overflow-x: clip;
   }
 
   body {

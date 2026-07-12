@@ -1,4 +1,4 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 import { GeistSans } from "geist/font/sans";
 import { JetBrains_Mono } from "next/font/google";
 import { personal } from "@/data";
@@ -32,6 +32,11 @@ export const metadata: Metadata = {
     title: TITLE,
     description: DESCRIPTION,
   },
+};
+
+export const viewport: Viewport = {
+  themeColor: "#05070c",
+  colorScheme: "dark",
 };
 
 // Person schema for rich results (recruiter-facing SEO).

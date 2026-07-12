@@ -27,7 +27,10 @@ export default function SiteFooter() {
             ●
           </span>
           <span>
-            session complete · <span className="text-ink-muted/70">try ⌘K</span>
+            session complete
+            <span className="hidden lg:inline">
+              {" "}· <span className="text-ink-muted/70">try ⌘K</span>
+            </span>
             <motion.span
               aria-hidden
               className="ml-1 inline-block text-ink"
@@ -44,11 +47,11 @@ export default function SiteFooter() {
         </p>
 
         {/* Colophon — one wrapping line. The ♥ is the footer's single live signal. */}
-        <p className="flex flex-wrap items-center justify-center gap-x-10 gap-y-1 leading-relaxed">
+        <p className="flex flex-wrap items-center justify-center gap-x-3 gap-y-1 leading-relaxed md:gap-x-10">
           <span className="whitespace-nowrap">© {new Date().getFullYear()} {personal.name}</span>
-          <span aria-hidden className="text-white/15">·</span>
-          <span className="whitespace-nowrap text-ink">100% hand-prompted, Claude did the typing</span>
-          <span aria-hidden className="text-white/15">·</span>
+          <span aria-hidden className="hidden text-white/15 md:inline">·</span>
+          <span className="text-ink">100% hand-prompted, Claude did the typing</span>
+          <span aria-hidden className="hidden text-white/15 md:inline">·</span>
           <span className="whitespace-nowrap">Next.js · Canvas · GSAP</span>
         </p>
 
@@ -57,7 +60,7 @@ export default function SiteFooter() {
           type="button"
           onClick={scrollTop}
           aria-label="Back to top"
-          className="group mt-1 flex h-9 w-9 items-center justify-center rounded-full border border-border-soft text-ink-muted transition-colors duration-200 ease-out-quint hover:border-infra hover:text-ink sm:absolute sm:right-10 sm:top-1/2 sm:mt-0 sm:-translate-y-1/2"
+          className="group mt-1 flex h-11 w-11 items-center justify-center rounded-full border border-border-soft text-ink-muted transition-colors duration-200 ease-out-quint hover:border-infra hover:text-ink sm:absolute sm:right-10 sm:top-1/2 sm:mt-0 sm:-translate-y-1/2 lg:h-9 lg:w-9"
         >
           <ArrowUp
             aria-hidden

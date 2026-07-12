@@ -10,6 +10,7 @@ import {
 } from "framer-motion";
 import { Dumbbell, MapPin, Mountain, UserRound } from "lucide-react";
 import { about, personal } from "@/data";
+import { registerAnchor } from "../thread/anchorStore";
 
 /**
  * Section — "Operator File": the about-me as a dossier being read.
@@ -30,7 +31,8 @@ import { about, personal } from "@/data";
  * Motion is enhancement-only (scale/y, no opacity gates), honors reduced
  * motion (typewriter becomes a static caption, rings pre-filled), and the
  * lime budget is two small marks: the scan line and the one live vitals
- * ring. Stays in normal flow and registers no thread anchors.
+ * ring. Stays in normal flow; that live ("curiosity") ring is the section's
+ * thread anchor — the page's traveling lime dot docks in its center.
  */
 
 const EASE = [0.22, 1, 0.36, 1] as const;
@@ -41,7 +43,12 @@ const gridVariants: Variants = {
 };
 const cardVariants: Variants = {
   hidden: { opacity: 0, y: 14, scale: 0.985 },
-  show: { opacity: 1, y: 0, scale: 1, transition: { duration: 0.55, ease: EASE } },
+  show: {
+    opacity: 1,
+    y: 0,
+    scale: 1,
+    transition: { duration: 0.55, ease: EASE },
+  },
 };
 
 /* ── Hobby glyphs ─────────────────────────────────────────────────────────
@@ -88,7 +95,10 @@ function PaddleIcon({ className }: { className?: string }) {
   );
 }
 
-const HOBBY_ICONS: Record<string, React.ComponentType<{ className?: string }>> = {
+const HOBBY_ICONS: Record<
+  string,
+  React.ComponentType<{ className?: string }>
+> = {
   trekking: Mountain,
   badminton: ShuttlecockIcon,
   pingpong: PaddleIcon,
@@ -105,7 +115,7 @@ function HobbiesStrip({ reduce }: { reduce: boolean }) {
 
   const hobbies = about.hobbies;
   const active = pinned
-    ? hobbies.find((h) => h.id === pinned) ?? hobbies[0]
+    ? (hobbies.find((h) => h.id === pinned) ?? hobbies[0])
     : hobbies[cycleIdx % hobbies.length];
   const target = active.tagline;
 
@@ -167,7 +177,7 @@ function HobbiesStrip({ reduce }: { reduce: boolean }) {
               onMouseLeave={() => setPinned(null)}
               onFocus={() => setPinned(h.id)}
               onBlur={() => setPinned(null)}
-              className={`flex h-8 w-8 items-center justify-center rounded-md border transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-live ${
+              className={`flex h-11 w-11 items-center justify-center rounded-md border transition-colors duration-200 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-live sm:h-8 sm:w-8 ${
                 isActive
                   ? "border-infra/60 bg-infra/10 text-infra"
                   : "border-hairline text-ink-muted hover:text-ink"
@@ -220,11 +230,13 @@ function VitalRow({
   index,
   started,
   reduce,
+  ringRef,
 }: {
   vital: (typeof about.vitals)[number];
   index: number;
   started: boolean;
   reduce: boolean;
+  ringRef?: React.Ref<SVGSVGElement>;
 }) {
   const [display, setDisplay] = useState(reduce ? vital.value : 0);
 
@@ -248,7 +260,12 @@ function VitalRow({
 
   return (
     <div className="flex items-center gap-3">
-      <svg viewBox="0 0 40 40" className="h-11 w-11 shrink-0 -rotate-90" aria-hidden>
+      <svg
+        ref={ringRef}
+        viewBox="0 0 40 40"
+        className="h-11 w-11 shrink-0 -rotate-90"
+        aria-hidden
+      >
         <circle
           cx="20"
           cy="20"
@@ -267,9 +284,17 @@ function VitalRow({
           className={vital.live ? "stroke-live" : "stroke-infra"}
           initial={reduce ? { pathLength: fillTarget } : { pathLength: 0 }}
           animate={
-            reduce ? undefined : started ? { pathLength: fillTarget } : undefined
+            reduce
+              ? undefined
+              : started
+                ? { pathLength: fillTarget }
+                : undefined
           }
-          transition={{ delay: ringDelay(index), duration: RING_DUR, ease: EASE }}
+          transition={{
+            delay: ringDelay(index),
+            duration: RING_DUR,
+            ease: EASE,
+          }}
         />
       </svg>
       <span className="min-w-0 flex-1 truncate font-mono text-[11px] text-ink-muted">
@@ -288,14 +313,27 @@ function VitalRow({
 
 function VitalsRings({ reduce }: { reduce: boolean }) {
   const ref = useRef<HTMLDivElement>(null);
-  const inView = useInView(ref, { once: true, margin: "0px 0px -10% 0px" });
+  const liveRingRef = useRef<SVGSVGElement>(null);
+  // Fire late (rings ~35% up the viewport) so the sweep plays at eye level,
+  // not while the column is still peeking in at the bottom edge.
+  const inView = useInView(ref, { once: true, margin: "0px 0px -35% 0px" });
+
+  // The one lime ring is the section's dock for the page thread: the traveling
+  // dot leaves the experience trace tip and settles into its center.
+  useEffect(
+    () =>
+      liveRingRef.current
+        ? registerAnchor("about-curiosity", liveRingRef.current)
+        : undefined,
+    [],
+  );
 
   return (
-    <div ref={ref} className="mx-auto w-48 shrink-0 sm:w-52">
-      <p className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+    <div ref={ref} className="flex h-full flex-col">
+      <p className="font-mono text-[11px] uppercase tracking-wider text-ink-muted">
         operator_vitals
       </p>
-      <div className="mt-3 flex flex-col gap-3">
+      <div className="mt-3 flex flex-1 flex-col justify-around gap-3">
         {about.vitals.map((v, i) => (
           <VitalRow
             key={v.id}
@@ -303,6 +341,7 @@ function VitalsRings({ reduce }: { reduce: boolean }) {
             index={i}
             started={inView}
             reduce={reduce}
+            ringRef={v.live ? liveRingRef : undefined}
           />
         ))}
       </div>
@@ -313,9 +352,13 @@ function VitalsRings({ reduce }: { reduce: boolean }) {
 export default function OperatorFile() {
   const reduce = useReducedMotion() ?? false;
   const portraitRef = useRef<HTMLDivElement>(null);
-  const portraitInView = useInView(portraitRef, { once: true, margin: "0px 0px -20% 0px" });
+  const portraitInView = useInView(portraitRef, {
+    once: true,
+    margin: "0px 0px -20% 0px",
+  });
 
-  const cardClass = "rounded-lg border border-border-soft bg-surface p-5 sm:p-6";
+  const cardClass =
+    "rounded-lg border border-border-soft bg-surface p-5 sm:p-6";
   const cardTitleClass =
     "font-mono text-[11px] uppercase tracking-wider text-ink-muted";
 
@@ -323,9 +366,9 @@ export default function OperatorFile() {
     <section
       id="about"
       aria-label="About — operator file"
-      className="border-t border-border-soft px-6 py-12 sm:px-10"
+      className="border-t border-border-soft px-6 py-10 sm:px-10"
     >
-      <div className="mx-auto w-full max-w-6xl">
+      <div className="mx-auto w-full max-w-7xl">
         <p className="font-mono text-xs uppercase tracking-widest text-ink-muted">
           Operator file
         </p>
@@ -335,11 +378,11 @@ export default function OperatorFile() {
         >
           A bit about me
         </h2>
-        <p className="mt-3 max-w-measure text-pretty leading-relaxed text-ink-muted">
-          Bio, vitals, and what happens when the laptop closes.
+        <p className="mt-2 max-w-measure text-pretty leading-relaxed text-ink-muted">
+          Bio, vitals, and hobbies.
         </p>
 
-        <div className="mt-8 flex flex-col gap-6 lg:grid lg:grid-cols-[300px_1fr]">
+        <div className="mt-6 flex flex-col gap-6 lg:grid lg:grid-cols-[280px_1fr]">
           {/* ── Left anchor: the scanned portrait ─────────────────────────── */}
           <motion.div
             ref={portraitRef}
@@ -347,7 +390,7 @@ export default function OperatorFile() {
             whileInView={reduce ? undefined : { opacity: 1, y: 0, scale: 1 }}
             viewport={{ once: true, margin: "0px 0px -12% 0px" }}
             transition={{ duration: 0.55, ease: EASE }}
-            className="relative flex min-h-[380px] flex-col overflow-hidden rounded-lg border border-border-soft bg-surface lg:min-h-0"
+            className="relative flex flex-col overflow-hidden rounded-lg border border-border-soft bg-surface"
           >
             {/* File header strip */}
             <div className="flex items-center justify-between border-b border-hairline px-4 py-2.5 font-mono text-[10px] uppercase tracking-wider text-ink-muted">
@@ -357,8 +400,9 @@ export default function OperatorFile() {
               </span>
             </div>
 
-            {/* Portrait area — content un-clips top→bottom behind the scan line */}
-            <div className="relative flex-1">
+            {/* Portrait area — 4:5 matches the source photo, so nothing crops until the
+                column takes over at lg. Content un-clips top→bottom behind the scan line. */}
+            <div className="relative aspect-[4/5] w-full lg:aspect-auto lg:flex-1">
               <motion.div
                 className="absolute inset-0"
                 initial={reduce ? false : { clipPath: "inset(0 0 100% 0)" }}
@@ -371,54 +415,59 @@ export default function OperatorFile() {
                 }
                 transition={{ duration: 1.8, ease: EASE }}
               >
-              {about.photo.ready ? (
-                <>
-                  {/* Real portrait: natural, no color filters (user call) */}
-                  {/* eslint-disable-next-line @next/next/no-img-element */}
-                  <img
-                    src={about.photo.src}
-                    alt={about.photo.alt}
-                    className="absolute inset-0 h-full w-full object-cover"
-                  />
-                  <div
-                    aria-hidden
-                    className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-bg/30"
-                  />
-                </>
-              ) : (
-                // Placeholder: dot-matrix silhouette awaiting the real file
-                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
-                  <UserRound
-                    aria-hidden
-                    strokeWidth={0.75}
-                    className="h-28 w-28 text-infra/30"
-                  />
-                  <p className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
-                    awaiting operator.jpg
-                  </p>
-                </div>
-              )}
+                {about.photo.ready ? (
+                  <>
+                    {/* Real portrait: natural, no color filters (user call) */}
+                    {/* eslint-disable-next-line @next/next/no-img-element */}
+                    <img
+                      src={about.photo.src}
+                      alt={about.photo.alt}
+                      className="absolute inset-0 h-full w-full object-cover"
+                    />
+                    <div
+                      aria-hidden
+                      className="absolute inset-0 bg-gradient-to-t from-bg/70 via-transparent to-bg/30"
+                    />
+                  </>
+                ) : (
+                  // Placeholder: dot-matrix silhouette awaiting the real file
+                  <div className="absolute inset-0 flex flex-col items-center justify-center gap-4">
+                    <UserRound
+                      aria-hidden
+                      strokeWidth={0.75}
+                      className="h-28 w-28 text-infra/30"
+                    />
+                    <p className="font-mono text-[10px] uppercase tracking-wider text-ink-muted">
+                      awaiting operator.jpg
+                    </p>
+                  </div>
+                )}
 
-              {/* Faint scanned-file grid overlay */}
-              <div
-                aria-hidden
-                className="pointer-events-none absolute inset-0"
-                style={{
-                  backgroundImage:
-                    "repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 28px), repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 28px)",
-                }}
-              />
+                {/* Faint scanned-file grid overlay */}
+                <div
+                  aria-hidden
+                  className="pointer-events-none absolute inset-0"
+                  style={{
+                    backgroundImage:
+                      "repeating-linear-gradient(0deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 28px), repeating-linear-gradient(90deg, rgba(255,255,255,0.05) 0 1px, transparent 1px 28px)",
+                  }}
+                />
 
-              {/* Corner brackets */}
-              {(["left-3 top-3 border-l-2 border-t-2", "right-3 top-3 border-r-2 border-t-2", "left-3 bottom-3 border-l-2 border-b-2", "right-3 bottom-3 border-r-2 border-b-2"] as const).map(
-                (pos) => (
+                {/* Corner brackets */}
+                {(
+                  [
+                    "left-3 top-3 border-l-2 border-t-2",
+                    "right-3 top-3 border-r-2 border-t-2",
+                    "left-3 bottom-3 border-l-2 border-b-2",
+                    "right-3 bottom-3 border-r-2 border-b-2",
+                  ] as const
+                ).map((pos) => (
                   <span
                     key={pos}
                     aria-hidden
                     className={`pointer-events-none absolute h-4 w-4 border-infra/50 ${pos}`}
                   />
-                ),
-              )}
+                ))}
               </motion.div>
 
               {/* One-shot lime scan line — rides the reveal edge (same duration + ease) */}
@@ -430,7 +479,11 @@ export default function OperatorFile() {
                   animate={{ top: "100%", opacity: [0, 0.85, 0.85, 0] }}
                   transition={{
                     top: { duration: 1.8, ease: EASE },
-                    opacity: { duration: 1.8, times: [0, 0.06, 0.92, 1], ease: "linear" },
+                    opacity: {
+                      duration: 1.8,
+                      times: [0, 0.06, 0.92, 1],
+                      ease: "linear",
+                    },
                   }}
                 />
               )}
@@ -456,26 +509,32 @@ export default function OperatorFile() {
             viewport={{ once: true, margin: "0px 0px -12% 0px" }}
             className="grid gap-6"
           >
-            {/* Card A — runtime environment: bio arc + signal curve */}
-            <motion.div
-              variants={reduce ? undefined : cardVariants}
-              className={cardClass}
-            >
-              <p className={cardTitleClass}>Runtime environment</p>
-              <div className="mt-3 flex flex-col gap-6 md:flex-row md:items-center md:gap-8">
-                <div className="space-y-2.5 md:flex-1">
+            {/* Top row — bio card beside its own vitals card */}
+            <div className="grid gap-6 md:grid-cols-[1fr_240px]">
+              <motion.div
+                variants={reduce ? undefined : cardVariants}
+                className={cardClass}
+              >
+                <p className={cardTitleClass}>How I got here</p>
+                <div className="mt-3 max-w-[72ch] space-y-2">
                   {about.bio.map((line, i) => (
                     <p
                       key={i}
-                      className="text-pretty text-sm leading-relaxed text-ink"
+                      className="text-pretty text-sm leading-normal text-ink"
                     >
                       {line}
                     </p>
                   ))}
                 </div>
+              </motion.div>
+
+              <motion.div
+                variants={reduce ? undefined : cardVariants}
+                className="rounded-lg border border-border-soft bg-surface p-4 sm:p-5"
+              >
                 <VitalsRings reduce={reduce} />
-              </div>
-            </motion.div>
+              </motion.div>
+            </div>
 
             {/* Bottom row — sandbox ticker beside the hobbies strip */}
             <div className="grid gap-6 sm:grid-cols-2">

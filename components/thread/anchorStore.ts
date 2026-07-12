@@ -14,7 +14,8 @@ export type AnchorMeta = {
   track?: boolean;
 };
 
-export type Anchor = { id: string; el: HTMLElement; meta: AnchorMeta };
+/** `el` is any Element — the thread only reads its `getBoundingClientRect()` (the About dock is an <svg>). */
+export type Anchor = { id: string; el: Element; meta: AnchorMeta };
 
 const anchors = new Map<string, Anchor>();
 const listeners = new Set<() => void>();
@@ -26,7 +27,7 @@ function emit() {
 /** Register an anchor; returns an unregister cleanup for useEffect. */
 export function registerAnchor(
   id: string,
-  el: HTMLElement,
+  el: Element,
   meta: AnchorMeta = { dock: true },
 ): () => void {
   anchors.set(id, { id, el, meta });

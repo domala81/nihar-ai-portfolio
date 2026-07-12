@@ -8,7 +8,8 @@ import { getAnchors } from "./anchorStore";
  * The lime "me" node threading the whole page.
  *
  * Reads the live screen position of every registered anchor each frame (network result
- * node, projects orbit core, experience "now" head + spine-bottom waypoint, contact node),
+ * node, projects orbit core, experience "now" head + spine-bottom waypoint, the About
+ * "curiosity" vitals ring, contact node),
  * orders them top→bottom, and rides the traveling dot along that polyline by scroll. A
  * faint screen-blend comet trail follows. When the user stops scrolling the dot dissolves
  * into the nearest dock anchor (so only that section's own lime dot remains) and fires a
@@ -95,6 +96,7 @@ export default function LimeThread() {
           const r = a.el.getBoundingClientRect();
           const docCenterY = r.top + scrollY + r.height / 2;
           return {
+            id: a.id,
             dock: a.meta.dock !== false,
             docCenterY,
             vpx: r.left + r.width / 2,
@@ -121,9 +123,20 @@ export default function LimeThread() {
         }
       }
 
-      // Final leg DOWN (experience → contact): hand off the tip early so the dot center-glides
-      // into the contact node over a long runway, instead of rushing across at the very end.
+      // Leaving the timeline DOWN: the tip hands the dot to the first dock below the experience
+      // section (the About "curiosity" ring; the contact node if About isn't there), early enough
+      // that the dot center-glides into it over a long runway instead of rushing across at the end.
       // Only while descending — going back up we want the tip (left spine) re-grabbed straight away.
+      const expIdx = docks.findIndex((d) => d.id === "experience");
+      const handoffDock =
+        (expIdx >= 0 ? docks[expIdx + 1] : undefined) ?? docks[docks.length - 1];
+      const approachingHandoff =
+        !goingUp &&
+        !!handoffDock &&
+        handoffDock === nd &&
+        scrollY > handoffDock.dockScroll - vh * 0.85;
+
+      // Final leg DOWN, into the contact node — same long, gentle runway.
       const contactDock = docks[docks.length - 1];
       const approachingContact =
         !goingUp &&
@@ -135,7 +148,7 @@ export default function LimeThread() {
       // doesn't yank the dot to the bottom edge as the section scrolls in. Ascending: the moment the
       // tip is on screen, so the dot glides left onto the spine tip instead of rejoining mid-spine.
       const onTip =
-        !!track && track.onScreen && (goingUp || track.vpy < vh * 0.55) && !approachingContact;
+        !!track && track.onScreen && (goingUp || track.vpy < vh * 0.55) && !approachingHandoff;
 
       let tx: number, ty: number;
       if (onTip) {
@@ -181,10 +194,11 @@ export default function LimeThread() {
         }
       }
 
-      // soft glide (snap to target on the first frame only). Gentler eases for the two long moves:
-      // descending into the contact node, and re-grabbing the left spine tip on the way back up.
+      // soft glide (snap to target on the first frame only). Gentler eases for the long moves:
+      // descending off the spine into the About ring and on into the contact node, and re-grabbing
+      // the left spine tip on the way back up.
       const k = s.primed
-        ? approachingContact
+        ? approachingHandoff || approachingContact
           ? 0.1
           : goingUp && onTip
             ? 0.085

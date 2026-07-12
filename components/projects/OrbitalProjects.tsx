@@ -338,7 +338,7 @@ function OrbitView() {
             type="button"
             onClick={() => go(-1)}
             aria-label="Previous project"
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border-soft text-ink-muted opacity-20 transition-all duration-200 ease-out-quint hover:scale-110 hover:border-infra hover:text-ink hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infra"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-soft text-ink-muted opacity-40 transition-all duration-200 ease-out-quint hover:scale-110 hover:border-infra hover:text-ink hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infra"
           >
             <ChevronLeft className="h-4 w-4" aria-hidden />
           </button>
@@ -358,7 +358,7 @@ function OrbitView() {
             type="button"
             onClick={() => go(1)}
             aria-label="Next project"
-            className="flex h-7 w-7 items-center justify-center rounded-full border border-border-soft text-ink-muted opacity-20 transition-all duration-200 ease-out-quint hover:scale-110 hover:border-infra hover:text-ink hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infra"
+            className="flex h-9 w-9 items-center justify-center rounded-full border border-border-soft text-ink-muted opacity-40 transition-all duration-200 ease-out-quint hover:scale-110 hover:border-infra hover:text-ink hover:opacity-100 focus-visible:opacity-100 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-infra"
           >
             <ChevronRight className="h-4 w-4" aria-hidden />
           </button>

@@ -33,7 +33,10 @@ reproducible. `←` marks where we are.
 | — | (out-of-flow) — centralized `data/` layer | Extracted all content into `data/personal.ts`, `data/projects.ts`, `data/experience.ts`, `data/skills.ts`; `networkData.ts` → adapter. Adding content now = edit one file. | ✅ done |
 | — | (out-of-flow) — brutal review → 4-phase fix pass | Full-site review (7/10) then: bug fixes + OG/favicon/JSON-LD, perf + keyboard a11y, micro-animations (count-ups, metallic hero, progress hairline, panel tilt), personality (model card, ⌘K terminal, backprop click, telemetry strip, console egg) | ✅ done |
 | 12 | `/impeccable craft` — about ("Operator File") | Dossier about section: scanned-portrait anchor + asymmetric bento (bio, hobbies, route trace, sandbox ticker); then v2: 4-para personal bio arc, `pull_toward_ai` signal curve, compact hobby icon strip w/ typewriter captions, topo watermark | ✅ done |
-| 13 | `/impeccable craft` — operator vitals rings | Replaced the `pull_toward_ai` constellation with four vertical fitness-style rings (self-reported personality metrics, sweep-from-zero + count-up, one lime) | ✅ done ← |
+| 13 | `/impeccable craft` — operator vitals rings | Replaced the `pull_toward_ai` constellation with four vertical fitness-style rings (self-reported personality metrics, sweep-from-zero + count-up, one lime) | ✅ done |
+| 14 | `/impeccable shape` — vitals box split | Opinion-first shape: moved operator_vitals out of the bio card into its own bordered card beside it (top row `1fr/240px`); rings distribute to fill the card | ✅ done |
+| 15 | `/impeccable craft` — thread docks in the curiosity ring | The traveling lime dot now leaves the experience trace tip, glides into the center of the About "curiosity" vitals ring and snaps + blooms there, then continues to the contact node | ✅ done |
+| 16 | (out-of-flow) — responsive optimization pass | Mobile-first pass for recruiters on phones + every laptop ratio: global overflow guard, contact/footer overflow fixes, pipeline detail-card clamping in the 768–1024 band, 44px tap targets, uncropped mobile portrait | ✅ done ← |
 
 Update this table whenever an impeccable command is run or the plan changes.
 
@@ -45,6 +48,54 @@ A separate thread for ideas, preferences, and course-corrections the user gives 
 we go — kept apart from my own design decisions so the user's *intent* is easy to
 trace. Newest on top. Each entry: date + the idea + how it was applied.
 
+- **2026-07-12 (optimize for mobile; recruiters open on phones)** — "Give me the best
+  possible way to optimize my current portfolio all pages … for the best mobile view,
+  as recruiters mostly open the page in mobile. Also optimize it to fit all laptop size
+  ratios without any page overflowing or weird structure." → Audited every section,
+  then a three-phase pass: global horizontal-overflow guard, the two real phone
+  overflow bugs (contact email row, footer colophon), detail-card clamping in the
+  768–1024 interactive band, and 44px tap targets. → Entry 046.
+- **2026-07-12 (face + footer look wrong on the phone)** — User sent phone screenshots:
+  the portrait crops the head, the footer separators dangle at line ends. → The mobile
+  portrait frame now matches the photo's own 4:5 ratio (nothing crops), and the footer's
+  `·` separators only appear when the colophon actually fits on one line. → Entry 046.
+- **2026-07-12 (dot should visit the curiosity ring)** — "Make the dot that travels
+  top→bottom move (snap at the end) to the curiosity ring in the about-me page from
+  the experience timeline's last point, then go to the last page dot as it is now."
+  → The About section now registers the lime curiosity ring as a thread dock, so the
+  dot glides off the timeline spine into the ring's center, snaps + blooms there, and
+  carries on to the contact node. Asked whether it should land in the ring's center or
+  ride its stroke; user chose center. → Entry 045.
+- **2026-07-12 (vitals get own box)** — Asked whether operator vitals should be a
+  separate box rather than living inside the bio card ("first tell me your
+  opinion"). Recommendation: yes — after the card was retitled "How I got here"
+  the rings no longer belonged to that story, and the bento grammar (small boxes
+  with mono headers) already existed. User confirmed. → Top row is now bio card +
+  vitals card (`1fr/240px`); rings spread to fill the card height; section still
+  778px at 1440×900. Impeccable skill updated v3.5.0→v3.9.1 (next session).
+- **2026-07-12 (about fits one screen)** — "Increase the text box width a bit and
+  reduce the height to fit in single page view." → Container `max-w-6xl→7xl`,
+  portrait column 300→280px, section `py-12→py-10`, header/bio spacing tightened,
+  bio `leading-relaxed→normal`. Verified in browser at 1440×900: section is 778px
+  tall, fits with room to spare.
+- **2026-07-12 (bio v2 — tightened)** — User supplied a tighter revision of their
+  own bio ("new description"): same arc, shorter sentences. Pasted verbatim into
+  `data/about.ts`; fixed the same paste-fusion typo ("value in proP.S." →
+  "…in production." + "P.S.").
+- **2026-07-12 (bio card title)** — "Runtime environment" title "doesn't make
+  sense" — wanted simpler. → Now "How I got here" (plain first-person, matches
+  the quirky-plain title voice).
+- **2026-07-12 (bio — user's own words)** — User rewrote the bio themselves and
+  supplied final copy ("this is my new about section"). Pasted verbatim into
+  `data/about.ts` as 5 paragraphs (incl. a "P.S." small-talk closer); only fix was
+  an obvious paste typo ("somee I'm headed" → "…someone." + "Where I'm headed:").
+  Supersedes the 2026-07-10 Claude-drafted arc.
+- **2026-07-10 (bio rewrite)** — "About me description is sooo bad": keep a hook
+  at the start, change the storyline if needed, don't sound robotic, and say the
+  goal, the passion, where it came from, and current interests. → Rewrote the
+  4-paragraph `bio` arc in `data/about.ts` (math-puzzle hook → IIT Kharagpur spark
+  → pipelines-by-day / AI-builds-by-night → explicit goal of owning AI systems end
+  to end); kept the small-talk closer.
 - **2026-07-10 (about copy)** — Title/subtitle "simpler like the other pages":
   "Who's behind the network / The operator, declassified." → "A bit about me /
   Bio, vitals, and what happens when the laptop closes." Also removed the
@@ -417,6 +468,106 @@ Each entry answers four things in order:
 2. **Flow** — what was actually done, step by step, in plain language.
 3. **Decisions** — choices made and *why* (especially anything non-obvious).
 4. **Output** — files created or changed.
+
+---
+
+## Entry 046 — Responsive pass: phones first, then every laptop ratio
+
+**Prompt:** "Give me the best possible way to optimize my current portfolio … for the
+best mobile view, as recruiters mostly open the page in mobile. Also optimize it to fit
+all laptop size ratios without any page sizes overflowing or weird structure." Followed
+by two phone screenshots: "the face is not centered, and the footer is not aligned."
+
+**Flow:** Audited every section first. The good news: the two heavy sections already
+degrade correctly — the pipeline swaps to the stacked `PipelineContent` list below
+768px, and the project orbit swaps to static cards below 1024px. So the work wasn't
+building fallbacks, it was fixing the things that quietly break at the edges:
+
+1. **Nothing stopped horizontal scroll.** Neither `html` nor `body` clipped overflow, so
+   any element poking past the viewport dragged the whole page sideways. Added
+   `overflow-x: clip` on `html`.
+2. **Two elements actually did poke out at 320–360px.** The contact email row is a
+   fixed three-column grid (`>` · label · value) and the email is a 25-character
+   unbreakable string — it needs ~318px inside a 272px viewport. Below `sm` the value
+   now drops to its own line under the label. The footer's middle credit line was
+   `whitespace-nowrap` at ~40 characters; it can wrap now.
+3. **The pipeline's detail card could hang off the right edge** between 768–1024px,
+   where the canvas is still interactive: the card is a fixed 280px and was positioned
+   purely relative to the hovered node. Its left edge is now clamped inside the stage,
+   and the stage's *measured* width is used instead of `window.innerWidth` (which was
+   never recomputed on resize, and includes the scrollbar the canvas doesn't have).
+4. **Tap targets.** Hero header links, the footer's back-to-top, the orbit's prev/next,
+   and the About hobby buttons were all 28–36px. They're 44px on touch sizes now and
+   unchanged on desktop.
+5. **From the screenshots:** the portrait is a 4:5 photo, but the mobile card gave it a
+   short, full-width frame, so `object-cover` cropped the head. The mobile frame is now
+   4:5 too, so the whole photo shows. And the footer's `·` separators were stranding
+   themselves at the end of wrapped lines — they only render from `md` up, where the
+   line actually fits.
+
+Verified by driving a real browser across 14 viewports (320 → 1920, phones with touch
+emulation, the 768–1024 band both touch and mouse): no horizontal overflow anywhere, and
+the detail card stays fully on-screen for every node.
+
+**Decisions:**
+- **`overflow-x: clip` on `html`, never `overflow-x: hidden` on `body`.** `hidden` turns
+  the element into a scroll container, which silently kills `position: sticky` — and the
+  pipeline stage is sticky. `clip` doesn't. It's also a guard, not the fix; the two real
+  overflows were fixed at the source.
+- **The mobile cutoff stays at 768px.** The spec sets it, and the 768–1024 band was
+  fixed by clamping the card rather than by hiding the canvas from more people.
+- **The ⌘K hint is gone from the footer on phones.** The terminal only opens via a
+  keyboard shortcut and its launcher is desktop-only, so phones were being told about a
+  feature they can't reach.
+
+**Output:** `app/globals.css` (overflow guard), `app/layout.tsx` (viewport export:
+dark color-scheme + theme color), `components/contact/ContactSection.tsx`,
+`components/footer/SiteFooter.tsx`, `components/pipeline/NeuralPipeline.tsx`,
+`components/pipeline/DetailCard.tsx`, `components/pipeline/PipelineContent.tsx`,
+`components/Hero.tsx`, `components/projects/OrbitalProjects.tsx`,
+`components/about/OperatorFile.tsx`.
+
+---
+
+## Entry 045 — The lime thread docks in the curiosity ring
+
+**Prompt:** "Make the dot that travels from top to bottom move (snap at the end)
+to the curiosity ring in the about-me page from the experience timeline last
+point, then go to the last page dot as now."
+
+**Flow:** The traveling lime "me" dot doesn't hardcode a path — sections register
+anchor elements in `components/thread/anchorStore.ts`, and `LimeThread` sorts them
+by their live document position each frame and glides the dot between them. The
+About section registered nothing, so the dot flew straight from the experience
+trace tip to the contact node, right past the one lime thing in About: the `live`
+"curiosity" vitals ring. So: (1) the curiosity ring's `<svg>` now registers itself
+as a dock anchor (`about-curiosity`) — which slots it into the path automatically,
+between experience and contact; (2) `LimeThread`'s hand-off was hardcoded to the
+*contact* dock (it held the dot glued to the timeline's trace tip until contact was
+within ~0.85 viewport heights), so it now hands off to whichever dock comes *after*
+the experience dock — the ring today, contact if About ever goes away. Verified by
+driving a real scroll in a headless browser: the dot settles **4.2px** from the
+ring's center (the 70px snap radius fires), both scrolling down into it and coming
+back up.
+
+**Decisions:**
+- **Dock at the ring's center, not on its stroke.** Asked the user; they chose
+  center. It reuses the existing dock/bloom behavior verbatim — the dot dissolves
+  into the ring and the ring's lime stroke stays as the section's one lime mark,
+  which is the same rule every other dock follows (One Live Signal).
+- **Hand-off is "the dock after experience," not "the ring."** Naming the ring
+  directly would have hardcoded a second special case into the thread. Deriving it
+  from the station order keeps `LimeThread` generic and preserves today's behavior
+  exactly if the ring anchor ever disappears.
+- **Both long lateral moves keep the gentle `k = 0.1` ease** (spine → ring, ring →
+  contact). The ring is far right and the spine is far left, so this is the biggest
+  horizontal move on the page; the faster default ease made it read as a dart.
+- `Anchor.el` widened from `HTMLElement` to `Element` — the ring is an SVG, and the
+  thread only ever reads `getBoundingClientRect()`.
+
+**Output:** `components/about/OperatorFile.tsx` (ring registers the dock),
+`components/thread/anchorStore.ts` (`el: Element`), `components/thread/LimeThread.tsx`
+(hand-off dock + ease).
 
 ---
 

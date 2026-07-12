@@ -49,6 +49,12 @@ const OFFSET_EASE = 0.12;
 // Ambient demo
 const DEMO_EVERY = 3500;
 const DEMO_SHOW = 2000;
+// Detail card geometry (CARD_W matches DetailCard w-[280px])
+const CARD_W = 280;
+const CARD_GAP = 34;
+const CARD_EDGE = 12;
+const CARD_Y_MARGIN = 190;
+const HINT_HALF = 70;
 
 type PNode = {
   id: string;
@@ -640,11 +646,19 @@ export default function NeuralPipeline() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [clearActive]);
 
-  const vw = typeof window !== "undefined" ? window.innerWidth : 1440;
-  const vh = typeof window !== "undefined" ? window.innerHeight : 900;
+  // Measured stage size (refreshed by the ResizeObserver) — window fallback pre-layout/SSR.
+  const vw = layout?.w ?? (typeof window !== "undefined" ? window.innerWidth : 1440);
+  const vh = layout?.h ?? (typeof window !== "undefined" ? window.innerHeight : 900);
   const activeNode = activeId && layout ? layout.nodes.find((n) => n.id === activeId) ?? null : null;
   const cardData = activeId ? ALL_NODES.find((n) => n.id === activeId) ?? null : null;
   const cardRight = activeNode ? activeNode.x < vw * 0.6 : true;
+  const cardLeft = activeNode
+    ? clamp(
+        cardRight ? activeNode.x + CARD_GAP : activeNode.x - CARD_GAP - CARD_W,
+        CARD_EDGE,
+        Math.max(CARD_EDGE, vw - CARD_W - CARD_EDGE),
+      )
+    : 0;
   const demoNode = demoId && layout ? layout.nodes.find((n) => n.id === demoId) ?? null : null;
 
   return (
@@ -705,7 +719,7 @@ export default function NeuralPipeline() {
                 <div
                   className="pointer-events-none absolute z-30 -translate-x-1/2"
                   style={{
-                    left: demoNode.x,
+                    left: clamp(demoNode.x, HINT_HALF, Math.max(HINT_HALF, vw - HINT_HALF)),
                     top: demoNode.y + (demoNode.isCore ? layout.size * 1.3 : layout.size) / 2 + 12,
                   }}
                 >
@@ -775,9 +789,9 @@ export default function NeuralPipeline() {
                 <div
                   className="pointer-events-none absolute z-40"
                   style={{
-                    left: activeNode.x,
-                    top: clamp(activeNode.y, 190, vh - 190),
-                    transform: cardRight ? "translate(34px, -50%)" : "translate(calc(-100% - 34px), -50%)",
+                    left: cardLeft,
+                    top: clamp(activeNode.y, CARD_Y_MARGIN, vh - CARD_Y_MARGIN),
+                    transform: "translateY(-50%)",
                   }}
                 >
                   <DetailCard node={cardData} onChipClick={onChipClick} onPointerEnter={onCardEnter} onPointerLeave={onCardLeave} />

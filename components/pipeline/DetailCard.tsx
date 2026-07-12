@@ -37,7 +37,7 @@ export default function DetailCard({ node, onChipClick, onPointerEnter, onPointe
       transition={{ type: "spring", stiffness: 380, damping: 30 }}
       onPointerEnter={onPointerEnter}
       onPointerLeave={onPointerLeave}
-      className="pointer-events-auto relative w-[280px] rounded-xl border border-border-soft bg-surface/80 p-5 pt-7 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.78)] backdrop-blur-md"
+      className="pointer-events-auto relative w-[280px] max-w-[calc(100vw-24px)] rounded-xl border border-border-soft bg-surface/80 p-5 pt-7 shadow-[0_24px_70px_-20px_rgba(0,0,0,0.78)] backdrop-blur-md"
     >
       {/* Circular badge, overlapping the top edge */}
       <div

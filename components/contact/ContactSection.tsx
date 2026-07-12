@@ -249,11 +249,11 @@ export default function ContactSection() {
         {/* Direct channels — terminal listing. Email copies to clipboard; github/linkedin open. */}
         <motion.div
           style={active ? chR : undefined}
-          className="mt-9 w-fit text-left font-mono text-sm"
+          className="mt-9 w-fit max-w-full text-left font-mono text-sm"
         >
           {CHANNELS.map((c) => {
             const rowClass =
-              "group grid grid-cols-[1.25rem_5rem_1fr] items-baseline gap-x-1 rounded-sm py-2 transition-colors duration-200 ease-out-quint";
+              "group grid grid-cols-[1.25rem_minmax(0,1fr)] items-baseline gap-x-1 rounded-sm py-2 transition-colors duration-200 ease-out-quint sm:grid-cols-[1.25rem_5rem_1fr]";
             const inner = (
               <>
                 <span
@@ -263,7 +263,7 @@ export default function ContactSection() {
                   &gt;
                 </span>
                 <span className="text-ink-muted">{c.label}</span>
-                <span className="inline-flex items-baseline">
+                <span className="col-start-2 inline-flex flex-wrap items-baseline sm:col-start-3">
                   <span className="relative w-fit text-ink-muted transition-colors duration-200 ease-out-quint group-hover:text-ink">
                     {c.value}
                     <span

@@ -22,12 +22,13 @@ export const about = {
     alt: "Portrait of Nihar Domala",
     ready: true,
   },
-  /** Card A — runtime environment: the personal arc, childhood → now. */
+  /** Card A — "How I got here": the personal arc, childhood → now. */
   bio: [
-    "It started with maths. Kid me chased logic puzzles for fun; the slow untangling of a hard problem was the game long before code showed up.",
-    "An AI micro-specialization at IIT Kharagpur turned that pull into a direction, and data science became the obvious road: maths, computing, and messy real-world problems in one job.",
-    "Now I live on the bridge between heavy data engineering and applied AI. By day I move billions of records through pipelines nobody should ever have to think about; the rest of the time I chase ideas that ship, especially where AI quietly makes someone's day easier.",
-    "And unlike a lot of engineers, I actually enjoy small talk. The contact node below is not decorative.",
+    "It all started with math puzzles. Long before code, I was the kid who couldn't put a logic problem down. I didn't care about the grade; I just loved the exact moment a messy problem suddenly \"clicked.\" Everything I've done since has been about chasing that feeling on a bigger scale.",
+    "Things got serious during my AI studies at IIT Kharagpur. Watching a model pick up on a pattern I hadn't explicitly taught it completely hooked me. I soon realized you can't build smart systems without clean data, so I dove into data engineering to learn how to tame the chaos first.",
+    "By day, I handle the heavy lifting - moving billions of records through rock-solid data pipelines. The rest of the time, I build with AI. Whether it's agents, local models, or RAG systems, I focus on the moment a project stops being just a cool demo and starts solving real-world problems.",
+    "Where I'm headed: I want to own AI systems end-to-end, taking them all the way from raw, messy data to finished models delivering real value in production.",
+    "P.S. Unlike a lot of engineers, I actually enjoy small talk - let's chat!",
   ],
   /**
    * Operator vitals beside the bio — self-reported personality metrics

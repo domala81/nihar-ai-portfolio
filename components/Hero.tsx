@@ -55,7 +55,7 @@ export default function Hero() {
               href={href}
               target="_blank"
               rel="noreferrer noopener"
-              className="group inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:text-ink"
+              className="group inline-flex items-center gap-2 rounded-md px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:text-ink max-lg:min-h-11 max-sm:min-w-11 max-sm:justify-center"
             >
               <Icon
                 className="h-4 w-4 transition-transform duration-200 ease-out group-hover:-translate-y-px"
@@ -70,7 +70,7 @@ export default function Hero() {
             href={personal.resume}
             target="_blank"
             rel="noreferrer noopener"
-            className="inline-flex items-center gap-2 rounded-md border border-border-soft px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:border-infra hover:text-ink"
+            className="inline-flex items-center gap-2 rounded-md border border-border-soft px-3 py-2 font-mono text-xs text-ink-muted transition-colors hover:border-infra hover:text-ink max-lg:min-h-11 max-sm:min-w-11 max-sm:justify-center"
           >
             <FileText className="h-4 w-4" aria-hidden />
             <span className="hidden sm:inline">Résumé</span>
